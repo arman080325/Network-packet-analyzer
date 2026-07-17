@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NetScope — Live Network Analyzer</title>
+<link rel="icon" type="image/svg+xml" href="favicon-tile.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#060911">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#060911; --bg2:#0A1120; --surface:#0F1726; --surface2:#111927;
+    --border:#1b2838; --border2:#26384e;
+    --accent:#31F2A0; --accent-dim:#0e7490;
+    --green:#31F2A0; --amber:#fbbf24; --red:#f87171; --orange:#fb923c;
+    --purple:#8C6BFF; --pink:#f472b6; --blue:#60a5fa;
+    --text:#EAF1FB; --text2:#7d93ad; --text3:#3e5267;
+    --mono:'JetBrains Mono','SFMono-Regular','Consolas',monospace;
+    --display:'Chakra Petch','JetBrains Mono',ui-monospace,monospace;
+    --sans:'Inter','Segoe UI',system-ui,sans-serif;
+    --radius:7px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--text);
+    font-family:var(--sans);font-size:13px;overflow:hidden}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+
+  #app{display:grid;grid-template-rows:50px 1fr;
+    grid-template-columns:208px 1fr 312px;height:100vh}
+
+  #topbar{grid-column:1/-1;display:flex;align-items:center;gap:18px;
+    padding:0 18px;background:linear-gradient(180deg,#0c1320,#0a0f17);
+    border-bottom:1px solid var(--border);z-index:20}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;
+    font-family:var(--display);font-size:15px;letter-spacing:-.4px;color:var(--accent)}
+  .logo .mark{width:26px;height:26px;flex:none;display:grid;place-items:center}
+  .logo .mark svg{width:26px;height:26px;display:block;
+    filter:drop-shadow(0 0 6px rgba(49,242,160,.45))}
+  .logo small{font-weight:500;color:var(--text3);font-size:10.5px;letter-spacing:0;
+    font-family:var(--mono);text-transform:none}
+  .tstats{display:flex;gap:20px;margin-left:8px}
+  .tstat{display:flex;flex-direction:column;line-height:1.15}
+  .tstat .v{font-family:var(--mono);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .tstat .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--text3)}
+  .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .conn{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text2);font-family:var(--mono)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red)}
+  .dot.live{background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);
+    padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;
+    font-family:var(--sans);transition:.15s}
+  .btn:hover{border-color:var(--accent-dim);color:var(--text)}
+  .btn.danger:hover{border-color:var(--red);color:var(--red)}
+
+  #sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:14px 12px}
+  .sec{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);
+    font-weight:700;margin:16px 0 8px}
+  .sec:first-child{margin-top:0}
+  .row{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:11.5px;flex-wrap:wrap}
+  .row .nm{font-family:var(--mono);color:var(--text)}
+  .row .ct{margin-left:auto;font-family:var(--mono);color:var(--text2);font-variant-numeric:tabular-nums}
+  .bar{height:4px;border-radius:2px;background:var(--accent);min-width:2px;transition:width .4s}
+  .swatch{width:9px;height:9px;border-radius:2px;flex:none}
+  .muted{color:var(--text3);font-size:11px;padding:6px 0}
+
+  #main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+  #hero{display:grid;grid-template-columns:1fr 300px;gap:1px;background:var(--border);height:300px;flex:none}
+  .panel{background:var(--surface);position:relative;overflow:hidden}
+  .panel .hd{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:8px;
+    padding:9px 14px;font-size:11px;font-weight:700;letter-spacing:.3px;color:var(--text2);
+    text-transform:uppercase;z-index:3;pointer-events:none}
+  .panel .hd .tag{font-family:var(--mono);font-weight:500;text-transform:none;color:var(--text3);font-size:10px}
+  #graph-wrap{position:relative}
+  #graph{display:block;width:100%;height:100%}
+  #graph-legend{position:absolute;bottom:10px;left:14px;display:flex;gap:14px;
+    font-size:10px;color:var(--text2);font-family:var(--mono);z-index:3}
+  #graph-legend span{display:flex;align-items:center;gap:5px}
+  #graph-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--text3);
+    font-family:var(--mono);font-size:12px}
+
+  #side-metrics{display:flex;flex-direction:column;background:var(--border);gap:1px}
+  .metric{background:var(--surface);flex:1;position:relative}
+  #gauge-wrap{display:flex;flex-direction:column;align-items:center;padding-top:30px}
+  #gauge{display:block}
+  .gauge-cap{text-align:center;margin-top:-4px}
+  .gauge-cap .v{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent)}
+  .gauge-cap .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}
+  #threat-meter{padding:34px 14px 12px}
+  .tm-head{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;margin-bottom:8px}
+  .tm-bar{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;display:flex}
+  .tm-bar i{height:100%;transition:width .5s}
+  .tm-legend{display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--text2);font-family:var(--mono)}
+  .tm-legend b{font-weight:700}
+
+  #charts{display:grid;grid-template-columns:1.6fr 1fr;gap:1px;background:var(--border);
+    height:150px;flex:none;border-top:1px solid var(--border)}
+  .chart-wrap{position:relative}
+  .chart-wrap canvas{position:absolute;inset:28px 12px 10px}
+
+  #filterbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg2);
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  #filter{flex:none;width:300px;background:var(--surface2);border:1px solid var(--border2);
+    color:var(--text);padding:6px 10px;border-radius:6px;font-family:var(--mono);font-size:11px}
+  #filter:focus{outline:none;border-color:var(--accent-dim)}
+  .chip{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);
+    padding:4px 9px;border-radius:14px;font-size:10.5px;cursor:pointer;font-weight:600}
+  .chip:hover{color:var(--text)}
+  .chip.on{border-color:var(--accent);color:var(--accent)}
+  #fcount{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--text3)}
+
+  #table{flex:1;overflow-y:auto;overflow-x:hidden}
+  #thead,.prow{display:grid;
+    grid-template-columns:78px 60px 1.4fr 1.4fr 58px 96px 1.2fr;align-items:center;gap:8px;padding:5px 14px}
+  #thead{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--border);
+    font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--text3);font-weight:700;z-index:2}
+  .prow{font-family:var(--mono);font-size:11px;border-bottom:1px solid #0e1622;cursor:pointer}
+  .prow:hover{background:var(--surface)}
+  .prow.sel{background:#0f2030}
+  .prow.flash{animation:flash .7s}
+  @keyframes flash{from{background:#13314a}to{background:transparent}}
+  .prow .ellip{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pill{padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;width:max-content}
+  .ext{color:var(--orange)}
+  .lock{color:var(--purple)}
+  .num{font-variant-numeric:tabular-nums;text-align:right}
+
+  #right{background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+  .tabs{display:flex;border-bottom:1px solid var(--border)}
+  .tab{flex:1;text-align:center;padding:10px 4px;font-size:10.5px;font-weight:700;color:var(--text3);
+    cursor:pointer;border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.4px}
+  .tab.on{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab .bdg{display:inline-block;min-width:16px;padding:0 4px;border-radius:8px;font-size:9px;
+    background:var(--surface2);margin-left:3px}
+  .tab .bdg.red{background:rgba(248,113,113,.18);color:var(--red)}
+  .tab .bdg.purple{background:rgba(140,107,255,.18);color:var(--purple)}
+  .pane{flex:1;overflow-y:auto;display:none;padding:10px}
+  .pane.on{display:block}
+
+  .tcard{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:7px;
+    background:var(--surface);border:1px solid var(--border);margin-bottom:7px}
+  .tcard .rank{font-family:var(--mono);font-size:11px;color:var(--text3);width:16px}
+  .tcard .ip{font-family:var(--mono);font-size:12px;font-weight:700}
+  .tcard .meta{font-size:9.5px;color:var(--text2);margin-top:2px}
+  .tcard .score{margin-left:auto;text-align:right}
+  .tcard .score b{font-family:var(--mono);font-size:16px;font-variant-numeric:tabular-nums}
+  .tcard .lvl{font-size:9px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+
+  .alert{border-left:3px solid var(--text3);background:var(--surface);border-radius:0 6px 6px 0;
+    padding:8px 10px;margin-bottom:7px;animation:flash .8s}
+  .alert .top{display:flex;align-items:center;gap:7px}
+  .alert .ty{font-weight:700;font-size:11px}
+  .alert .tm{margin-left:auto;font-family:var(--mono);font-size:9.5px;color:var(--text3)}
+  .alert .ms{font-size:10.5px;color:var(--text2);margin-top:4px;line-height:1.4}
+  .sev-CRITICAL{border-left-color:var(--red)} .sev-CRITICAL .ty{color:var(--red)}
+  .sev-WARNING{border-left-color:var(--amber)} .sev-WARNING .ty{color:var(--amber)}
+  .sev-INFO{border-left-color:var(--blue)} .sev-INFO .ty{color:var(--blue)}
+
+  .crow{padding:8px 10px;border-radius:6px;background:var(--surface);margin-bottom:7px;font-family:var(--mono);font-size:10.5px}
+  .crow .l1{display:flex;gap:6px;color:var(--text)}
+  .crow .m{color:var(--purple);font-size:9.5px;margin-top:4px}
+
+  .kv{display:flex;justify-content:space-between;padding:6px 2px;border-bottom:1px solid var(--border);font-size:11px}
+  .kv .k{color:var(--text2)} .kv .v{font-family:var(--mono);color:var(--text);font-variant-numeric:tabular-nums}
+  .dtl{font-family:var(--mono);font-size:11px}
+  .dtl .seg{margin:8px 0;padding:8px;background:var(--surface);border-radius:6px}
+  .dtl .seg .t{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:5px}
+  .empty{text-align:center;color:var(--text3);padding:30px 10px;font-size:11.5px}
+  .flows{width:100%;border-collapse:collapse}
+  .flows td{padding:4px 6px;font-family:var(--mono);font-size:10.5px;border-bottom:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="topbar">
+    <div class="logo">
+      <div class="mark">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <polygon points="50,3 90.7,26.5 90.7,73.5 50,97 9.3,73.5 9.3,26.5" fill="#060911" stroke="#31F2A0" stroke-width="6" stroke-linejoin="round"/>
+          <polygon points="50,29 68.19,39.5 68.19,60.5 50,71 31.81,60.5 31.81,39.5" fill="#31F2A0"/>
+          <circle cx="90.7" cy="26.5" r="7" fill="#8C6BFF"/>
+        </svg>
+      </div>
+      NetScope<small>Live Network Threat Console</small>
+    </div>
+    <div class="tstats">
+      <div class="tstat"><span class="v" id="s-pkts">0</span><span class="l">Packets</span></div>
+      <div class="tstat"><span class="v" id="s-pps">0</span><span class="l">Pkt/s</span></div>
+      <div class="tstat"><span class="v" id="s-data">0 B</span><span class="l">Data</span></div>
+      <div class="tstat"><span class="v" id="s-conns" style="color:var(--green)">0</span><span class="l">Conns</span></div>
+      <div class="tstat"><span class="v" id="s-enc" style="color:var(--purple)">0%</span><span class="l">Encrypted</span></div>
+      <div class="tstat"><span class="v" id="s-retr" style="color:var(--amber)">0</span><span class="l">Retrans</span></div>
+      <div class="tstat"><span class="v" id="s-alerts" style="color:var(--red)">0</span><span class="l">Alerts</span></div>
+    </div>
+    <div class="right">
+      <div class="conn"><span id="conn-txt">connecting…</span><span class="dot" id="dot"></span></div>
+      <button class="btn" id="btn-pause" onclick="togglePause()">⏸ Pause</button>
+      <button class="btn danger" onclick="clearAll()">✕ Clear</button>
+    </div>
+  </div>
+
+  <div id="sidebar">
+    <div class="sec">Protocols</div><div id="proto-list"><div class="muted">—</div></div>
+    <div class="sec">Address Types</div><div id="class-list"><div class="muted">—</div></div>
+    <div class="sec">Top Services</div><div id="svc-list"><div class="muted">—</div></div>
+  </div>
+
+  <div id="main">
+    <div id="hero">
+      <div class="panel" id="graph-wrap">
+        <div class="hd">Live Network Map <span class="tag">hosts · flows · threat</span></div>
+        <canvas id="graph"></canvas>
+        <div id="graph-empty">awaiting traffic…</div>
+        <div id="graph-legend">
+          <span><span class="swatch" style="background:var(--green)"></span>clean</span>
+          <span><span class="swatch" style="background:var(--amber)"></span>suspicious</span>
+          <span><span class="swatch" style="background:var(--red)"></span>malicious</span>
+          <span><span class="swatch" style="background:var(--accent)"></span>local</span>
+          <span><span class="swatch" style="background:var(--orange)"></span>external</span>
+        </div>
+      </div>
+      <div id="side-metrics">
+        <div class="metric" id="gauge-wrap">
+          <div class="hd">Payload Entropy</div>
+          <canvas id="gauge" width="220" height="120"></canvas>
+          <div class="gauge-cap"><div class="v" id="ent-val">0.00</div><div class="l">bits / byte · live</div></div>
+        </div>
+        <div class="metric" id="threat-meter">
+          <div class="hd">Threat Posture</div>
+          <div class="tm-head"><span id="tm-hosts">0 hosts tracked</span><span id="tm-flagged" style="color:var(--amber)">0 flagged</span></div>
+          <div class="tm-bar" id="tm-bar"><i style="width:100%;background:var(--green)"></i></div>
+          <div class="tm-legend">
+            <span><b style="color:var(--green)" id="tm-clean">0</b> clean</span>
+            <span><b style="color:var(--amber)" id="tm-susp">0</b> suspicious</span>
+            <span><b style="color:var(--red)" id="tm-mal">0</b> malicious</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="charts">
+      <div class="panel chart-wrap"><div class="hd">Throughput <span class="tag">bytes/sec</span></div><canvas id="chart-tp"></canvas></div>
+      <div class="panel chart-wrap"><div class="hd">Protocol Mix</div><canvas id="chart-proto"></canvas></div>
+    </div>
+
+    <div id="filterbar">
+      <input id="filter" placeholder="ip:10.0.0.99   proto:TCP   port:443   enc:true" oninput="applyFilter()">
+      <span class="chip on" onclick="quick(this,'')">All</span>
+      <span class="chip" onclick="quick(this,'proto:TCP')">TCP</span>
+      <span class="chip" onclick="quick(this,'proto:UDP')">UDP</span>
+      <span class="chip" onclick="quick(this,'proto:ICMP')">ICMP</span>
+      <span class="chip" onclick="quick(this,'proto:ARP')">ARP</span>
+      <span class="chip" onclick="quick(this,'enc:true')">🔒 Encrypted</span>
+      <span id="fcount">0 shown</span>
+    </div>
+
+    <div id="table">
+      <div id="thead">
+        <span>Time</span><span>Proto</span><span>Source</span><span>Destination</span>
+        <span class="num">Size</span><span>Flags</span><span>Info</span>
+      </div>
+      <div id="tbody"></div>
+    </div>
+  </div>
+
+  <div id="right">
+    <div class="tabs">
+      <div class="tab on" data-pane="threats" onclick="tab(this)">Threats</div>
+      <div class="tab" data-pane="alerts" onclick="tab(this)">Alerts <span class="bdg red" id="b-alerts">0</span></div>
+      <div class="tab" data-pane="crypto" onclick="tab(this)">Crypto <span class="bdg purple" id="b-crypto">0</span></div>
+      <div class="tab" data-pane="detail" onclick="tab(this)">Detail</div>
+      <div class="tab" data-pane="stats" onclick="tab(this)">Stats</div>
+    </div>
+    <div class="pane on" id="p-threats"><div class="empty" id="e-threats">No threats scored yet</div><div id="threat-list"></div></div>
+    <div class="pane" id="p-alerts"><div class="empty" id="e-alerts">No anomalies detected</div><div id="alert-list"></div></div>
+    <div class="pane" id="p-crypto"><div class="empty" id="e-crypto">No encrypted payloads yet</div><div id="crypto-list"></div></div>
+    <div class="pane" id="p-detail"><div class="empty" id="e-detail">Select a packet to inspect</div><div id="detail"></div></div>
+    <div class="pane" id="p-stats"><div id="stats-body"><div class="empty">Waiting for data…</div></div></div>
+  </div>
+</div>
+
+<script>
+const WS_PORT = "__WS_PORT__".match(/^\d+$/) ? "__WS_PORT__" : "8765";
+const WS_URL  = `ws://${location.hostname || "localhost"}:${WS_PORT}`;
+const MAX_ROWS = 300, MAX_MEM = 1200;
+
+const PROTO_COLOR = {TCP:"#31F2A0",UDP:"#34d399",ICMP:"#fbbf24",ICMPv6:"#fbbf24",
+  ARP:"#60a5fa",DNS:"#34d399",UNKNOWN:"#7d93ad"};
+const LEVEL_COLOR = {malicious:"#f87171",suspicious:"#fbbf24",clean:"#31F2A0"};
+
+let ws=null, paused=false, packets=[], filterStr="", selId=null;
+let cryptoItems=[], lastStats=null, alertCount=0, threatMap={};
+
+function connect(){
+  ws=new WebSocket(WS_URL);
+  ws.onopen=()=>setConn(true);
+  ws.onclose=()=>{setConn(false);setTimeout(connect,2500);};
+  ws.onerror=()=>{};
+  ws.onmessage=({data})=>{
+    let m; try{m=JSON.parse(data)}catch(e){return}
+    if(m.type==="init"){
+      (m.packets||[]).forEach(ingest);
+      (m.alerts||[]).forEach(addAlert);
+      if(m.stats) updateStats(m.stats);
+    }else if(m.type==="packet"){
+      ingest(m.packet);
+      (m.alerts||[]).forEach(addAlert);
+      if(m.stats) updateStats(m.stats);
+    }else if(m.type==="heartbeat"){
+      if(m.stats) updateStats(m.stats);
+    }
+  };
+}
+function setConn(up){
+  document.getElementById("conn-txt").textContent=up?"live":"disconnected";
+  document.getElementById("dot").classList.toggle("live",up);
+}
+
+function ingest(p){
+  if(!p) return;
+  packets.push(p); if(packets.length>MAX_MEM) packets.shift();
+  graphFeed(p);
+  if(!paused && matchFilter(p)) addRow(p,true);
+}
+function addRow(p,flash){
+  const tb=document.getElementById("tbody");
+  const row=document.createElement("div");
+  row.className="prow"+(flash?" flash":""); row.dataset.id=p.id;
+  row.onclick=()=>selectPkt(p.id,row);
+  const pc=PROTO_COLOR[p.protocol]||"#7d93ad";
+  const src=p.src_port?`${p.src_ip}:${p.src_port}`:p.src_ip;
+  const dst=p.dst_port?`${p.dst_ip}:${p.dst_port}`:p.dst_ip;
+  const dstCls=(p.dst_class==="public")?' class="ext"':'';
+  const enc=p.enc?'<span class="lock">🔒</span> ':'';
+  row.innerHTML=
+    `<span style="color:var(--text3)">${p.timestamp||""}</span>`+
+    `<span class="pill" style="background:${pc}22;color:${pc}">${p.protocol}</span>`+
+    `<span class="ellip">${src||"—"}</span>`+
+    `<span class="ellip"><span${dstCls}>${dst||"—"}</span></span>`+
+    `<span class="num" style="color:var(--text2)">${p.length}</span>`+
+    `<span style="color:var(--amber)">${p.flags||""}</span>`+
+    `<span class="ellip" style="color:var(--text2)">${enc}${p.service||p.info||""}</span>`;
+  tb.prepend(row);
+  while(tb.childElementCount>MAX_ROWS) tb.lastChild.remove();
+  if(selId===p.id) row.classList.add("sel");
+  bumpCount();
+}
+function rebuildTable(){
+  const tb=document.getElementById("tbody"); tb.innerHTML="";
+  packets.filter(matchFilter).slice(-MAX_ROWS).forEach(p=>addRow(p,false));
+}
+function bumpCount(){document.getElementById("fcount").textContent=
+  document.getElementById("tbody").childElementCount+" shown";}
+
+function matchFilter(p){
+  if(!filterStr) return true;
+  return filterStr.split(/\s+/).every(tok=>{
+    if(!tok) return true;
+    const [k,...r]=tok.split(":"); const v=(r.join(":")||"").toLowerCase();
+    if(k==="ip")    return (p.src_ip+p.dst_ip).toLowerCase().includes(v);
+    if(k==="proto") return (p.protocol||"").toLowerCase()===v;
+    if(k==="port")  return String(p.src_port)===v||String(p.dst_port)===v;
+    if(k==="enc")   return v==="true"?!!p.enc:!p.enc;
+    if(k==="info")  return ((p.info||"")+(p.service||"")).toLowerCase().includes(v);
+    return JSON.stringify(p).toLowerCase().includes(tok.toLowerCase());
+  });
+}
+function applyFilter(){filterStr=document.getElementById("filter").value.trim();
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on")); rebuildTable();}
+function quick(el,f){document.getElementById("filter").value=f;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("on")); el.classList.add("on");
+  filterStr=f; rebuildTable();}
+
+function selectPkt(id,row){
+  selId=id;
+  document.querySelectorAll(".prow.sel").forEach(r=>r.classList.remove("sel"));
+  if(row) row.classList.add("sel");
+  const p=packets.find(x=>x.id===id); if(!p) return;
+  document.getElementById("e-detail").style.display="none";
+  const enc=p.enc?`<div class="seg"><div class="t">Encryption</div>${(p.enc_methods||[]).join(" · ")||"detected"}</div>`:"";
+  document.getElementById("detail").innerHTML=
+    `<div class="dtl">
+      <div class="seg"><div class="t">Frame</div>${p.protocol} · ${p.length} bytes · TTL ${p.ttl??"—"} · ${p.timestamp}</div>
+      <div class="seg"><div class="t">Source</div>${p.src_ip||"—"}${p.src_port?":"+p.src_port:""} <span style="color:var(--text3)">[${p.src_class}]</span></div>
+      <div class="seg"><div class="t">Destination</div>${p.dst_ip||"—"}${p.dst_port?":"+p.dst_port:""} <span style="color:var(--text3)">[${p.dst_class}]</span></div>
+      <div class="seg"><div class="t">Service / Info</div>${p.service?p.service+" · ":""}${p.info||"—"}</div>
+      <div class="seg"><div class="t">TCP Flags</div>${p.flags||"—"}</div>
+      ${enc}
+    </div>`;
+  switchTo("detail");
+}
+
+function addAlert(a){
+  if(!a||!a.type) return;
+  alertCount++; document.getElementById("b-alerts").textContent=alertCount;
+  document.getElementById("e-alerts").style.display="none";
+  const el=document.createElement("div");
+  el.className="alert sev-"+(a.severity||"INFO");
+  el.innerHTML=`<div class="top"><span class="ty">${a.type}</span><span class="tm">${a.time||""}</span></div>
+    <div class="ms">${a.message||""}</div>`;
+  const list=document.getElementById("alert-list"); list.prepend(el);
+  while(list.childElementCount>80) list.lastChild.remove();
+}
+
+function updateStats(s){
+  lastStats=s;
+  document.getElementById("s-pkts").textContent=fmt(s.total_packets);
+  document.getElementById("s-pps").textContent=s.pps;
+  document.getElementById("s-data").textContent=bytes(s.total_bytes);
+  document.getElementById("s-conns").textContent=s.connections_est;
+  document.getElementById("s-retr").textContent=s.retransmissions;
+  document.getElementById("s-alerts").textContent=s.alerts_total;
+  if(s.crypto) document.getElementById("s-enc").textContent=(s.crypto.encrypted_pct||0)+"%";
+  renderProtoList(s.protocol_counts||{});
+  renderClassList(s.ipclass_counts||{});
+  renderServices(s.top_services||[]);
+  if(s.crypto) drawGauge(s.crypto.recent_entropy||s.crypto.last_entropy||0);
+  if(s.threat) renderThreat(s.threat);
+  updateTpChart(s.throughput||[]);
+  updateProtoChart(s.protocol_counts||{});
+  renderStatsPane(s);
+}
+function renderProtoList(pc){
+  const tot=Object.values(pc).reduce((a,b)=>a+b,0)||1;
+  const el=document.getElementById("proto-list");
+  const rows=Object.entries(pc).sort((a,b)=>b[1]-a[1]);
+  if(!rows.length){el.innerHTML='<div class="muted">—</div>';return}
+  el.innerHTML=rows.map(([p,c])=>{
+    const col=PROTO_COLOR[p]||"#7d93ad", pct=c/tot*100;
+    return `<div class="row"><span class="swatch" style="background:${col}"></span>
+      <span class="nm">${p}</span><span class="ct">${fmt(c)}</span>
+      <div class="bar" style="width:${pct}%;background:${col};margin-left:17px"></div></div>`;
+  }).join("");
+}
+function renderClassList(cc){
+  const el=document.getElementById("class-list");
+  const col={private:"#31F2A0",public:"#fb923c",loopback:"#7d93ad",multicast:"#8C6BFF",
+    "link-local":"#60a5fa",cgnat:"#fbbf24",reserved:"#7d93ad",broadcast:"#f472b6",unknown:"#3e5267"};
+  const rows=Object.entries(cc).sort((a,b)=>b[1]-a[1]);
+  if(!rows.length){el.innerHTML='<div class="muted">—</div>';return}
+  el.innerHTML=rows.map(([k,c])=>
+    `<div class="row"><span class="swatch" style="background:${col[k]||"#7d93ad"}"></span>
+      <span class="nm">${k}</span><span class="ct">${fmt(c)}</span></div>`).join("");
+}
+function renderServices(sv){
+  const el=document.getElementById("svc-list");
+  if(!sv.length){el.innerHTML='<div class="muted">—</div>';return}
+  const max=sv[0][1]||1;
+  el.innerHTML=sv.map(([n,c])=>
+    `<div class="row"><span class="nm">${n}</span><span class="ct">${fmt(c)}</span>
+      <div class="bar" style="width:${c/max*100}%;flex-basis:100%"></div></div>`).join("");
+}
+function renderThreat(t){
+  document.getElementById("tm-hosts").textContent=(t.hosts_tracked||0)+" hosts tracked";
+  const flagged=(t.malicious||0)+(t.suspicious||0);
+  document.getElementById("tm-flagged").textContent=flagged+" flagged";
+  const clean=Math.max((t.hosts_tracked||0)-flagged,0);
+  document.getElementById("tm-clean").textContent=clean;
+  document.getElementById("tm-susp").textContent=t.suspicious||0;
+  document.getElementById("tm-mal").textContent=t.malicious||0;
+  const tot=Math.max(clean+(t.suspicious||0)+(t.malicious||0),1);
+  document.getElementById("tm-bar").innerHTML=
+    `<i style="width:${clean/tot*100}%;background:var(--green)"></i>`+
+    `<i style="width:${(t.suspicious||0)/tot*100}%;background:var(--amber)"></i>`+
+    `<i style="width:${(t.malicious||0)/tot*100}%;background:var(--red)"></i>`;
+  threatMap={};
+  const top=t.top||[];
+  document.getElementById("e-threats").style.display=top.length?"none":"block";
+  document.getElementById("threat-list").innerHTML=top.map((r,i)=>{
+    threatMap[r.ip]=r.level;
+    const col=LEVEL_COLOR[r.level]||"#7d93ad";
+    return `<div class="tcard"><span class="rank">${i+1}</span>
+      <div><div class="ip">${r.ip}</div><div class="meta">${r.hits} alerts · ${(r.types||[]).slice(0,3).join(", ")}</div></div>
+      <div class="score"><b style="color:${col}">${Math.round(r.score)}</b>
+        <div class="lvl" style="color:${col}">${r.level}</div></div></div>`;
+  }).join("");
+}
+function renderStatsPane(s){
+  const flows=(s.top_flows||[]).map(f=>
+    `<tr><td>${f.a}</td><td style="color:var(--text3)">↔</td><td>${f.b}</td>
+      <td class="num" style="color:var(--accent)">${bytes(f.bytes)}</td></tr>`).join("");
+  const byType=Object.entries(s.alerts_by_type||{}).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>`<div class="kv"><span class="k">${k}</span><span class="v" style="color:var(--amber)">${v}</span></div>`).join("");
+  const c=s.crypto||{};
+  document.getElementById("stats-body").innerHTML=
+    `<div class="kv"><span class="k">Total packets</span><span class="v">${fmt(s.total_packets)}</span></div>
+     <div class="kv"><span class="k">Throughput</span><span class="v">${s.pps} pkt/s</span></div>
+     <div class="kv"><span class="k">Connections est/total</span><span class="v">${s.connections_est} / ${s.connections_total}</span></div>
+     <div class="kv"><span class="k">Retransmissions</span><span class="v" style="color:var(--amber)">${s.retransmissions}</span></div>
+     <div class="kv"><span class="k">Encrypted payloads</span><span class="v" style="color:var(--purple)">${c.encrypted||0} (${c.encrypted_pct||0}%)</span></div>
+     <div class="kv"><span class="k">Avg entropy</span><span class="v">${c.avg_entropy||0} b/B</span></div>
+     <div class="sec" style="margin-top:14px">Top Conversations</div>
+     <table class="flows">${flows||'<tr><td class="empty">none</td></tr>'}</table>
+     <div class="sec" style="margin-top:14px">Alerts by Type</div>
+     ${byType||'<div class="muted">none</div>'}`;
+}
+function pushCrypto(p){
+  cryptoItems.unshift(p); if(cryptoItems.length>60) cryptoItems.pop();
+  document.getElementById("b-crypto").textContent=cryptoItems.length;
+  document.getElementById("e-crypto").style.display="none";
+  const list=document.getElementById("crypto-list");
+  const el=document.createElement("div"); el.className="crow";
+  el.innerHTML=`<div class="l1">${p.src_ip} → ${p.dst_ip}:${p.dst_port||""} <span style="margin-left:auto;color:var(--text3)">${p.length}B</span></div>
+    <div class="m">${(p.enc_methods||["encrypted"]).join(" · ")}</div>`;
+  list.prepend(el);
+  while(list.childElementCount>60) list.lastChild.remove();
+}
+
+let tpChart,protoChart;
+function initCharts(){
+  tpChart=new Chart(document.getElementById("chart-tp"),{
+    type:"line",
+    data:{labels:[],datasets:[{data:[],borderColor:"#31F2A0",borderWidth:1.5,
+      backgroundColor:(ctx)=>{const g=ctx.chart.ctx.createLinearGradient(0,0,0,140);
+        g.addColorStop(0,"rgba(49,242,160,.35)");g.addColorStop(1,"rgba(49,242,160,0)");return g;},
+      fill:true,tension:.35,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{display:false}},
+      scales:{x:{display:false},y:{grid:{color:"#16222f"},ticks:{color:"#5a6e85",font:{size:9},callback:v=>bytes(v)}}}}
+  });
+  protoChart=new Chart(document.getElementById("chart-proto"),{
+    type:"doughnut",
+    data:{labels:[],datasets:[{data:[],borderWidth:0,backgroundColor:[]}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,cutout:"62%",
+      plugins:{legend:{position:"right",labels:{color:"#7d93ad",font:{size:10},boxWidth:9,padding:6}}}}
+  });
+}
+function updateTpChart(tp){
+  if(!tpChart) return;
+  const pts=tp.slice(-40);
+  tpChart.data.labels=pts.map(()=>"");
+  tpChart.data.datasets[0].data=pts.map(p=>p.bytes);
+  tpChart.update("none");
+}
+function updateProtoChart(pc){
+  if(!protoChart) return;
+  const rows=Object.entries(pc).sort((a,b)=>b[1]-a[1]);
+  protoChart.data.labels=rows.map(r=>r[0]);
+  protoChart.data.datasets[0].data=rows.map(r=>r[1]);
+  protoChart.data.datasets[0].backgroundColor=rows.map(r=>PROTO_COLOR[r[0]]||"#7d93ad");
+  protoChart.update("none");
+}
+
+function drawGauge(val){
+  const cv=document.getElementById("gauge"),x=cv.getContext("2d");
+  const W=cv.width,H=cv.height,cx=W/2,cy=H-8,R=86;
+  x.clearRect(0,0,W,H);
+  const a0=Math.PI,a1=2*Math.PI;
+  x.lineWidth=12;x.lineCap="round";
+  x.strokeStyle="#16222f";x.beginPath();x.arc(cx,cy,R,a0,a1);x.stroke();
+  const frac=Math.max(0,Math.min(val/8,1));
+  const col=val>=7.2?"#8C6BFF":val>=5?"#31F2A0":"#34d399";
+  x.strokeStyle=col;x.beginPath();x.arc(cx,cy,R,a0,a0+(a1-a0)*frac);x.stroke();
+  for(let i=0;i<=8;i++){const a=a0+(a1-a0)*(i/8);
+    x.strokeStyle="#2a3a4d";x.lineWidth=1;x.beginPath();
+    x.moveTo(cx+Math.cos(a)*(R-9),cy+Math.sin(a)*(R-9));
+    x.lineTo(cx+Math.cos(a)*(R+9),cy+Math.sin(a)*(R+9));x.stroke();}
+  const at=a0+(a1-a0)*(7.2/8);
+  x.strokeStyle="#f87171";x.lineWidth=2;x.beginPath();
+  x.moveTo(cx+Math.cos(at)*(R-11),cy+Math.sin(at)*(R-11));
+  x.lineTo(cx+Math.cos(at)*(R+11),cy+Math.sin(at)*(R+11));x.stroke();
+  document.getElementById("ent-val").textContent=(val||0).toFixed(2);
+  document.getElementById("ent-val").style.color=col;
+}
+
+const G={nodes:new Map(),edges:new Map(),pulses:[]};
+let gcv,gx,gW,gH;
+function graphInit(){
+  gcv=document.getElementById("graph");gx=gcv.getContext("2d");
+  resizeGraph();new ResizeObserver(resizeGraph).observe(gcv.parentElement);
+  requestAnimationFrame(graphLoop);
+}
+function resizeGraph(){
+  const r=gcv.parentElement.getBoundingClientRect();
+  const dpr=window.devicePixelRatio||1;
+  gW=r.width;gH=r.height;
+  gcv.width=gW*dpr;gcv.height=gH*dpr;gx.setTransform(dpr,0,0,dpr,0,0);
+}
+function gnode(ip,cls){
+  if(!ip) return null;
+  let n=G.nodes.get(ip);
+  if(!n){n={ip,cls,x:gW/2+(Math.random()-.5)*120,y:gH/2+(Math.random()-.5)*120,vx:0,vy:0,heat:0,count:0};
+    G.nodes.set(ip,n);}
+  n.heat=Math.min(n.heat+1,30);n.count++;n.cls=cls;return n;
+}
+function graphFeed(p){
+  document.getElementById("graph-empty").style.display="none";
+  const a=gnode(p.src_ip,p.src_class), b=gnode(p.dst_ip,p.dst_class);
+  if(p.enc) pushCrypto(p);
+  if(!a||!b||a===b) return;
+  const key=p.src_ip+"|"+p.dst_ip;
+  let e=G.edges.get(key);
+  if(!e){e={a,b,heat:0};G.edges.set(key,e);}
+  e.heat=Math.min(e.heat+1,18); if(p.enc) e.enc=true;
+  G.pulses.push({a,b,t:0,col:p.enc?"#8C6BFF":(PROTO_COLOR[p.protocol]||"#31F2A0")});
+  if(G.pulses.length>180) G.pulses.shift();
+  if(G.nodes.size>46){
+    let cold=null;for(const n of G.nodes.values())if(!cold||n.heat<cold.heat)cold=n;
+    if(cold){G.nodes.delete(cold.ip);
+      for(const[k,ed]of G.edges)if(ed.a===cold||ed.b===cold)G.edges.delete(k);}
+  }
+}
+function graphLoop(){
+  const nodes=[...G.nodes.values()];
+  for(const n of nodes){
+    let fx=0,fy=0;
+    for(const m of nodes){if(m===n)continue;
+      let dx=n.x-m.x,dy=n.y-m.y,d2=dx*dx+dy*dy+.01,d=Math.sqrt(d2);
+      const rep=1400/d2; fx+=dx/d*rep; fy+=dy/d*rep;}
+    fx+=(gW/2-n.x)*0.0016; fy+=(gH/2-n.y)*0.0016;
+    n.fx=fx;n.fy=fy;
+  }
+  for(const e of G.edges.values()){
+    let dx=e.b.x-e.a.x,dy=e.b.y-e.a.y,d=Math.sqrt(dx*dx+dy*dy)+.01;
+    const k=(d-86)*0.012;
+    e.a.fx+=dx/d*k; e.a.fy+=dy/d*k; e.b.fx-=dx/d*k; e.b.fy-=dy/d*k;
+  }
+  for(const n of nodes){
+    n.vx=(n.vx+n.fx)*0.82; n.vy=(n.vy+n.fy)*0.82;
+    n.x+=n.vx; n.y+=n.vy;
+    n.x=Math.max(18,Math.min(gW-18,n.x)); n.y=Math.max(26,Math.min(gH-14,n.y));
+    n.heat*=0.985;
+  }
+  for(const[k,e]of G.edges){e.heat*=0.97; if(e.heat<0.4)G.edges.delete(k);}
+  gx.clearRect(0,0,gW,gH);
+  for(const e of G.edges.values()){
+    gx.strokeStyle=e.enc?`rgba(140,107,255,${Math.min(e.heat/18,.7)})`:`rgba(49,242,160,${Math.min(e.heat/18,.55)})`;
+    gx.lineWidth=Math.min(.5+e.heat/9,3);
+    gx.beginPath();gx.moveTo(e.a.x,e.a.y);gx.lineTo(e.b.x,e.b.y);gx.stroke();
+  }
+  for(const pu of G.pulses){
+    pu.t+=0.05; if(pu.t>=1)continue;
+    const x=pu.a.x+(pu.b.x-pu.a.x)*pu.t, y=pu.a.y+(pu.b.y-pu.a.y)*pu.t;
+    gx.fillStyle=pu.col;gx.beginPath();gx.arc(x,y,2.1,0,7);gx.fill();
+  }
+  G.pulses=G.pulses.filter(p=>p.t<1);
+  for(const n of nodes){
+    const lvl=threatMap[n.ip];
+    let col=(n.cls==="private"||n.cls==="loopback"||n.cls==="link-local")?"#31F2A0":"#fb923c";
+    if(lvl) col=LEVEL_COLOR[lvl];
+    const r=4+Math.min(Math.sqrt(n.count),7)+n.heat*0.12;
+    if(lvl==="malicious"){gx.fillStyle="rgba(248,113,113,.18)";
+      gx.beginPath();gx.arc(n.x,n.y,r+7,0,7);gx.fill();}
+    gx.fillStyle=col;gx.beginPath();gx.arc(n.x,n.y,r,0,7);gx.fill();
+    gx.strokeStyle="rgba(0,0,0,.5)";gx.lineWidth=1;gx.stroke();
+    if(r>9||lvl){gx.fillStyle="#9fb3c8";gx.font="9px monospace";gx.textAlign="center";
+      gx.fillText(n.ip,n.x,n.y-r-4);}
+  }
+  requestAnimationFrame(graphLoop);
+}
+
+function tab(el){switchTo(el.dataset.pane);}
+function switchTo(name){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on",t.dataset.pane===name));
+  document.querySelectorAll(".pane").forEach(p=>p.classList.toggle("on",p.id==="p-"+name));
+}
+function togglePause(){paused=!paused;
+  document.getElementById("btn-pause").textContent=paused?"▶ Resume":"⏸ Pause";
+  if(!paused) rebuildTable();}
+function clearAll(){
+  packets=[];cryptoItems=[];alertCount=0;selId=null;
+  G.nodes.clear();G.edges.clear();G.pulses=[];threatMap={};
+  ["tbody","alert-list","crypto-list","threat-list","detail"].forEach(id=>document.getElementById(id).innerHTML="");
+  ["b-alerts","b-crypto"].forEach(id=>document.getElementById(id).textContent="0");
+  ["e-threats","e-alerts","e-crypto","e-detail"].forEach(id=>document.getElementById(id).style.display="block");
+  document.getElementById("graph-empty").style.display="grid";
+}
+
+function fmt(n){return (n||0).toLocaleString();}
+function bytes(b){b=b||0;if(b<1024)return b+" B";if(b<1048576)return (b/1024).toFixed(1)+" KB";return (b/1048576).toFixed(2)+" MB";}
+
+// Boot core first so a CDN/chart failure can never blank the live feed
+graphInit();
+connect();
+function bootCharts(){ try{ if(window.Chart){ initCharts(); if(lastStats){updateTpChart(lastStats.throughput||[]);updateProtoChart(lastStats.protocol_counts||{});} } }catch(e){ console.warn("charts unavailable:",e); } }
+if(window.Chart){ bootCharts(); } else { window.addEventListener("load", bootCharts); }
+</script>
+</body>
+</html>

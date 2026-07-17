@@ -1,0 +1,52 @@
+# ─── Virtual environments (the big one — never commit these) ───
+.venv/
+venv/
+env/
+ENV/
+
+# ─── Python bytecode & caches ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ─── Test / tooling caches ───
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ─── Build / packaging artifacts ───
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ─── This project's runtime output (regenerated each run) ───
+data/captures/*.csv
+data/captures/*.txt
+reports/output/*.html
+reports/output/*.json
+*.pcap
+
+# ...but keep the empty folders so the structure survives a clone
+!data/captures/.gitkeep
+!reports/output/.gitkeep
+
+# ─── Environment variables / secrets ───
+.env
+.env.*
+!.env.example
+backend/.env
+
+# ─── Platform CLI local state ───
+.vercel/
+.render/
+
+# ─── Editor / OS junk ───
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

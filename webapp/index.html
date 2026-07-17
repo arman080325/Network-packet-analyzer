@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NetScope — Live Network Threat Console</title>
+<meta name="description" content="Real-time network packet analysis, anomaly detection and threat scoring console." />
+<meta property="og:title" content="NetScope — Live Network Threat Console" />
+<meta property="og:description" content="Real-time packet capture, anomaly detection, encryption fingerprinting and host threat scoring — streamed live over WebSocket." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="app-icon-512.png" />
+<meta name="theme-color" content="#060911" />
+<link rel="icon" type="image/svg+xml" href="favicon-tile.svg">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="tokens-extension.css" />
+<link rel="stylesheet" href="radar-circle.css" />
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div id="scanline" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div class="brand-text">
+      <span class="brand-name">NetScope</span>
+      <span class="brand-tag">Live Network Threat Console</span>
+    </div>
+  </div>
+
+  <div class="status-cluster">
+    <div class="stat-chip">
+      <span class="stat-chip-label">Packets</span>
+      <span class="stat-chip-value" id="stat-packets">0</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-chip-label">Pkt/s</span>
+      <span class="stat-chip-value" id="stat-pps">0</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-chip-label">Encrypted</span>
+      <span class="stat-chip-value" id="stat-enc">0%</span>
+    </div>
+    <div class="stat-chip">
+      <span class="stat-chip-label">Uptime</span>
+      <span class="stat-chip-value" id="stat-uptime">00:00:00</span>
+    </div>
+  </div>
+
+  <div class="conn-cluster">
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">
+      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
+      </svg>
+    </button>
+    <button id="conn-indicator" class="conn-indicator" type="button" aria-haspopup="dialog">
+      <span class="conn-dot" id="conn-dot"></span>
+      <span id="conn-label">Connecting…</span>
+    </button>
+  </div>
+</header>
+
+<dialog id="conn-dialog">
+  <form method="dialog" id="conn-form">
+    <h2>Backend connection</h2>
+    <p class="hint">Point this console at your deployed NetScope backend (Render URL) or a local instance.</p>
+    <label for="ws-url-input">WebSocket URL</label>
+    <input id="ws-url-input" type="text" placeholder="wss://your-backend.onrender.com/ws" autocomplete="off" />
+    <div class="dialog-actions">
+      <button type="button" id="conn-cancel" class="btn-ghost">Cancel</button>
+      <button type="submit" id="conn-connect" class="btn-primary">Connect</button>
+    </div>
+  </form>
+</dialog>
+
+<main class="grid" id="main-content">
+
+  <section class="panel panel-map" aria-label="Live network map">
+    <div class="panel-head">
+      <h2>Network Map</h2>
+      <div class="legend">
+        <span class="legend-item"><i class="dot clean"></i>Clean</span>
+        <span class="legend-item"><i class="dot suspicious"></i>Suspicious</span>
+        <span class="legend-item"><i class="dot malicious"></i>Malicious</span>
+      </div>
+    </div>
+    <div class="radar-wrap">
+      <div class="radar-sweep" aria-hidden="true"></div>
+      <div class="radar-rings" aria-hidden="true"></div>
+      <svg id="map-svg" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+  </section>
+
+  <section class="panel panel-gauges" aria-label="Live measurements">
+    <div class="panel-head"><h2>Signal</h2></div>
+
+    <div class="gauge-block">
+      <div class="gauge-label">
+        <span>Payload Entropy</span>
+        <span id="entropy-value">0.00 bits/B</span>
+      </div>
+      <div class="gauge-track"><div class="gauge-fill" id="entropy-fill"></div><div class="gauge-threshold"></div></div>
+    </div>
+
+    <div class="gauge-block">
+      <div class="gauge-label"><span>Threat Posture</span><span id="threat-total">0 hosts</span></div>
+      <div class="posture-bar">
+        <div class="posture-seg clean" id="posture-clean"></div>
+        <div class="posture-seg suspicious" id="posture-suspicious"></div>
+        <div class="posture-seg malicious" id="posture-malicious"></div>
+      </div>
+      <div class="posture-legend">
+        <span><i class="dot clean"></i><span id="count-clean">0</span> clean</span>
+        <span><i class="dot suspicious"></i><span id="count-suspicious">0</span> suspicious</span>
+        <span><i class="dot malicious"></i><span id="count-malicious">0</span> malicious</span>
+      </div>
+    </div>
+
+    <div class="gauge-block">
+      <div class="gauge-label"><span>Throughput</span><span id="throughput-value">0 B/s</span></div>
+      <canvas id="throughput-canvas" width="280" height="70"></canvas>
+    </div>
+
+    <div class="gauge-block">
+      <div class="gauge-label"><span>Protocol Mix</span></div>
+      <div class="protocol-bars" id="protocol-bars"></div>
+    </div>
+  </section>
+
+  <section class="panel panel-tabs" aria-label="Threats and alerts">
+    <div class="panel-head tabs" role="tablist">
+      <button class="tab active" role="tab" data-tab="threats" aria-selected="true">Threats</button>
+      <button class="tab" role="tab" data-tab="alerts" aria-selected="false">Alerts</button>
+      <button class="tab" role="tab" data-tab="crypto" aria-selected="false">Crypto</button>
+      <button class="tab" role="tab" data-tab="detail" aria-selected="false">Detail</button>
+      <button class="tab" role="tab" data-tab="stats" aria-selected="false">Stats</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-threats">
+      <table class="data-table"><thead><tr><th>Host</th><th>Class</th><th>Score</th><th>Status</th></tr></thead>
+      <tbody id="threat-table-body"></tbody></table>
+    </div>
+
+    <div class="tab-panel" id="tab-alerts">
+      <ul class="feed-list" id="alerts-feed"></ul>
+    </div>
+
+    <div class="tab-panel" id="tab-crypto">
+      <ul class="feed-list" id="crypto-feed"></ul>
+    </div>
+
+    <div class="tab-panel" id="tab-detail">
+      <pre class="detail-view" id="detail-view">Select a row in the packet stream to inspect it.</pre>
+    </div>
+
+    <div class="tab-panel" id="tab-stats">
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+  </section>
+
+  <section class="panel panel-stream" aria-label="Live packet stream">
+    <div class="panel-head">
+      <h2>Packet Stream</h2>
+      <input id="stream-filter" type="text" placeholder="filter: ip:10.0.0.1  proto:tcp  port:443  enc:true" autocomplete="off" />
+    </div>
+    <div class="stream-table-wrap">
+      <table class="data-table stream-table">
+        <thead><tr><th>Time</th><th>Proto</th><th>Src</th><th>Dst</th><th>Len</th><th>Info</th></tr></thead>
+        <tbody id="stream-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <span>NetScope — built by Arman Ahemad Khan</span>
+  <a href="https://github.com/arman080325" target="_blank" rel="noopener">github.com/arman080325</a>
+</footer>
+
+<script src="app.js"></script>
+<script src="theme-enhancements.js"></script>
+<script src="radar-circle.js"></script>
+</body>
+</html>

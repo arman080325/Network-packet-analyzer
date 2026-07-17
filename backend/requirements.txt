@@ -1,0 +1,7 @@
+# backend/app.py is stdlib-only (socket, threading, hashlib, base64, json) —
+# no Flask, no flask-sock, no gunicorn/eventlet needed for the web server itself.
+
+cryptography>=41.0.0  # optional: stronger encrypted-payload detection
+
+# Only needed if ALLOW_LIVE_CAPTURE=1 is used on a host that supports raw sockets
+scapy>=2.5.0

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="NetScope icon mark">
+  <title>NetScope icon mark</title>
+  <!-- outer hex ring — the "net" boundary -->
+  <polygon points="50,3 90.7,26.5 90.7,73.5 50,97 9.3,73.5 9.3,26.5"
+    fill="#060911" stroke="#31F2A0" stroke-width="6" stroke-linejoin="round"/>
+  <!-- inner hex — the "scope" aperture -->
+  <polygon points="50,29 68.19,39.5 68.19,60.5 50,71 31.81,60.5 31.81,39.5"
+    fill="#31F2A0"/>
+  <!-- packet node accent — a single flagged vertex, the brand's signature detail -->
+  <circle cx="90.7" cy="26.5" r="7" fill="#8C6BFF"/>
+</svg>

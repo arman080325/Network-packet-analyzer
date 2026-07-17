@@ -1,0 +1,40 @@
+{
+  "name": "NetScope Brand Tokens",
+  "version": "1.0.0",
+  "color": {
+    "dark": {
+      "void":    "#060911",
+      "surface": "#0F1726",
+      "signal":  "#31F2A0",
+      "warn":    "#FFB13C",
+      "danger":  "#FF3E6C",
+      "accent":  "#8C6BFF",
+      "text":    "#EAF1FB",
+      "muted":   "#8493B2"
+    },
+    "light": {
+      "void":    "#F4F7FC",
+      "surface": "#FFFFFF",
+      "signal":  "#0EA573",
+      "warn":    "#B26A00",
+      "danger":  "#D6274F",
+      "accent":  "#6438E0",
+      "text":    "#101826",
+      "muted":   "#5B6884"
+    }
+  },
+  "typography": {
+    "display": ["Chakra Petch", "JetBrains Mono", "ui-monospace", "monospace"],
+    "mono":    ["JetBrains Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+    "body":    ["Inter", "system-ui", "-apple-system", "sans-serif"]
+  },
+  "logo": {
+    "iconMark": "icon-mark.svg",
+    "iconMarkSimple": "icon-mark-simple.svg",
+    "horizontalDark": "logo-horizontal.svg",
+    "horizontalLight": "logo-horizontal-on-light.svg",
+    "stacked": "logo-stacked.svg",
+    "faviconSource": "favicon-tile.svg",
+    "appIconSource": "app-icon.svg"
+  }
+}

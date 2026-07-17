@@ -1,0 +1,73 @@
+/* ============================================================
+   NetScope — token extension layer
+   Additive only. Defines NEW custom properties and NEW opt-in
+   utility classes. Does not redeclare or override any selector
+   in style.css. Safe to include or delete independently.
+
+   Load order:  style.css  →  tokens-extension.css  →  (JS unaffected)
+   ============================================================ */
+
+:root{
+  /* ── Spacing scale ──────────────────────────────────────────
+     style.css currently hardcodes spacing per-rule (12px 16px,
+     14px 16px, 9px 13px...). These name the values already in
+     use so future rules can reference a scale instead of a new
+     magic number. Nothing existing is rewired to these — that
+     would mean touching working CSS for no visual change. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* ── Motion tokens ───────────────────────────────────────────
+     style.css uses consistent durations already (.15s, .2s, .3s)
+     but as literals in ~15 places. Naming them here means new
+     component work can stay consistent without hunting the file. */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
+  --ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --ease-out: cubic-bezier(0, 0, .2, 1);
+
+  /* ── Elevation scale ─────────────────────────────────────────
+     style.css defines one --shadow for panels/dialogs. This adds
+     two more tiers for anything that needs to sit above a panel
+     (tooltips already improvise inline; toasts, popovers would
+     need this). Dark-mode values shown; light overrides below. */
+  --elevation-1: 0 2px 8px -4px rgba(0,0,0,.4);
+  --elevation-2: var(--shadow); /* alias — reuse existing panel shadow */
+  --elevation-3: 0 28px 70px -24px rgba(0,0,0,.75), 0 4px 16px rgba(0,0,0,.4);
+}
+
+:root[data-theme="light"]{
+  --elevation-1: 0 2px 8px -4px rgba(30,42,64,.14);
+  --elevation-3: 0 24px 60px -20px rgba(30,42,64,.28), 0 4px 14px rgba(30,42,64,.10);
+}
+
+/* ── Opt-in utility classes ─────────────────────────────────
+   None of these are referenced by app.js or theme-enhancements.js.
+   They're available for future markup — add the class attribute
+   by hand when you want the effect; nothing applies automatically. */
+
+/* Elevated variant for .panel — e.g. a panel being dragged, or a
+   detail view promoted to focus. Add class="panel elevated". */
+.panel.elevated{ box-shadow: var(--elevation-3); }
+
+/* Consistent tooltip/menu popover shadow, since [data-tooltip]
+   currently reuses --shadow inline. Opt-in only. */
+.popover-elevated{ box-shadow: var(--elevation-3); }
+
+/* Standardized hover-lift using the named motion tokens, for any
+   new interactive element that wants the same feel as .stat-chip
+   and .btn-primary without re-deriving the timing by hand. */
+.lift-on-hover{
+  transition: transform var(--duration-fast) var(--ease-out),
+              border-color var(--duration-base) var(--ease-standard);
+}
+.lift-on-hover:hover{ transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce){
+  .lift-on-hover{ transition: none; }
+}

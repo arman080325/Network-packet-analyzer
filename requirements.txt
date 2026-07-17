@@ -1,0 +1,12 @@
+# ── NetScope — Network Packet Analyzer ──────────────────────────────────────
+# The live dashboard (frontend/server.py) and demo mode use ONLY the Python
+# standard library — no extra packages required for them.
+#
+# scapy is needed only for LIVE packet capture (sudo). cryptography is optional
+# and improves Fernet/AES detection in the crypto module.
+
+scapy>=2.5.0          # live capture + pcap parsing (required for live mode only)
+cryptography>=41.0.0  # optional: stronger encrypted-payload detection
+
+# Dev / testing
+pytest>=7.0.0         # run: python -m pytest tests/ -v

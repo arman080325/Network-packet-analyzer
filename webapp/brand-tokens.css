@@ -1,0 +1,36 @@
+/* ============================================================
+   NetScope — brand tokens (identity layer)
+   Distinct from style.css's UI tokens: this file is the portable
+   source of truth for brand color + type, meant to travel with
+   the logo files into other surfaces (marketing site, deck,
+   README badges, partner embeds) where style.css isn't loaded.
+   Values match style.css's --void/--signal/--warn/--danger/--accent
+   exactly — this is not a second palette, just a named export.
+   ============================================================ */
+
+:root{
+  /* Dark-mode brand palette (primary — product default) */
+  --brand-void-dark:  #060911;
+  --brand-surface-dark: #0F1726;
+  --brand-signal-dark: #31F2A0;  /* primary brand color */
+  --brand-warn-dark:   #FFB13C;
+  --brand-danger-dark: #FF3E6C;
+  --brand-accent-dark: #8C6BFF;  /* secondary / packet-node accent */
+  --brand-text-dark:   #EAF1FB;
+  --brand-muted-dark:  #8493B2;
+
+  /* Light-mode brand palette (secondary — print, light UI, partner sites) */
+  --brand-void-light:   #F4F7FC;
+  --brand-surface-light:#FFFFFF;
+  --brand-signal-light: #0EA573;
+  --brand-warn-light:   #B26A00;
+  --brand-danger-light: #D6274F;
+  --brand-accent-light: #6438E0;
+  --brand-text-light:   #101826;
+  --brand-muted-light:  #5B6884;
+
+  /* Typography */
+  --brand-font-display: 'Chakra Petch', 'JetBrains Mono', ui-monospace, monospace;
+  --brand-font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --brand-font-body:    'Inter', system-ui, -apple-system, sans-serif;
+}

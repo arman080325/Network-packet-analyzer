@@ -1,0 +1,88 @@
+/* ============================================================
+   NetScope — circular radar fix (v2)
+   Loads AFTER style.css (and tokens-extension.css, if used).
+
+   v1 of this file used CSS container query units (cqw/cqh) to
+   size the sweep/rings/grid as a perfect square without JS. That
+   approach is dropped here: `container-type: size` needs the
+   container to have a stable block-size independent of its
+   content, and .radar-wrap gets its height from `flex:1` inside a
+   flex column — a known trouble spot for size containment across
+   browsers, and not worth the risk for a decorative overlay.
+
+   v2: radar-circle.js measures .radar-wrap with a ResizeObserver
+   and sets --radar-diameter (a plain pixel value) on it. This file
+   just consumes that variable. No container queries, no @supports
+   branching — one code path, works everywhere ResizeObserver does
+   (every browser released since 2020).
+
+   Does not touch #map-svg, node classes, or any selector app.js /
+   theme-enhancements.js rely on.
+   ============================================================ */
+
+.radar-wrap{
+  position: relative;
+  overflow: hidden; /* nothing escapes the rect even before JS sets a size */
+}
+
+/* Shared circular frame for sweep, rings, and the grid overlay.
+   --radar-diameter is set by radar-circle.js on first paint and
+   on every resize; the 100% fallback only applies for the single
+   frame before that JS runs (imperceptible, and still fully
+   clipped by overflow:hidden above). */
+.radar-sweep,
+.radar-rings,
+.radar-grid{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--radar-diameter, 100%);
+  height: var(--radar-diameter, 100%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  clip-path: circle(50%);
+  pointer-events: none;
+}
+
+/* Sweep — same colors/duration as the original, now rotating
+   around a true circle instead of a stretched rectangle. */
+.radar-sweep{
+  background: conic-gradient(from 0deg, rgba(49,242,160,.24), rgba(140,107,255,.08) 12%, transparent 26%);
+  mix-blend-mode: screen;
+  animation: radarSweepCircular 6s linear infinite;
+}
+@keyframes radarSweepCircular{
+  to{ transform: translate(-50%, -50%) rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce){
+  .radar-sweep{ animation: none; opacity: .3; }
+}
+
+/* Rings — four evenly-spaced concentric circles at 25/50/75/100%
+   of the true radius, plus a brighter rim at the edge. */
+.radar-rings{
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(49,242,160,.07) 24.3% 24.6%, transparent 24.9%),
+    radial-gradient(circle at 50% 50%, transparent 0 49%, rgba(49,242,160,.06) 49.3% 49.6%, transparent 49.9%),
+    radial-gradient(circle at 50% 50%, transparent 0 74%, rgba(49,242,160,.05) 74.3% 74.6%, transparent 74.9%),
+    radial-gradient(circle at 50% 50%, transparent 0 98%, rgba(49,242,160,.32) 98.6% 99%, transparent 99.4%);
+}
+
+/* Grid overlay — radial spokes + degree marks, injected as a
+   small inline SVG by radar-circle.js so lines stay crisp at any
+   size (a CSS conic-gradient can't draw hairline spokes cleanly). */
+.radar-grid svg{ display: block; width: 100%; height: 100%; overflow: visible; }
+.radar-grid .spoke{ stroke: rgba(140,160,200,.14); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.radar-grid .spoke.cardinal{ stroke: rgba(140,160,200,.30); }
+.radar-grid .tick-label{
+  font-family: var(--mono, 'JetBrains Mono', monospace);
+  font-size: 3.4px; /* scales with the 0-100 viewBox, tiny by design */
+  fill: var(--dim, #5B6884);
+}
+
+/* Rim glow for readability against the panel background. */
+.radar-grid::after{
+  content:'';
+  position:absolute; inset:0; border-radius:50%;
+  box-shadow: inset 0 0 40px rgba(49,242,160,.06), 0 0 30px rgba(49,242,160,.05);
+}

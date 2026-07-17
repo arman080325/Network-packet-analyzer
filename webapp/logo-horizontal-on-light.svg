@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 100" role="img" aria-label="NetScope logo">
+  <title>NetScope</title>
+  <g transform="translate(2,2) scale(0.94)">
+    <polygon points="50,3 90.7,26.5 90.7,73.5 50,97 9.3,73.5 9.3,26.5"
+      fill="#FFFFFF" stroke="#0EA573" stroke-width="6" stroke-linejoin="round"/>
+    <polygon points="50,29 68.19,39.5 68.19,60.5 50,71 31.81,60.5 31.81,39.5"
+      fill="#0EA573"/>
+    <circle cx="90.7" cy="26.5" r="7" fill="#6438E0"/>
+  </g>
+  <text x="112" y="68" font-family="'Chakra Petch','JetBrains Mono',ui-monospace,monospace"
+    font-weight="700" font-size="52" letter-spacing="0.5">
+    <tspan fill="#101826">Net</tspan><tspan fill="#0EA573">Scope</tspan>
+  </text>
+</svg>
