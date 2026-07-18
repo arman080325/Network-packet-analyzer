@@ -53,13 +53,11 @@
   let reconnectTimer = null;
   let reconnectDelay = 1500;
 
-  function guessDefaultWsUrl() {
+function guessDefaultWsUrl() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return saved;
-    // Same-origin fallback (useful if you ever host backend + frontend together)
-    const proto = location.protocol === "https:" ? "wss:" : "ws:";
-    return `${proto}//${location.host}/ws`;
-  }
+    return "wss://netscope-backend-ekkj.onrender.com/ws";
+}
 
   function setConnState(state) {
     // state: "connecting" | "live" | "down"
