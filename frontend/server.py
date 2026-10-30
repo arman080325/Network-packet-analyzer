@@ -344,15 +344,20 @@ def http_server(host, port, ws_port):
 
         def do_GET(self):
             path = self.path.split("?")[0]
-            if path in ("/", "/dashboard.html"):
+            webapp_dir = os.path.join(ROOT, "webapp")
+            if path in ("/", "/dashboard.html", "/index.html"):
+                target_html = os.path.join(webapp_dir, "index.html")
+                if not os.path.exists(target_html):
+                    target_html = DASHBOARD_HTML
                 try:
-                    with open(DASHBOARD_HTML, "r", encoding="utf-8") as f:
+                    with open(target_html, "r", encoding="utf-8") as f:
                         html = f.read()
                     # Inject the WS port the server is actually using
                     html = html.replace("__WS_PORT__", str(ws_port))
+                    html = html.replace("</head>", f"<script>window.__WS_PORT__ = {ws_port};</script></head>")
                     body = html.encode("utf-8")
                 except FileNotFoundError:
-                    self.send_error(404, "dashboard.html not found")
+                    self.send_error(404, "index.html not found")
                     return
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -364,7 +369,30 @@ def http_server(host, port, ws_port):
                 self.end_headers()
                 self.wfile.write(b"ok")
             else:
-                self.send_error(404)
+                rel = path.lstrip("/")
+                asset_file = os.path.join(webapp_dir, rel)
+                if os.path.exists(asset_file) and os.path.isfile(asset_file):
+                    try:
+                        import mimetypes
+                        ctype, _ = mimetypes.guess_type(asset_file)
+                        if not ctype:
+                            if asset_file.endswith(".css"): ctype = "text/css"
+                            elif asset_file.endswith(".js"): ctype = "application/javascript"
+                            elif asset_file.endswith(".webmanifest"): ctype = "application/manifest+json"
+                            else: ctype = "application/octet-stream"
+                        if ctype.startswith("text/") or ctype == "application/javascript":
+                            ctype += "; charset=utf-8"
+                        with open(asset_file, "rb") as f:
+                            body = f.read()
+                        self.send_response(200)
+                        self.send_header("Content-Type", ctype)
+                        self.send_header("Content-Length", str(len(body)))
+                        self.end_headers()
+                        self.wfile.write(body)
+                    except Exception:
+                        self.send_error(500)
+                else:
+                    self.send_error(404)
 
     httpd = ThreadingHTTPServer((host, port), Handler)
     httpd.serve_forever()

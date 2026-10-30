@@ -1,0 +1,10 @@
+{
+  "description": "Monitor network traffic, inspect packets, and investigate security indicators with clear analytics for network engineers and security teams.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
