@@ -342,7 +342,16 @@ export default function App() {
   const navigate=(id:PageId)=>{setPage(id);setMobileOpen(false);window.scrollTo(0,0)}
   return <div className={`app ${theme} ${collapsed?'collapsed':''}`}>
     <aside className={`sidebar ${mobileOpen?'mobile-open':''}`}>
-      <div className="brand"><span className="logo"><i/><i/><i/></span><b>Net<span>Scope</span></b><button className="collapse" onClick={()=>setCollapsed(!collapsed)} aria-label="Collapse sidebar"><Icon name="chevron" size={16}/></button></div>
+      <div className="brand" onClick={() => collapsed && setCollapsed(false)}>
+        {collapsed ? (
+          <img src={theme === 'dark' ? '/NetScope_Short_Icon_Dark_Mode.png' : '/NetScope_Short_Icon_Light_Mode.png'} alt="NetScope" width={28} height={28} style={{ objectFit: 'contain' }} />
+        ) : (
+          <img src={theme === 'dark' ? '/NetScope_Full_Logo_Dark_Mode.png' : '/NetScope_Full_Logo_Light_Mode.png'} alt="NetScope" height={28} style={{ objectFit: 'contain', maxWidth: 150 }} />
+        )}
+        <button className="collapse" onClick={(e) => { e.stopPropagation(); setCollapsed(!collapsed); }} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
+          <Icon name="chevron" size={16}/>
+        </button>
+      </div>
       <nav>{nav.map(group=><div className="nav-group" key={group.label}><label>{group.label}</label>{group.items.map(item=><button title={item.name} key={item.id} className={page===item.id?'active':''} onClick={()=>navigate(item.id)}><Icon name={item.icon}/><span>{item.name}</span>{item.id==='alerts'&&<em>12</em>}</button>)}</div>)}</nav>
       <div className="connection"><div><span className="online"/><b>Backend connected</b></div><p>Demo mode · 42 pps</p></div>
     </aside>

@@ -7,16 +7,15 @@
   <meta name="description" content="Production-quality network observability, packet intelligence, and anomaly detection interface." />
   <meta name="theme-color" content="#0b1020" />
   
-  <link rel="icon" type="image/svg+xml" href="favicon-tile.svg" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="NetScope_Short_Icon_Dark_Mode.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="NetScope_Short_Icon_Dark_Mode.png" />
   <link rel="manifest" href="site.webmanifest" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=2.2" />
+  <link rel="stylesheet" href="style.css?v=2.3" />
 </head>
 <body>
 
@@ -200,10 +199,17 @@
   <div id="app-root" class="app dark">
     <!-- Desktop & Mobile Sidebar Navigation -->
     <aside id="app-sidebar" class="sidebar" aria-label="Main navigation">
-      <div class="brand">
-        <span class="logo" aria-hidden="true"><i></i><i></i><i></i></span>
-        <b>Net<span>Scope</span></b>
-        <button id="sidebar-collapse-btn" class="collapse-btn" type="button" aria-label="Toggle sidebar collapse" title="Toggle sidebar">
+      <div class="brand" id="brand-header">
+        <a href="#overview" class="brand-link" aria-label="NetScope Dashboard" title="NetScope Dashboard">
+          <!-- Full Logo for Expanded Sidebar: Dark & Light Mode -->
+          <img class="brand-logo-full dark-only" src="NetScope_Full_Logo_Dark_Mode.png" alt="NetScope" height="30" />
+          <img class="brand-logo-full light-only" src="NetScope_Full_Logo_Light_Mode.png" alt="NetScope" height="30" />
+          
+          <!-- Short Mark for Collapsed Sidebar: Dark & Light Mode -->
+          <img class="brand-logo-short dark-only" src="NetScope_Short_Icon_Dark_Mode.png" alt="NetScope" width="30" height="30" />
+          <img class="brand-logo-short light-only" src="NetScope_Short_Icon_Light_Mode.png" alt="NetScope" width="30" height="30" />
+        </a>
+        <button id="sidebar-collapse-btn" class="collapse-btn" type="button" aria-label="Toggle sidebar collapse" title="Collapse sidebar">
           <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-chevron" /></svg>
         </button>
       </div>
@@ -290,6 +296,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=2.2"></script>
+  <script src="app.js?v=2.3"></script>
 </body>
 </html>

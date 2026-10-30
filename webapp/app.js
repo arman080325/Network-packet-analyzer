@@ -552,6 +552,11 @@
     state.sidebarCollapsed = !state.sidebarCollapsed;
     localStorage.setItem(STORAGE_SIDEBAR_KEY, String(state.sidebarCollapsed));
     $('#app-root').classList.toggle('collapsed', state.sidebarCollapsed);
+    const btn = $('#sidebar-collapse-btn');
+    if (btn) {
+      btn.title = state.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
+      btn.setAttribute('aria-label', state.sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar');
+    }
   }
 
   function openMobileMenu() {
@@ -786,7 +791,7 @@
         <div class="packet-workspace ${!selectedPkt ? 'no-inspector' : ''}" style="padding: 0 14px 14px;">
           <!-- Dense Packet Table -->
           <div class="packet-list card" style="background: var(--surface-2); border-color: var(--border-soft);">
-            <div class="table-scroll" id="packet-table-container" style="max-height: 480px;">
+            <div class="table-scroll" id="packet-table-container">
               <table class="data-table packet-table">
                 <thead>
                   <tr>
@@ -1170,7 +1175,7 @@
 
       <div class="packet-workspace">
         <div class="card packet-list">
-          <div class="table-scroll" style="max-height: 600px;">
+          <div class="table-scroll">
             <table class="data-table packet-table">
               <thead>
                 <tr>
@@ -2205,8 +2210,13 @@
   //  Event Listeners & Interaction Wiring
   // ══════════════════════════════════════════════════════════════════════════
   function attachGlobalListeners() {
-    // Sidebar collapse button
+    // Sidebar collapse/expand button & brand click in collapsed state
     $('#sidebar-collapse-btn')?.addEventListener('click', toggleSidebarCollapse);
+    $('#brand-header')?.addEventListener('click', (e) => {
+      if (state.sidebarCollapsed && !e.target.closest('#sidebar-collapse-btn')) {
+        toggleSidebarCollapse();
+      }
+    });
 
     // Mobile menu toggles
     $('#mobile-menu-btn')?.addEventListener('click', openMobileMenu);

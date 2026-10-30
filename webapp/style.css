@@ -196,66 +196,62 @@ html, body {
   overflow: hidden;
 }
 
+/* Brand Header & NetScope Logo Pack */
 .brand {
   height: 64px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 16px 0 20px;
+  justify-content: space-between;
+  padding: 0 14px 0 16px;
   border-bottom: 1px solid var(--border);
   user-select: none;
   flex-shrink: 0;
+  gap: 8px;
 }
 
-.brand > b {
-  font-size: 18px;
-  letter-spacing: -0.3px;
-  white-space: nowrap;
-  font-weight: 700;
-}
-.brand > b span {
-  color: var(--teal);
+.brand-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  cursor: pointer;
+  flex: 1;
 }
 
-.logo {
-  width: 30px;
-  height: 30px;
-  position: relative;
+.brand-logo-full {
+  height: 28px;
+  width: auto;
+  max-width: 155px;
+  object-fit: contain;
   display: block;
-  flex: none;
 }
-.logo i {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border: 2px solid var(--teal);
-  border-radius: 50%;
-  box-sizing: border-box;
+
+.brand-logo-short {
+  display: none !important;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
-.logo i:first-child { left: 1px; top: 11px; }
-.logo i:nth-child(2) { right: 2px; top: 2px; }
-.logo i:nth-child(3) { right: 2px; bottom: 3px; }
-.logo::before, .logo::after {
-  content: "";
-  position: absolute;
-  width: 15px;
-  height: 1.5px;
-  background: var(--teal);
-  left: 8px;
-  top: 12px;
-  transform: rotate(-28deg);
-  transform-origin: left;
+
+/* Theme Switching for Logos */
+.dark-only { display: block; }
+.light-only { display: none !important; }
+
+[data-theme="light"] .dark-only,
+.app.light .dark-only {
+  display: none !important;
 }
-.logo::after {
-  top: 18px;
-  transform: rotate(28deg);
+[data-theme="light"] .light-only,
+.app.light .light-only {
+  display: block !important;
 }
 
 .collapse-btn {
   margin-left: auto;
-  width: 30px;
-  height: 30px;
-  border: 0;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--muted);
   display: flex;
@@ -264,18 +260,17 @@ html, body {
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all 0.15s ease;
+  flex-shrink: 0;
 }
 .collapse-btn svg {
   display: block;
   transform: rotate(180deg);
   transition: transform 0.2s ease;
 }
-.collapsed .collapse-btn svg {
-  transform: rotate(0deg);
-}
 .collapse-btn:hover, .icon-btn:hover, .mobile-menu-btn:hover {
   background: var(--surface-2);
   color: var(--text);
+  border-color: var(--border-soft);
 }
 
 .sidebar nav, #sidebar-nav {
@@ -419,15 +414,51 @@ html, body {
   margin-left: 68px;
 }
 .collapsed .brand {
-  padding: 0 19px;
+  padding: 0 8px;
+  justify-content: space-between;
 }
-.collapsed .brand > b,
+.collapsed .brand-logo-full {
+  display: none !important;
+}
+.collapsed .dark-only.brand-logo-short {
+  display: block !important;
+}
+[data-theme="light"] .collapsed .dark-only.brand-logo-short,
+.app.light.collapsed .dark-only.brand-logo-short {
+  display: none !important;
+}
+[data-theme="light"] .collapsed .light-only.brand-logo-short,
+.app.light.collapsed .light-only.brand-logo-short {
+  display: block !important;
+}
+
 .collapsed .nav-group > label,
 .collapsed .nav-item span,
 .collapsed .nav-item em,
-.collapsed .sidebar-connection,
-.collapsed .collapse-btn {
+.collapsed .sidebar-connection {
   display: none !important;
+}
+
+/* Expand Button in Collapsed State */
+.collapsed .collapse-btn {
+  display: flex !important;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  color: var(--teal);
+  border-radius: var(--radius-sm);
+  align-items: center;
+  justify-content: center;
+}
+.collapsed .collapse-btn:hover {
+  background: var(--teal-soft);
+  color: var(--teal);
+  border-color: var(--teal);
+}
+.collapsed .collapse-btn svg {
+  transform: rotate(0deg); /* Points right -> EXPAND */
 }
 .collapsed .nav-item {
   justify-content: center;
@@ -1401,24 +1432,39 @@ h1.page-title {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 350px;
   gap: 14px;
-  align-items: start;
+  align-items: stretch;
 }
 .packet-workspace.no-inspector {
   grid-template-columns: 1fr;
 }
 .packet-list {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  align-self: start;
+  height: 100%;
+  min-height: 380px;
+  max-height: 520px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+}
+.packet-list .table-scroll {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 /* Inspector Side Panel */
 .inspector {
   overflow: hidden;
-  position: sticky;
-  top: 80px;
-  max-height: calc(100vh - 100px);
   display: flex;
   flex-direction: column;
+  height: 100%;
+  max-height: 520px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
 }
 .inspector-body {
   overflow-y: auto;
@@ -2340,8 +2386,22 @@ footer.app-footer {
 @media (max-width: 1024px) {
   .sidebar { width: 68px; }
   .main-shell { width: calc(100% - 68px); margin-left: 68px; }
-  .brand { padding: 0 20px; }
-  .brand > b, .nav-group > label, .nav-item span, .nav-item em, .sidebar-connection, .collapse-btn { display: none !important; }
+  .brand { padding: 0 8px; justify-content: space-between; }
+  .brand-logo-full, .nav-group > label, .nav-item span, .nav-item em, .sidebar-connection { display: none !important; }
+  .dark-only.brand-logo-short { display: block !important; }
+  .collapse-btn {
+    display: flex !important;
+    width: 24px;
+    height: 24px;
+    margin-left: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border-soft);
+    color: var(--teal);
+    border-radius: var(--radius-sm);
+    align-items: center;
+    justify-content: center;
+  }
+  .collapse-btn svg { transform: rotate(0deg); }
   .nav-item { justify-content: center; padding: 0; }
   .nav-item.active::before { left: -12px; }
   .global-search { max-width: 320px; }
@@ -2362,7 +2422,12 @@ footer.app-footer {
   .sidebar.mobile-open {
     transform: none;
   }
-  .mobile-open .brand > b,
+  .mobile-open .brand-logo-full.dark-only {
+    display: block !important;
+  }
+  .mobile-open .brand-logo-short {
+    display: none !important;
+  }
   .mobile-open .nav-item span,
   .mobile-open .nav-item em,
   .mobile-open .sidebar-connection,
