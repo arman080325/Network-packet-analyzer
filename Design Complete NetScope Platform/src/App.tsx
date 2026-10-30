@@ -344,7 +344,7 @@ export default function App() {
     <aside className={`sidebar ${mobileOpen?'mobile-open':''}`}>
       <div className="brand" onClick={() => collapsed && setCollapsed(false)}>
         {collapsed ? (
-          <img src={theme === 'dark' ? '/NetScope_Short_Icon_Dark_Mode.png' : '/NetScope_Short_Icon_Light_Mode.png'} alt="NetScope" width={28} height={28} style={{ objectFit: 'contain' }} />
+          <img src={theme === 'dark' ? '/NetScope_Short_Icon_Dark_Mode.png' : '/NetScope_Short_Icon_Light_Mode.png'} alt="NetScope" width={32} height={32} style={{ objectFit: 'contain' }} />
         ) : (
           <img src={theme === 'dark' ? '/NetScope_Full_Logo_Dark_Mode.png' : '/NetScope_Full_Logo_Light_Mode.png'} alt="NetScope" height={28} style={{ objectFit: 'contain', maxWidth: 150 }} />
         )}

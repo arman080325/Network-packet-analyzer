@@ -198,6 +198,7 @@ html, body {
 
 /* Brand Header & NetScope Logo Pack */
 .brand {
+  position: relative;
   height: 64px;
   display: flex;
   align-items: center;
@@ -408,14 +409,25 @@ html, body {
 /* Collapsed Sidebar */
 .collapsed .sidebar {
   width: 68px;
+  overflow: visible; /* Prevents floating toggle clipping */
 }
 .collapsed .main-shell {
   width: calc(100% - 68px);
   margin-left: 68px;
 }
 .collapsed .brand {
-  padding: 0 8px;
-  justify-content: space-between;
+  position: relative;
+  overflow: visible;
+  padding: 0;
+  justify-content: center;
+}
+.collapsed .brand-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  flex: none;
 }
 .collapsed .brand-logo-full {
   display: none !important;
@@ -431,6 +443,12 @@ html, body {
 .app.light.collapsed .light-only.brand-logo-short {
   display: block !important;
 }
+.collapsed .brand-logo-short {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin: 0 auto;
+}
 
 .collapsed .nav-group > label,
 .collapsed .nav-item span,
@@ -439,26 +457,52 @@ html, body {
   display: none !important;
 }
 
-/* Expand Button in Collapsed State */
+/* Expand Button in Collapsed State: Sleek floating border pill with ZERO logo overlap */
 .collapsed .collapse-btn {
   display: flex !important;
-  width: 26px;
-  height: 26px;
-  margin-left: auto;
+  position: absolute;
+  right: -11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  margin: 0;
   background: var(--surface-2);
   border: 1px solid var(--border-soft);
   color: var(--teal);
-  border-radius: var(--radius-sm);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
   align-items: center;
   justify-content: center;
+  z-index: 60;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
 }
 .collapsed .collapse-btn:hover {
-  background: var(--teal-soft);
-  color: var(--teal);
+  background: var(--surface);
   border-color: var(--teal);
+  color: var(--teal);
+  transform: translateY(-50%) scale(1.15);
+  box-shadow: 0 0 10px var(--teal-soft);
 }
 .collapsed .collapse-btn svg {
+  width: 13px;
+  height: 13px;
   transform: rotate(0deg); /* Points right -> EXPAND */
+}
+[data-theme="light"] .collapsed .collapse-btn,
+.app.light.collapsed .collapse-btn {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  color: #0d9488;
+}
+[data-theme="light"] .collapsed .collapse-btn:hover,
+.app.light.collapsed .collapse-btn:hover {
+  background: #f8fafc;
+  border-color: #0d9488;
+  box-shadow: 0 0 10px rgba(13, 148, 136, 0.2);
 }
 .collapsed .nav-item {
   justify-content: center;
@@ -2384,24 +2428,33 @@ footer.app-footer {
 }
 
 @media (max-width: 1024px) {
-  .sidebar { width: 68px; }
+  .sidebar { width: 68px; overflow: visible; }
   .main-shell { width: calc(100% - 68px); margin-left: 68px; }
-  .brand { padding: 0 8px; justify-content: space-between; }
+  .brand { position: relative; overflow: visible; padding: 0; justify-content: center; }
+  .brand-link { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; flex: none; }
   .brand-logo-full, .nav-group > label, .nav-item span, .nav-item em, .sidebar-connection { display: none !important; }
   .dark-only.brand-logo-short { display: block !important; }
+  .brand-logo-short { width: 32px; height: 32px; object-fit: contain; margin: 0 auto; }
   .collapse-btn {
     display: flex !important;
-    width: 24px;
-    height: 24px;
-    margin-left: auto;
+    position: absolute;
+    right: -11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    margin: 0;
     background: var(--surface-2);
     border: 1px solid var(--border-soft);
     color: var(--teal);
-    border-radius: var(--radius-sm);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
     align-items: center;
     justify-content: center;
+    z-index: 60;
+    padding: 0;
   }
-  .collapse-btn svg { transform: rotate(0deg); }
+  .collapse-btn svg { width: 13px; height: 13px; transform: rotate(0deg); }
   .nav-item { justify-content: center; padding: 0; }
   .nav-item.active::before { left: -12px; }
   .global-search { max-width: 320px; }
@@ -2416,11 +2469,21 @@ footer.app-footer {
 @media (max-width: 768px) {
   .sidebar {
     width: 252px;
+    overflow: hidden;
     transform: translateX(-100%);
     box-shadow: 12px 0 35px rgba(0, 0, 0, 0.55);
   }
   .sidebar.mobile-open {
     transform: none;
+  }
+  .mobile-open .brand {
+    padding: 0 14px 0 16px;
+    justify-content: space-between;
+  }
+  .mobile-open .brand-link {
+    width: auto;
+    flex: 1;
+    justify-content: flex-start;
   }
   .mobile-open .brand-logo-full.dark-only {
     display: block !important;
@@ -2433,6 +2496,20 @@ footer.app-footer {
   .mobile-open .sidebar-connection,
   .mobile-open .collapse-btn {
     display: flex !important;
+  }
+  .mobile-open .collapse-btn {
+    position: static;
+    transform: none;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-sm);
+    box-shadow: none;
+    margin-left: auto;
+  }
+  .mobile-open .collapse-btn svg {
+    width: 16px;
+    height: 16px;
+    transform: rotate(180deg);
   }
   .mobile-open .nav-group > label {
     display: block !important;
