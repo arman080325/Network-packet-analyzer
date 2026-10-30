@@ -228,6 +228,7 @@ html, body {
   display: block;
 }
 
+/* By default (expanded sidebar), the short icon mark is strictly hidden */
 .brand-logo-short {
   display: none !important;
   width: 28px;
@@ -235,16 +236,20 @@ html, body {
   object-fit: contain;
 }
 
-/* Theme Switching for Logos */
-.dark-only { display: block; }
-.light-only { display: none !important; }
-
-[data-theme="light"] .dark-only,
-.app.light .dark-only {
+/* Theme Switching for Full Logos (Expanded Sidebar) */
+.brand-logo-full.dark-only {
+  display: block;
+}
+.brand-logo-full.light-only {
   display: none !important;
 }
-[data-theme="light"] .light-only,
-.app.light .light-only {
+
+[data-theme="light"] .brand-logo-full.dark-only,
+.app.light .brand-logo-full.dark-only {
+  display: none !important;
+}
+[data-theme="light"] .brand-logo-full.light-only,
+.app.light .brand-logo-full.light-only {
   display: block !important;
 }
 
@@ -432,15 +437,18 @@ html, body {
 .collapsed .brand-logo-full {
   display: none !important;
 }
-.collapsed .dark-only.brand-logo-short {
+.collapsed .brand-logo-short.dark-only {
   display: block !important;
 }
-[data-theme="light"] .collapsed .dark-only.brand-logo-short,
-.app.light.collapsed .dark-only.brand-logo-short {
+.collapsed .brand-logo-short.light-only {
   display: none !important;
 }
-[data-theme="light"] .collapsed .light-only.brand-logo-short,
-.app.light.collapsed .light-only.brand-logo-short {
+[data-theme="light"] .collapsed .brand-logo-short.dark-only,
+.app.light.collapsed .brand-logo-short.dark-only {
+  display: none !important;
+}
+[data-theme="light"] .collapsed .brand-logo-short.light-only,
+.app.light.collapsed .brand-logo-short.light-only {
   display: block !important;
 }
 .collapsed .brand-logo-short {
@@ -2432,8 +2440,13 @@ footer.app-footer {
   .main-shell { width: calc(100% - 68px); margin-left: 68px; }
   .brand { position: relative; overflow: visible; padding: 0; justify-content: center; }
   .brand-link { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; flex: none; }
-  .brand-logo-full, .nav-group > label, .nav-item span, .nav-item em, .sidebar-connection { display: none !important; }
-  .dark-only.brand-logo-short { display: block !important; }
+  .sidebar:not(.mobile-open) .brand-logo-full, .nav-group > label, .nav-item span, .nav-item em, .sidebar-connection { display: none !important; }
+  .sidebar:not(.mobile-open) .brand-logo-short.dark-only { display: block !important; }
+  .sidebar:not(.mobile-open) .brand-logo-short.light-only { display: none !important; }
+  [data-theme="light"] .sidebar:not(.mobile-open) .brand-logo-short.dark-only,
+  .app.light .sidebar:not(.mobile-open) .brand-logo-short.dark-only { display: none !important; }
+  [data-theme="light"] .sidebar:not(.mobile-open) .brand-logo-short.light-only,
+  .app.light .sidebar:not(.mobile-open) .brand-logo-short.light-only { display: block !important; }
   .brand-logo-short { width: 32px; height: 32px; object-fit: contain; margin: 0 auto; }
   .collapse-btn {
     display: flex !important;
@@ -2485,11 +2498,22 @@ footer.app-footer {
     flex: 1;
     justify-content: flex-start;
   }
+  .mobile-open .brand-logo-short {
+    display: none !important;
+  }
   .mobile-open .brand-logo-full.dark-only {
     display: block !important;
   }
-  .mobile-open .brand-logo-short {
+  .mobile-open .brand-logo-full.light-only {
     display: none !important;
+  }
+  [data-theme="light"] .mobile-open .brand-logo-full.dark-only,
+  .app.light .mobile-open .brand-logo-full.dark-only {
+    display: none !important;
+  }
+  [data-theme="light"] .mobile-open .brand-logo-full.light-only,
+  .app.light .mobile-open .brand-logo-full.light-only {
+    display: block !important;
   }
   .mobile-open .nav-item span,
   .mobile-open .nav-item em,
