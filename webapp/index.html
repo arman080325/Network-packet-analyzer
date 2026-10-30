@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=2.5" />
+  <link rel="stylesheet" href="style.css?v=2.6" />
 </head>
 <body>
 
@@ -127,6 +127,11 @@
       <symbol id="icon-sun" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8" />
         <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+      </symbol>
+
+      <!-- Moon / Theme Toggle -->
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path fill="currentColor" stroke="none" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
       </symbol>
 
       <!-- Chevron -->
@@ -257,8 +262,22 @@
             <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-bell" /></svg>
             <i id="notif-dot"></i>
           </button>
-          <button id="btn-theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">
-            <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-sun" /></svg>
+          <button id="btn-theme-toggle" class="sun-moon-toggle-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">
+            <span class="sky-night" aria-hidden="true">
+              <span class="star" style="left: 24%; top: 22%; width: 2px; height: 2px;"></span>
+              <span class="star" style="left: 66%; top: 16%; width: 1.5px; height: 1.5px;"></span>
+              <span class="star" style="left: 80%; top: 42%; width: 2.2px; height: 2.2px;"></span>
+              <span class="star" style="left: 38%; top: 58%; width: 1.5px; height: 1.5px;"></span>
+              <span class="star" style="left: 58%; top: 74%; width: 2px; height: 2px;"></span>
+              <span class="star" style="left: 14%; top: 72%; width: 1.5px; height: 1.5px;"></span>
+            </span>
+            <span class="sky-day" aria-hidden="true"></span>
+            <span class="celestial-moon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-moon" /></svg>
+            </span>
+            <span class="celestial-sun" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-sun" /></svg>
+            </span>
           </button>
           <button id="btn-top-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings">
             <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-settings" /></svg>

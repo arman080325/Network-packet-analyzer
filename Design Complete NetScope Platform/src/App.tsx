@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { SunMoonThemeToggle } from './components/ui/sun-moon-theme-toggle'
 
 type PageId =
   | 'overview' | 'live' | 'packets' | 'topology' | 'hosts' | 'flows'
@@ -357,7 +358,7 @@ export default function App() {
     </aside>
     {mobileOpen&&<button className="backdrop" onClick={()=>setMobileOpen(false)} aria-label="Close navigation"/>}
     <div className="main-shell">
-      <header className="topbar"><div className="top-left"><button className="mobile-menu" onClick={()=>setMobileOpen(true)}><Icon name="grid"/></button><div className="current-icon"><Icon name={current?.icon||'grid'}/></div><b>{pageMeta[page][0]}</b></div><label className="global-search"><Icon name="search" size={16}/><input placeholder="Search packets, hosts or alerts"/><kbd>⌘ K</kbd></label><div className="top-actions"><Badge tone="good">Connected</Badge><Badge tone="purple">Demo mode</Badge><button aria-label="Notifications" className="icon-btn"><Icon name="bell"/><i/></button><button aria-label="Toggle theme" className="icon-btn" onClick={()=>setTheme(theme==='dark'?'light':'dark')}><Icon name="sun"/></button><button aria-label="Settings" className="icon-btn" onClick={()=>navigate('settings')}><Icon name="settings"/></button></div></header>
+      <header className="topbar"><div className="top-left"><button className="mobile-menu" onClick={()=>setMobileOpen(true)}><Icon name="grid"/></button><div className="current-icon"><Icon name={current?.icon||'grid'}/></div><b>{pageMeta[page][0]}</b></div><label className="global-search"><Icon name="search" size={16}/><input placeholder="Search packets, hosts or alerts"/><kbd>⌘ K</kbd></label><div className="top-actions"><Badge tone="good">Connected</Badge><Badge tone="purple">Demo mode</Badge><button aria-label="Notifications" className="icon-btn"><Icon name="bell"/><i/></button><SunMoonThemeToggle theme={theme} onThemeChange={(t)=>setTheme(t)} size={32} sky duration={1200} /><button aria-label="Settings" className="icon-btn" onClick={()=>navigate('settings')}><Icon name="settings"/></button></div></header>
       <main><PageHeader id={page}/><GenericPage id={page}/><footer><span>NetScope · Network observability and packet analysis</span><span>Backend connected · v1.0</span></footer></main>
     </div>
   </div>
