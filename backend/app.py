@@ -344,6 +344,9 @@ def _file_response(filepath):
         return (
             f"HTTP/1.1 200 OK\r\n"
             f"Content-Type: {content_type}\r\n"
+            f"Cache-Control: no-cache, no-store, must-revalidate\r\n"
+            f"Pragma: no-cache\r\n"
+            f"Expires: 0\r\n"
             f"Access-Control-Allow-Origin: *\r\n"
             f"Content-Length: {len(body)}\r\n"
             f"Connection: close\r\n\r\n"

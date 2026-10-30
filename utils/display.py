@@ -48,17 +48,14 @@ class Display:
 
     @staticmethod
     def banner():
-        print(f"""
+        try:
+            print(f"""
 {CYAN}{BOLD}
- ███╗   ██╗███████╗████████╗    ███████╗███╗   ██╗██╗███████╗███████╗███████╗██████╗
- ████╗  ██║██╔════╝╚══██╔══╝    ██╔════╝████╗  ██║██║██╔════╝██╔════╝██╔════╝██╔══██╗
- ██╔██╗ ██║█████╗     ██║       ███████╗██╔██╗ ██║██║█████╗  █████╗  █████╗  ██████╔╝
- ██║╚██╗██║██╔══╝     ██║       ╚════██║██║╚██╗██║██║██╔══╝  ██╔══╝  ██╔══╝  ██╔══██╗
- ██║ ╚████║███████╗   ██║       ███████║██║ ╚████║██║██║     ██║     ███████╗██║  ██║
- ╚═╝  ╚═══╝╚══════╝   ╚═╝       ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝     ╚═╝     ╚══════╝╚═╝  ╚═╝
-{RESET}{DIM}  Network Packet Analyzer v1.0  |  Protocol Dissection · Anomaly Detection · Crypto Detection
-  Author: Arman Ahemad Khan  |  github.com/arman080325{RESET}
-""")
+  NETSCOPE — Live Network Packet Analyzer v2.0
+{RESET}{DIM}  Protocol Dissection · Anomaly Detection · Crypto Detection
+  Author: Arman Ahemad Khan  |  github.com/arman080325{RESET}\n""")
+        except Exception:
+            print("NetScope - Network Packet Analyzer v2.0")
 
     @staticmethod
     def section(title: str):
