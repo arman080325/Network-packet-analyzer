@@ -336,7 +336,6 @@ function PageHeader({ id, onBack, prevTitle }: { id: PageId; onBack?: () => void
         <p>{pageMeta[id][1]}</p>
       </div>
       <div className="page-actions">
-        <Badge tone="purple">Sample data</Badge>
         {(id === 'overview' || id === 'live') && (
           <>
             <Button icon="pause">Pause view</Button>
@@ -354,7 +353,7 @@ function Overview() {
   const currentVol = timeframe === '1H' ? '2.14 GB' : timeframe === '6H' ? '14.8 GB' : '58.6 GB'
 
   return <>
-    <div className="capture-strip"><div><span className="pulse"/><b>Demo capture active</b><span>Simulated traffic · 42 packets/sec</span></div><div><Icon name="clock" size={15}/> Updated just now <Button icon="pause" kind="ghost">Pause view</Button></div></div>
+    <div className="capture-strip"><div><span className="pulse"/><b>Live capture active</b><span>Traffic stream · 42 packets/sec</span></div><div><Icon name="clock" size={15}/> Updated just now <Button icon="pause" kind="ghost">Pause view</Button></div></div>
     <div className="metrics six">
       <Metric label="Total packets" value="18,432" detail="+12.4% this session" bars={[24,35,29,52,46,64,76,68]} />
       <Metric label="Packets per second" value="42.8" detail="Peak 96.2 pps" tone="blue" bars={[20,36,44,34,68,55,80,72]} />
@@ -419,7 +418,7 @@ function LiveTraffic() {
   const [paused, setPaused] = useState(false)
   const [selectedPkt, setSelectedPkt] = useState('18432')
   return <>
-    <div className="capture-strip"><div><span className="pulse"/><b>Demo capture active</b><span>Simulated traffic · 42 packets/sec</span></div><div><Icon name="clock" size={15}/> Updated just now <Button icon="pause" kind="ghost" onClick={() => setPaused(!paused)}>{paused ? 'Resume' : 'Pause'}</Button></div></div>
+    <div className="capture-strip"><div><span className="pulse"/><b>Live capture active</b><span>Traffic stream · 42 packets/sec</span></div><div><Icon name="clock" size={15}/> Updated just now <Button icon="pause" kind="ghost" onClick={() => setPaused(!paused)}>{paused ? 'Resume' : 'Pause'}</Button></div></div>
     <div className="metrics four"><Metric label="Total packets" value="18,432" detail="Capture duration 00:42:18"/><Metric label="Current packet rate" value="42.8" unit="pps" detail="Peak 96.2 pps"/><Metric label="Throughput" value="6.24" unit="Mbps" detail="In 4.1 · Out 2.1"/><Metric label="Active hosts" value="24" detail="18 local · 6 external"/></div>
     <Card title="Real-time throughput" action={<div className="actions"><Button icon={paused ? 'play' : 'pause'} onClick={() => setPaused(!paused)}>{paused ? 'Resume view' : 'Pause view'}</Button><Button kind="ghost">Reset</Button></div>}><div className="legend"><span><i className="teal"/>Incoming</span><span><i className="blue"/>Outgoing</span>{paused && <Badge tone="warn">Visualization paused · capture continues</Badge>}</div><LineChart /></Card>
     
@@ -565,7 +564,7 @@ export default function App() {
         </button>
       </div>
       <nav>{nav.map(group=><div className="nav-group" key={group.label}><label>{group.label}</label>{group.items.map(item=><button title={item.name} key={item.id} className={page===item.id?'active':''} onClick={()=>navigate(item.id)}><Icon name={item.icon}/><span>{item.name}</span>{item.id==='alerts'&&<em>12</em>}</button>)}</div>)}</nav>
-      <div className="connection"><div><span className="online"/><b>Backend connected</b></div><p>Demo mode · 42 pps</p></div>
+      <div className="connection"><div><span className="online"/><b>Backend connected</b></div><p>Stream active · 42 pps</p></div>
     </aside>
     {mobileOpen&&<button className="backdrop" onClick={()=>setMobileOpen(false)} aria-label="Close navigation"/>}
     <div className="main-shell">
@@ -579,7 +578,6 @@ export default function App() {
         <label className="global-search"><Icon name="search" size={16}/><input placeholder="Search packets, hosts or alerts"/><kbd>⌘ K</kbd></label>
         <div className="top-actions">
           <Badge tone="good">Connected</Badge>
-          <Badge tone="purple">Demo mode</Badge>
           <button aria-label="Notifications" className="icon-btn" onClick={()=>navigate('alerts')}><Icon name="bell"/><i/></button>
           <SunMoonThemeToggle theme={theme} onThemeChange={(t)=>setTheme(t)} size={32} sky duration={1200} />
           <button aria-label="Settings" className="icon-btn" onClick={()=>navigate('settings')}><Icon name="settings"/></button>

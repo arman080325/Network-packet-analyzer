@@ -397,6 +397,8 @@ def _handle_connection(conn):
             resp = _file_response(os.path.join(WEBAPP_DIR, "index.html"))
         else:
             rel = path.lstrip("/")
+            if rel.startswith("logos/"):
+                rel = rel[6:]
             target = os.path.join(WEBAPP_DIR, rel)
             if os.path.exists(target) and os.path.isfile(target):
                 resp = _file_response(target)
