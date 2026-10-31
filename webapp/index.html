@@ -1,195 +1,325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NetScope — Live Network Threat Console</title>
-<meta name="description" content="Real-time network packet analysis, anomaly detection and threat scoring console." />
-<meta property="og:title" content="NetScope — Live Network Threat Console" />
-<meta property="og:description" content="Real-time packet capture, anomaly detection, encryption fingerprinting and host threat scoring — streamed live over WebSocket." />
-<meta property="og:type" content="website" />
-<meta property="og:image" content="app-icon-512.png" />
-<meta name="theme-color" content="#060911" />
-<link rel="icon" type="image/svg+xml" href="favicon-tile.svg">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="48x48" href="favicon-48.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180.png">
-<link rel="manifest" href="site.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="tokens-extension.css" />
-<link rel="stylesheet" href="radar-circle.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>NetScope — Network Packet Analyzer & Security Platform</title>
+  <meta name="description" content="Production-quality network observability, packet intelligence, and anomaly detection interface." />
+  <meta name="theme-color" content="#0b1020" />
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="NetScope_Short_Icon_Dark_Mode.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="NetScope_Short_Icon_Dark_Mode.png" />
+  <link rel="manifest" href="site.webmanifest" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css?v=3.0" />
 </head>
 <body>
 
-<a href="#main-content" class="skip-link">Skip to main content</a>
-<div id="scanline" aria-hidden="true"></div>
+  <!-- Screen Reader Announcements -->
+  <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark" aria-hidden="true"></span>
-    <div class="brand-text">
-      <span class="brand-name">NetScope</span>
-      <span class="brand-tag">Live Network Threat Console</span>
+  <!-- Skip Navigation -->
+  <a href="#page-content" class="skip-link">Skip to main content</a>
+
+  <!-- SVG Icon Definitions (Symbols with viewBox="0 0 24 24" so icons NEVER clip or distort) -->
+  <svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#19b89a" stop-opacity="0.28" />
+        <stop offset="100%" stop-color="#19b89a" stop-opacity="0" />
+      </linearGradient>
+
+      <!-- Dashboard Grid -->
+      <symbol id="icon-grid" viewBox="0 0 24 24">
+        <path fill="currentColor" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" />
+      </symbol>
+
+      <!-- Activity / Pulse -->
+      <symbol id="icon-activity" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 12h4l2.5-7 5 14 2.5-7h4" />
+      </symbol>
+
+      <!-- Packet -->
+      <symbol id="icon-packet" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8.5 4.8-8.5 4.8-8.5-4.8L12 3zm-8.5 8.8l8.5 4.8 8.5-4.8M3.5 16.5l8.5 4.8 8.5-4.8" />
+      </symbol>
+
+      <!-- Network / Router (Gateway) -->
+      <symbol id="icon-network" viewBox="0 0 24 24">
+        <rect x="2" y="11" width="20" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8" />
+        <circle cx="6" cy="15.5" r="1.2" fill="currentColor" />
+        <circle cx="10" cy="15.5" r="1.2" fill="currentColor" />
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M15 15.5h3M7 11V4M17 11V4" />
+      </symbol>
+
+      <!-- Server / Host -->
+      <symbol id="icon-server" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="6.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+        <rect x="3" y="13.5" width="18" height="6.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+        <circle cx="6.5" cy="7.25" r="1" fill="currentColor" />
+        <circle cx="6.5" cy="16.75" r="1" fill="currentColor" />
+        <line x1="13" y1="7.25" x2="17" y2="7.25" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        <line x1="13" y1="16.75" x2="17" y2="16.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </symbol>
+
+      <!-- Flow / Sessions -->
+      <symbol id="icon-flow" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h6v5H4zM14 14h6v5h-6zM10 7.5h4a2 2 0 012 2v2M8 12.5v2a2 2 0 002 2h4" />
+      </symbol>
+
+      <!-- Threat / Shield -->
+      <symbol id="icon-shield" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 3v5c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-3zm-3 9l2 2 4-5" />
+      </symbol>
+
+      <!-- Alert -->
+      <symbol id="icon-alert" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 4L3 19h18L12 4zm0 6v4m0 3h.01" />
+      </symbol>
+
+      <!-- Lock / Encryption -->
+      <symbol id="icon-lock" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 10h12v10H6zM8 10V7a4 4 0 018 0v3" />
+      </symbol>
+
+      <!-- Chart / Analytics -->
+      <symbol id="icon-chart" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 19V10m5 9V6m5 13v-8m5 8V4" />
+      </symbol>
+
+      <!-- Report -->
+      <symbol id="icon-report" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h6m-6 4h6" />
+      </symbol>
+
+      <!-- Sliders / Config -->
+      <symbol id="icon-sliders" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 6h10m4 0h2M4 12h2m4 0h10M4 18h7m4 0h5M14 4v4M6 10v4m5 2v4" />
+      </symbol>
+
+      <!-- Settings Cog (Crisp Feather/Lucide gear) -->
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8" />
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+      </symbol>
+
+      <!-- Book / Docs -->
+      <symbol id="icon-book" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5a3 3 0 013-2h5v17H7a3 3 0 00-3 1zm16 0a3 3 0 00-3-2h-5v17h5a3 3 0 013 1z" />
+      </symbol>
+
+      <!-- Search Magnifier (Full loop and handle, properly proportioned) -->
+      <symbol id="icon-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M15.5 15.5L20 20" />
+      </symbol>
+
+      <!-- Bell / Notifications -->
+      <symbol id="icon-bell" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 9a6 6 0 0112 0c0 7 3 7 3 8H3c0-1 3-1 3-8m5 11a2 2 0 004 0" />
+      </symbol>
+
+      <!-- Sun / Theme Toggle -->
+      <symbol id="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8" />
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+      </symbol>
+
+      <!-- Moon / Theme Toggle -->
+      <symbol id="icon-moon" viewBox="0 0 24 24">
+        <path fill="currentColor" stroke="none" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+      </symbol>
+
+      <!-- Arrow Left / Back -->
+      <symbol id="icon-arrow-left" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m7-7l-7 7 7 7" />
+      </symbol>
+
+      <!-- Chevron -->
+      <symbol id="icon-chevron" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" />
+      </symbol>
+
+      <!-- Pause (Solid dual vertical bars, 100% immune to stroke clipping) -->
+      <symbol id="icon-pause" viewBox="0 0 24 24">
+        <rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor" />
+        <rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor" />
+      </symbol>
+
+      <!-- Play -->
+      <symbol id="icon-play" viewBox="0 0 24 24">
+        <path fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 5l10 7-10 7V5z" />
+      </symbol>
+
+      <!-- Filter -->
+      <symbol id="icon-filter" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h16l-6.5 7.5v5.5l-3 1.5v-7L4 5z" />
+      </symbol>
+
+      <!-- Download -->
+      <symbol id="icon-download" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m-4-4l4 4 4-4M4 19h16" />
+      </symbol>
+
+      <!-- More -->
+      <symbol id="icon-more" viewBox="0 0 24 24">
+        <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+        <circle cx="19" cy="12" r="1.5" fill="currentColor" />
+      </symbol>
+
+      <!-- Clock -->
+      <symbol id="icon-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2" />
+      </symbol>
+
+      <!-- Close X -->
+      <symbol id="icon-x" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+      </symbol>
+
+      <!-- Check -->
+      <symbol id="icon-check" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M5 12l4 4L19 6" />
+      </symbol>
+
+      <!-- Upload -->
+      <symbol id="icon-upload" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15V4m-4 4l4-4 4 4M4 16v4h16v-4" />
+      </symbol>
+
+      <!-- Radio -->
+      <symbol id="icon-radio" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8.5 8.5a5 5 0 000 7m7-7a5 5 0 010 7M5.5 5.5a9 9 0 000 13m0-13a9 9 0 010 13" />
+      </symbol>
+
+      <!-- Copy -->
+      <symbol id="icon-copy" viewBox="0 0 24 24">
+        <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.5L16.5 4H10a2 2 0 00-2 2zM4 8v12a2 2 0 002 2h8" />
+      </symbol>
+    </defs>
+  </svg>
+
+  <div id="app-root" class="app dark">
+    <!-- Desktop & Mobile Sidebar Navigation -->
+    <aside id="app-sidebar" class="sidebar" aria-label="Main navigation">
+      <div class="brand" id="brand-header">
+        <a href="#overview" class="brand-link" aria-label="NetScope Dashboard" title="NetScope Dashboard">
+          <!-- Full Logo for Expanded Sidebar: Dark & Light Mode -->
+          <img class="brand-logo-full dark-only" src="NetScope_Full_Logo_Dark_Mode.png" alt="NetScope" height="30" />
+          <img class="brand-logo-full light-only" src="NetScope_Full_Logo_Light_Mode.png" alt="NetScope" height="30" />
+          
+          <!-- Short Mark for Collapsed Sidebar: Dark & Light Mode -->
+          <img class="brand-logo-short dark-only" src="NetScope_Short_Icon_Dark_Mode.png" alt="NetScope" width="30" height="30" />
+          <img class="brand-logo-short light-only" src="NetScope_Short_Icon_Light_Mode.png" alt="NetScope" width="30" height="30" />
+        </a>
+        <button id="sidebar-collapse-btn" class="collapse-btn" type="button" aria-label="Toggle sidebar collapse" title="Collapse sidebar">
+          <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-chevron" /></svg>
+        </button>
+      </div>
+
+      <nav id="sidebar-nav">
+        <!-- Rendered dynamically by app.js with zero scrollbar -->
+      </nav>
+
+      <div id="sidebar-conn-card" class="sidebar-connection" role="button" tabindex="0" title="Configure connection">
+        <div>
+          <span id="sidebar-conn-dot" class="online-dot demo"></span>
+          <b id="sidebar-conn-title">Backend connected</b>
+        </div>
+        <p id="sidebar-conn-subtitle">Demo mode · 18 pps</p>
+      </div>
+    </aside>
+
+    <!-- Backdrop for mobile drawer -->
+    <button id="sidebar-backdrop" class="backdrop" hidden aria-label="Close navigation overlay"></button>
+
+    <!-- Main Shell -->
+    <div class="main-shell">
+      <header class="topbar">
+        <div class="top-left">
+          <button id="mobile-menu-btn" class="mobile-menu-btn" type="button" aria-label="Open navigation menu">
+            <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-grid" /></svg>
+          </button>
+          <a href="#overview" class="topbar-logo" aria-label="NetScope" title="NetScope Overview">
+            <img class="topbar-logo-img dark-only" src="NetScope_Full_Logo_Dark_Mode.png" alt="NetScope" height="26" />
+            <img class="topbar-logo-img light-only" src="NetScope_Full_Logo_Light_Mode.png" alt="NetScope" height="26" />
+          </a>
+        </div>
+
+        <label class="global-search" for="global-search-input">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-search" /></svg>
+          <input id="global-search-input" type="text" placeholder="Search packets, hosts or alerts…" autocomplete="off" />
+          <kbd>⌘ K</kbd>
+        </label>
+
+        <div class="top-actions">
+          <span id="top-status-badge" class="badge good"><i></i> Connected</span>
+          <span id="top-mode-badge" class="badge purple"><i></i> Demo mode</span>
+
+          <button id="btn-notifications" class="icon-btn" type="button" aria-label="Security alerts" title="12 alerts recorded">
+            <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-bell" /></svg>
+            <i id="notif-dot"></i>
+          </button>
+          <button id="btn-theme-toggle" class="sun-moon-toggle-btn" type="button" aria-label="Toggle dark/light theme" title="Toggle theme">
+            <span class="sky-night" aria-hidden="true">
+              <span class="star" style="left: 24%; top: 22%; width: 2px; height: 2px;"></span>
+              <span class="star" style="left: 66%; top: 16%; width: 1.5px; height: 1.5px;"></span>
+              <span class="star" style="left: 80%; top: 42%; width: 2.2px; height: 2.2px;"></span>
+              <span class="star" style="left: 38%; top: 58%; width: 1.5px; height: 1.5px;"></span>
+              <span class="star" style="left: 58%; top: 74%; width: 2px; height: 2px;"></span>
+              <span class="star" style="left: 14%; top: 72%; width: 1.5px; height: 1.5px;"></span>
+            </span>
+            <span class="sky-day" aria-hidden="true"></span>
+            <span class="celestial-moon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-moon" /></svg>
+            </span>
+            <span class="celestial-sun" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24"><use href="#icon-sun" /></svg>
+            </span>
+          </button>
+          <button id="btn-top-settings" class="icon-btn" type="button" aria-label="Settings" title="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-settings" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Active Page Content -->
+      <main id="page-content" class="page-content">
+        <!-- Rendered by app.js based on active route -->
+      </main>
+
+      <footer class="app-footer">
+        <span>NetScope · Network observability &amp; packet intelligence</span>
+        <span id="footer-conn-info">Backend connected · v2.0</span>
+      </footer>
     </div>
   </div>
 
-  <div class="status-cluster">
-    <div class="stat-chip">
-      <span class="stat-chip-label">Packets</span>
-      <span class="stat-chip-value" id="stat-packets">0</span>
-    </div>
-    <div class="stat-chip">
-      <span class="stat-chip-label">Pkt/s</span>
-      <span class="stat-chip-value" id="stat-pps">0</span>
-    </div>
-    <div class="stat-chip">
-      <span class="stat-chip-label">Encrypted</span>
-      <span class="stat-chip-value" id="stat-enc">0%</span>
-    </div>
-    <div class="stat-chip">
-      <span class="stat-chip-label">Uptime</span>
-      <span class="stat-chip-value" id="stat-uptime">00:00:00</span>
-    </div>
-  </div>
+  <!-- Connection Configuration Dialog -->
+  <dialog id="conn-dialog">
+    <div style="padding: 24px; background: var(--surface); color: var(--text); border-radius: var(--radius); border: 1px solid var(--border); min-width: 320px; max-width: 480px; box-shadow: var(--shadow);">
+      <h3 style="margin: 0 0 8px; font-size: 16px;">Backend Connection</h3>
+      <p style="margin: 0 0 16px; color: var(--muted); font-size: 11px;">Specify the WebSocket URL for the live NetScope stream.</p>
+      
+      <label class="field" style="margin-bottom: 16px;">
+        <span>WebSocket URL</span>
+        <input id="conn-url-input" type="text" placeholder="ws://localhost:8000/ws or wss://..." autocomplete="off" />
+      </label>
 
-  <div class="conn-cluster">
-    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">
-      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="4"></circle>
-        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path>
-      </svg>
-    </button>
-    <button id="conn-indicator" class="conn-indicator" type="button" aria-haspopup="dialog">
-      <span class="conn-dot" id="conn-dot"></span>
-      <span id="conn-label">Connecting…</span>
-    </button>
-  </div>
-</header>
-
-<dialog id="conn-dialog">
-  <form method="dialog" id="conn-form">
-    <h2>Backend connection</h2>
-    <p class="hint">Pointed this console to the deployed NetScope backend(Render)</p>
-    <label for="ws-url-input">WebSocket URL</label>
-    <input id="ws-url-input" type="text" placeholder="wss://your-backend.onrender.com/ws" autocomplete="off" />
-    <div class="dialog-actions">
-      <button type="button" id="conn-cancel" class="btn-ghost">Cancel</button>
-      <button type="submit" id="conn-connect" class="btn-primary">Connect</button>
-    </div>
-  </form>
-</dialog>
-
-<main class="grid" id="main-content">
-
-  <section class="panel panel-map" aria-label="Live network map">
-    <div class="panel-head">
-      <h2>Network Map</h2>
-      <div class="legend">
-        <span class="legend-item"><i class="dot clean"></i>Clean</span>
-        <span class="legend-item"><i class="dot suspicious"></i>Suspicious</span>
-        <span class="legend-item"><i class="dot malicious"></i>Malicious</span>
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button id="conn-dialog-cancel" class="btn ghost" type="button">Cancel</button>
+        <button id="conn-dialog-save" class="btn primary" type="button">Save &amp; Connect</button>
       </div>
     </div>
-    <div class="radar-wrap">
-      <div class="radar-sweep" aria-hidden="true"></div>
-      <div class="radar-rings" aria-hidden="true"></div>
-      <svg id="map-svg" viewBox="0 0 600 460" preserveAspectRatio="xMidYMid meet"></svg>
-    </div>
-  </section>
+  </dialog>
 
-  <section class="panel panel-gauges" aria-label="Live measurements">
-    <div class="panel-head"><h2>Signal</h2></div>
-
-    <div class="gauge-block">
-      <div class="gauge-label">
-        <span>Payload Entropy</span>
-        <span id="entropy-value">0.00 bits/B</span>
-      </div>
-      <div class="gauge-track"><div class="gauge-fill" id="entropy-fill"></div><div class="gauge-threshold"></div></div>
-    </div>
-
-    <div class="gauge-block">
-      <div class="gauge-label"><span>Threat Posture</span><span id="threat-total">0 hosts</span></div>
-      <div class="posture-bar">
-        <div class="posture-seg clean" id="posture-clean"></div>
-        <div class="posture-seg suspicious" id="posture-suspicious"></div>
-        <div class="posture-seg malicious" id="posture-malicious"></div>
-      </div>
-      <div class="posture-legend">
-        <span><i class="dot clean"></i><span id="count-clean">0</span> clean</span>
-        <span><i class="dot suspicious"></i><span id="count-suspicious">0</span> suspicious</span>
-        <span><i class="dot malicious"></i><span id="count-malicious">0</span> malicious</span>
-      </div>
-    </div>
-
-    <div class="gauge-block">
-      <div class="gauge-label"><span>Throughput</span><span id="throughput-value">0 B/s</span></div>
-      <canvas id="throughput-canvas" width="280" height="70"></canvas>
-    </div>
-
-    <div class="gauge-block">
-      <div class="gauge-label"><span>Protocol Mix</span></div>
-      <div class="protocol-bars" id="protocol-bars"></div>
-    </div>
-  </section>
-
-  <section class="panel panel-tabs" aria-label="Threats and alerts">
-    <div class="panel-head tabs" role="tablist">
-      <button class="tab active" role="tab" data-tab="threats" aria-selected="true">Threats</button>
-      <button class="tab" role="tab" data-tab="alerts" aria-selected="false">Alerts</button>
-      <button class="tab" role="tab" data-tab="crypto" aria-selected="false">Crypto</button>
-      <button class="tab" role="tab" data-tab="detail" aria-selected="false">Detail</button>
-      <button class="tab" role="tab" data-tab="stats" aria-selected="false">Stats</button>
-    </div>
-
-    <div class="tab-panel active" id="tab-threats">
-      <table class="data-table"><thead><tr><th>Host</th><th>Class</th><th>Score</th><th>Status</th></tr></thead>
-      <tbody id="threat-table-body"></tbody></table>
-    </div>
-
-    <div class="tab-panel" id="tab-alerts">
-      <ul class="feed-list" id="alerts-feed"></ul>
-    </div>
-
-    <div class="tab-panel" id="tab-crypto">
-      <ul class="feed-list" id="crypto-feed"></ul>
-    </div>
-
-    <div class="tab-panel" id="tab-detail">
-      <pre class="detail-view" id="detail-view">Select a row in the packet stream to inspect it.</pre>
-    </div>
-
-    <div class="tab-panel" id="tab-stats">
-      <div class="stats-grid" id="stats-grid"></div>
-    </div>
-  </section>
-
-  <section class="panel panel-stream" aria-label="Live packet stream">
-    <div class="panel-head">
-      <h2>Packet Stream</h2>
-      <input id="stream-filter" type="text" placeholder="filter: ip:10.0.0.1  proto:tcp  port:443  enc:true" autocomplete="off" />
-    </div>
-    <div class="stream-table-wrap">
-      <table class="data-table stream-table">
-        <thead><tr><th>Time</th><th>Proto</th><th>Src</th><th>Dst</th><th>Len</th><th>Info</th></tr></thead>
-        <tbody id="stream-body"></tbody>
-      </table>
-    </div>
-  </section>
-
-</main>
-
-<footer class="foot">
-  <span>NetScope — built by Arman Ahemad Khan</span>
-  <a href="https://github.com/arman080325" target="_blank" rel="noopener">github.com/arman080325</a>
-</footer>
-
-<script src="app.js"></script>
-<script src="theme-enhancements.js"></script>
-<script src="radar-circle.js"></script>
+  <script src="app.js?v=3.0"></script>
 </body>
 </html>

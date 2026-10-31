@@ -44,17 +44,21 @@ Network-packet-analyzer/
 ├── frontend/
 │   └── server.py              ← Pure-stdlib HTTP + WebSocket server (local/offline use)
 │
-├── backend/                   ★ new — production API, deploy this to Render
-│   ├── app.py                 ← Flask + WebSocket service, single $PORT, reuses core/ as-is
+├── backend/                   ★ production backend, deploy this to Render
+│   ├── app.py                 ← Single-port HTTP + WebSocket server (pure stdlib, serves webapp/ directly)
 │   └── requirements.txt
 │
-├── webapp/                    ★ new — production web console, deploy this to Vercel
-│   ├── index.html             ← Redesigned SOC-style live console
-│   ├── style.css              ← Design system (radar map, gauges, threat board)
-│   ├── app.js                 ← WebSocket client + rendering (same wire protocol)
+├── webapp/                    ★ production web console & Live Traffic workspace
+│   ├── index.html             ← Modern Figma-designed SOC console & live packet inspector
+│   ├── style.css              ← Enterprise design system with dark/light themes, responsive drawer, animations
+│   ├── app.js                 ← Live packet inspector, dynamic WS protocol, animated topology mesh
 │   └── vercel.json
 │
-├── render.yaml                ★ new — one-click Render blueprint for backend/
+├── Design Complete NetScope Platform/  ★ React + Vite + Tailwind CSS + shadcn implementation
+│   ├── src/App.tsx            ← Interactive React platform with telemetry & widgets
+│   └── src/components/ui/     ← shadcn components including celestial SunMoonThemeToggle
+│
+├── render.yaml                ★ one-click Render blueprint for backend/ (HTTP + WS on single $PORT)
 │
 ├── utils/
 │   ├── display.py             ← ANSI-coloured terminal output

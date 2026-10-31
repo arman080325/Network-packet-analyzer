@@ -32,6 +32,7 @@ import hashlib
 import struct
 import socket
 import threading
+import mimetypes
 from collections import deque
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -43,6 +44,8 @@ from core.threat import ThreatScorer
 from core.netinfo import classify_ip, service_name
 
 WS_MAGIC = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WEBAPP_DIR = os.path.join(ROOT, "webapp")
 
 DEMO_PPS = int(os.environ.get("DEMO_PPS", "18"))
 SYN_THRESHOLD = int(os.environ.get("SYN_THRESHOLD", "100"))
@@ -322,6 +325,36 @@ def _json_response(obj, status="200 OK"):
     ).encode("utf-8") + body
 
 
+def _file_response(filepath):
+    try:
+        with open(filepath, "rb") as f:
+            body = f.read()
+        content_type, _ = mimetypes.guess_type(filepath)
+        if not content_type:
+            if filepath.endswith(".css"):
+                content_type = "text/css"
+            elif filepath.endswith(".js"):
+                content_type = "application/javascript"
+            elif filepath.endswith(".webmanifest"):
+                content_type = "application/manifest+json"
+            else:
+                content_type = "application/octet-stream"
+        if content_type.startswith("text/") or content_type == "application/javascript":
+            content_type += "; charset=utf-8"
+        return (
+            f"HTTP/1.1 200 OK\r\n"
+            f"Content-Type: {content_type}\r\n"
+            f"Cache-Control: no-cache, no-store, must-revalidate\r\n"
+            f"Pragma: no-cache\r\n"
+            f"Expires: 0\r\n"
+            f"Access-Control-Allow-Origin: *\r\n"
+            f"Content-Length: {len(body)}\r\n"
+            f"Connection: close\r\n\r\n"
+        ).encode("utf-8") + body
+    except Exception:
+        return _json_response({"error": "file not found"}, status="404 Not Found")
+
+
 def _handle_connection(conn):
     try:
         request_line, headers = _read_headers(conn)
@@ -349,19 +382,26 @@ def _handle_connection(conn):
                 client.close()
             return
 
-        # Plain HTTP REST endpoints
+        # Plain HTTP REST & Webapp endpoints
         if path == "/health":
             resp = _json_response({"status": "ok", "uptime_s": round(time.time() - hub.started_at, 1)})
         elif path == "/api/status":
             resp = _json_response(hub.stats())
-        elif path == "/":
+        elif path == "/api":
             resp = _json_response({
                 "name": "NetScope API",
                 "description": "Live network traffic analysis backend",
                 "endpoints": ["/health", "/api/status", "/ws (WebSocket)"],
             })
+        elif path in ("/", "/index.html", "/dashboard.html"):
+            resp = _file_response(os.path.join(WEBAPP_DIR, "index.html"))
         else:
-            resp = _json_response({"error": "not found"}, status="404 Not Found")
+            rel = path.lstrip("/")
+            target = os.path.join(WEBAPP_DIR, rel)
+            if os.path.exists(target) and os.path.isfile(target):
+                resp = _file_response(target)
+            else:
+                resp = _json_response({"error": "not found"}, status="404 Not Found")
 
         conn.sendall(resp)
         conn.close()
