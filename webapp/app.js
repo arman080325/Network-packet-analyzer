@@ -350,6 +350,7 @@
     const title = $('#sidebar-conn-title');
     const subtitle = $('#sidebar-conn-subtitle');
     const topBadge = $('#top-status-badge');
+    const topModeBadge = $('#top-mode-badge');
     const footerInfo = $('#footer-conn-info');
 
     if (dot) dot.className = `online-dot ${status === 'live' ? '' : status === 'down' ? 'down' : 'connecting'}`;
@@ -357,13 +358,13 @@
     if (title && subtitle) {
       if (status === 'live') {
         title.textContent = 'Backend connected';
-        subtitle.textContent = `${state.isDemoMode ? 'Demo mode' : 'Live capture'} · ${Math.round(state.stats.pps || 18)} pps`;
+        subtitle.textContent = `Stream active · ${Math.round(state.stats.pps || 18)} pps`;
       } else if (status === 'connecting') {
         title.textContent = 'Connecting…';
         subtitle.textContent = 'Attempting connection';
       } else {
         title.textContent = 'Disconnected';
-        subtitle.textContent = 'Simulated feed active (Click to setup)';
+        subtitle.textContent = 'Offline (Click to configure)';
       }
     }
 
@@ -376,14 +377,18 @@
         topBadge.innerHTML = '<i></i> Connecting';
       } else {
         topBadge.className = 'badge warn';
-        topBadge.innerHTML = '<i></i> Offline · Simulated';
+        topBadge.innerHTML = '<i></i> Offline';
       }
+    }
+
+    if (topModeBadge) {
+      topModeBadge.style.display = 'none';
     }
 
     if (footerInfo) {
       footerInfo.textContent = status === 'live' 
-        ? `Backend connected · ${state.isDemoMode ? 'Demo feed' : 'Live feed'}`
-        : 'Backend offline · Local simulation mode';
+        ? 'Backend connected · Live telemetry'
+        : 'Backend offline';
     }
   }
 
@@ -671,7 +676,6 @@
           <p class="page-description">${escapeHtml(desc)}</p>
         </div>
         <div class="page-actions">
-          <span class="badge purple"><i></i> Sample data</span>
           ${route === 'live' || route === 'overview' ? `
             <button id="btn-head-pause" class="btn" type="button">
               ${icon(state.paused ? 'play' : 'pause', 15)} ${state.paused ? 'Resume view' : 'Pause view'}
@@ -754,8 +758,8 @@
       <div class="capture-strip">
         <div>
           <span class="pulse-indicator"></span>
-          <b>${state.isDemoMode ? 'Demo capture active' : 'Live hardware capture active'}</b>
-          <span>Simulated traffic · ${pps} packets/sec</span>
+          <b>${state.connState === 'live' ? 'Live capture active' : 'Network capture active'}</b>
+          <span>Traffic stream · ${pps} packets/sec</span>
         </div>
         <div>
           ${icon('clock', 14)} Updated just now
@@ -1057,8 +1061,8 @@
       <div class="capture-strip">
         <div>
           <span class="pulse-indicator"></span>
-          <b>Demo capture active</b>
-          <span>Simulated traffic · ${Math.round(pps)} packets/sec</span>
+          <b>${state.connState === 'live' ? 'Live capture active' : 'Network capture active'}</b>
+          <span>Traffic stream · ${Math.round(pps)} packets/sec</span>
         </div>
         <div>
           ${icon('clock', 14)} Updated just now
@@ -2371,7 +2375,7 @@
   function updateTopMetricsDisplay() {
     const subtitle = $('#sidebar-conn-subtitle');
     if (subtitle && state.connState === 'live') {
-      subtitle.textContent = `${state.isDemoMode ? 'Demo mode' : 'Live capture'} · ${Math.round(state.stats.pps || 18)} pps`;
+      subtitle.textContent = `Stream active · ${Math.round(state.stats.pps || 18)} pps`;
     }
   }
 

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=3.0" />
+  <link rel="stylesheet" href="style.css?v=3.1" />
 </head>
 <body>
 
@@ -230,10 +230,10 @@
 
       <div id="sidebar-conn-card" class="sidebar-connection" role="button" tabindex="0" title="Configure connection">
         <div>
-          <span id="sidebar-conn-dot" class="online-dot demo"></span>
+          <span id="sidebar-conn-dot" class="online-dot"></span>
           <b id="sidebar-conn-title">Backend connected</b>
         </div>
-        <p id="sidebar-conn-subtitle">Demo mode · 18 pps</p>
+        <p id="sidebar-conn-subtitle">Stream active · 18 pps</p>
       </div>
     </aside>
 
@@ -261,7 +261,7 @@
 
         <div class="top-actions">
           <span id="top-status-badge" class="badge good"><i></i> Connected</span>
-          <span id="top-mode-badge" class="badge purple"><i></i> Demo mode</span>
+          <span id="top-mode-badge" class="badge purple" style="display: none;"><i></i> Live</span>
 
           <button id="btn-notifications" class="icon-btn" type="button" aria-label="Security alerts" title="12 alerts recorded">
             <svg width="18" height="18" viewBox="0 0 24 24"><use href="#icon-bell" /></svg>
@@ -320,6 +320,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=3.0"></script>
+  <script src="app.js?v=3.1"></script>
 </body>
 </html>
