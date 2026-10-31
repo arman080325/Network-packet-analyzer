@@ -232,12 +232,11 @@
     if (saved) return saved;
 
     const loc = window.location;
-    if (loc.hostname === 'localhost' || loc.hostname === '127.0.0.1') {
-      // Local server uses single port 8080 (backend/app.py) or 8765 (frontend/server.py)
-      const port = loc.port || '8080';
-      return `ws://${loc.hostname}:${port}/ws`;
+    if (loc.protocol === 'http:' || loc.protocol === 'https:') {
+      const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${proto}//${loc.host}/ws`;
     }
-    // Remote Render backend fallback
+    // Remote Render backend fallback for file:/// or non-HTTP execution
     return 'wss://netscope-backend-ekkj.onrender.com/ws';
   }
 
