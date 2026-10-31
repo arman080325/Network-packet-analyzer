@@ -122,6 +122,7 @@
   // ══════════════════════════════════════════════════════════════════════════
   const state = {
     activeRoute: 'live',
+    previousRoute: 'overview',
     sidebarCollapsed: localStorage.getItem(STORAGE_SIDEBAR_KEY) === 'true',
     mobileMenuOpen: false,
     theme: localStorage.getItem(STORAGE_THEME_KEY) || 'dark',
@@ -561,6 +562,9 @@
 
   function navigateTo(routeId) {
     if (!PAGE_META[routeId]) routeId = 'live';
+    if (state.activeRoute !== routeId && state.activeRoute !== 'settings') {
+      state.previousRoute = state.activeRoute;
+    }
     state.activeRoute = routeId;
     window.location.hash = `#${routeId}`;
 
@@ -635,13 +639,36 @@
 
     const route = state.activeRoute;
     const [title, desc] = PAGE_META[route] || PAGE_META.live;
+    const prevRouteTitle = PAGE_META[state.previousRoute || 'overview']?.[0] || 'Overview';
 
-    // Standard Figma Page Heading
+    // Standard Figma Page Heading with Brand Breadcrumbs & Settings Back Button
     let headingHtml = `
-      <div class="page-heading">
+      <div class="page-heading ${route === 'settings' ? 'settings-heading' : ''}">
         <div>
-          <div class="breadcrumbs">NetScope ${icon('chevron', 12)} ${escapeHtml(title)}</div>
-          <h1 class="page-title">${escapeHtml(title)}</h1>
+          <div class="breadcrumbs">
+            ${route === 'settings' ? `
+              <button id="btn-back-breadcrumb" class="breadcrumb-back-btn" type="button" aria-label="Go back">
+                ${icon('arrow-left', 13)}
+                <span>Back to ${escapeHtml(prevRouteTitle)}</span>
+              </button>
+              <span class="breadcrumb-sep">/</span>
+            ` : ''}
+            <span class="breadcrumb-brand">
+              <img class="breadcrumb-icon dark-only" src="NetScope_Short_Icon_Dark_Mode.png" alt="NetScope" width="13" height="13" />
+              <img class="breadcrumb-icon light-only" src="NetScope_Short_Icon_Light_Mode.png" alt="NetScope" width="13" height="13" />
+              <span>NetScope</span>
+            </span>
+            ${icon('chevron', 12)}
+            <span>${escapeHtml(title)}</span>
+          </div>
+          <div class="page-title-row">
+            <h1 class="page-title">${escapeHtml(title)}</h1>
+            ${route === 'settings' ? `
+              <button id="btn-settings-back" class="btn btn-back-pill" type="button" title="Back to ${escapeHtml(prevRouteTitle)}">
+                ${icon('arrow-left', 14)} Back to ${escapeHtml(prevRouteTitle)}
+              </button>
+            ` : ''}
+          </div>
           <p class="page-description">${escapeHtml(desc)}</p>
         </div>
         <div class="page-actions">
@@ -2310,6 +2337,15 @@
     // Settings shortcut button
     $('#btn-top-settings')?.addEventListener('click', () => navigateTo('settings'));
     $('#btn-notifications')?.addEventListener('click', () => navigateTo('alerts'));
+
+    // Back navigation button (Settings header & breadcrumbs)
+    $('#page-content')?.addEventListener('click', (e) => {
+      const backBtn = e.target.closest('#btn-settings-back, #btn-back-breadcrumb, .btn-back-pill, [data-action="go-back"]');
+      if (backBtn) {
+        e.preventDefault();
+        navigateTo(state.previousRoute || 'overview');
+      }
+    });
 
     // Connection configuration dialog
     const connDialog = $('#conn-dialog');

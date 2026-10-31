@@ -11,6 +11,7 @@ type IconName =
   | 'alert' | 'lock' | 'chart' | 'report' | 'sliders' | 'settings' | 'book'
   | 'search' | 'bell' | 'sun' | 'chevron' | 'pause' | 'play' | 'filter'
   | 'download' | 'more' | 'clock' | 'x' | 'check' | 'upload' | 'radio'
+  | 'arrow-left'
 
 const paths: Record<IconName, string> = {
   grid: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
@@ -41,6 +42,7 @@ const paths: Record<IconName, string> = {
   check: 'M5 12l4 4L19 6',
   upload: 'M12 16V4m-5 5l5-5 5 5M4 16v4h16v-4',
   radio: 'M12 12h.01M8.5 8.5a5 5 0 000 7m7-7a5 5 0 010 7M5.5 5.5a9 9 0 000 13m0-13a9 9 0 010 13',
+  'arrow-left': 'M19 12H5m7-7l-7 7 7 7',
 }
 
 function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
@@ -207,8 +209,43 @@ function TopologyGraph({ large = false }: { large?: boolean }) {
   </div>
 }
 
-function PageHeader({ id }: { id: PageId }) {
-  return <div className="page-heading"><div><div className="breadcrumbs">NetScope <Icon name="chevron" size={12}/> {pageMeta[id][0]}</div><h1>{pageMeta[id][0]}</h1><p>{pageMeta[id][1]}</p></div><div className="page-actions"><Badge tone="purple">Sample data</Badge>{(id === 'overview' || id === 'live') && <><Button icon="pause">Pause view</Button><Button icon="sliders" kind="primary">Capture settings</Button></>}</div></div>
+function PageHeader({ id, onBack, prevTitle }: { id: PageId; onBack?: () => void; prevTitle?: string }) {
+  return (
+    <div className={`page-heading ${id === 'settings' ? 'settings-heading' : ''}`}>
+      <div>
+        <div className="breadcrumbs">
+          {id === 'settings' && onBack && (
+            <>
+              <button className="breadcrumb-back-btn" onClick={onBack} type="button">
+                <Icon name="arrow-left" size={13}/>
+                <span>Back to {prevTitle || 'Overview'}</span>
+              </button>
+              <span className="breadcrumb-sep">/</span>
+            </>
+          )}
+          <span>NetScope</span> <Icon name="chevron" size={12}/> <span>{pageMeta[id][0]}</span>
+        </div>
+        <div className="page-title-row">
+          <h1>{pageMeta[id][0]}</h1>
+          {id === 'settings' && onBack && (
+            <Button icon="arrow-left" onClick={onBack} className="btn-back-pill">
+              Back to {prevTitle || 'Overview'}
+            </Button>
+          )}
+        </div>
+        <p>{pageMeta[id][1]}</p>
+      </div>
+      <div className="page-actions">
+        <Badge tone="purple">Sample data</Badge>
+        {(id === 'overview' || id === 'live') && (
+          <>
+            <Button icon="pause">Pause view</Button>
+            <Button icon="sliders" kind="primary">Capture settings</Button>
+          </>
+        )}
+      </div>
+    </div>
+  )
 }
 
 function Overview() {
@@ -394,12 +431,18 @@ function GenericPage({ id }: { id: PageId }) {
 }
 
 export default function App() {
-  const [page,setPage]=useState<PageId>('live')
-  const [collapsed,setCollapsed]=useState(false)
-  const [mobileOpen,setMobileOpen]=useState(false)
-  const [theme,setTheme]=useState<'dark'|'light'>('dark')
-  const current = useMemo(()=>nav.flatMap(n=>n.items).find(x=>x.id===page),[page])
-  const navigate=(id:PageId)=>{setPage(id);setMobileOpen(false);window.scrollTo(0,0)}
+  const [page, setPage] = useState<PageId>('live')
+  const [prevPage, setPrevPage] = useState<PageId>('overview')
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [theme, setTheme] = useState<'dark'|'light'>('dark')
+  const current = useMemo(() => nav.flatMap(n => n.items).find(x => x.id === page), [page])
+  const navigate = (id: PageId) => {
+    if (page !== 'settings' && page !== id) setPrevPage(page);
+    setPage(id);
+    setMobileOpen(false);
+    window.scrollTo(0, 0);
+  }
   return <div className={`app ${theme} ${collapsed?'collapsed':''}`}>
     <aside className={`sidebar ${mobileOpen?'mobile-open':''}`}>
       <div className="brand" onClick={() => {
@@ -442,7 +485,11 @@ export default function App() {
           <button aria-label="Settings" className="icon-btn" onClick={()=>navigate('settings')}><Icon name="settings"/></button>
         </div>
       </header>
-      <main><PageHeader id={page}/><GenericPage id={page}/><footer><span>NetScope · Network observability and packet analysis</span><span>Backend connected · v1.0</span></footer></main>
+      <main>
+        <PageHeader id={page} onBack={() => navigate(prevPage)} prevTitle={pageMeta[prevPage][0]} />
+        <GenericPage id={page}/>
+        <footer><span>NetScope · Network observability and packet analysis</span><span>Backend connected · v1.0</span></footer>
+      </main>
     </div>
   </div>
 }
