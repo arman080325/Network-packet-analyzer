@@ -551,6 +551,23 @@ html, body {
   min-width: 190px;
   flex-shrink: 0;
 }
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  min-width: 0;
+  transition: opacity 0.15s ease;
+}
+.topbar-logo:hover {
+  opacity: 0.85;
+}
+.topbar-logo img {
+  height: 26px;
+  width: auto;
+  max-width: 145px;
+  object-fit: contain;
+  display: block;
+}
 .top-left > b {
   font-size: 14.5px;
   font-weight: 650;
@@ -2578,84 +2595,220 @@ footer.app-footer {
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    width: 252px;
-    overflow: hidden;
-    transform: translateX(-100%);
-    box-shadow: 12px 0 35px rgba(0, 0, 0, 0.55);
+  /* Mobile Sidebar Drawer - Overrides any desktop .collapsed state */
+  .sidebar,
+  .collapsed .sidebar,
+  .sidebar.mobile-open,
+  .collapsed .sidebar.mobile-open {
+    width: 280px !important;
+    max-width: 85vw !important;
+    position: fixed !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    z-index: 100 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 16px 0 40px rgba(0, 0, 0, 0.65) !important;
+    background: var(--surface) !important;
   }
-  .sidebar.mobile-open {
-    transform: none;
+
+  .sidebar.mobile-open,
+  .collapsed .sidebar.mobile-open {
+    transform: translateX(0) !important;
   }
-  .mobile-open .brand {
-    padding: 0 14px 0 16px;
-    justify-content: space-between;
+
+  /* Mobile Brand Header in Drawer */
+  .brand,
+  .collapsed .brand,
+  .mobile-open .brand,
+  .collapsed .mobile-open .brand {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 16px !important;
+    height: 60px !important;
+    position: relative !important;
+    border-bottom: 1px solid var(--border) !important;
   }
-  .mobile-open .brand-link {
-    width: auto;
-    flex: 1;
-    justify-content: flex-start;
+
+  .brand-link,
+  .collapsed .brand-link,
+  .mobile-open .brand-link,
+  .collapsed .mobile-open .brand-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex: 1 !important;
+    width: auto !important;
+    height: 100% !important;
   }
-  .mobile-open .brand-logo-short {
+
+  /* In mobile drawer: NEVER show short mark, show only full logo */
+  .sidebar .brand-logo-short,
+  .collapsed .sidebar .brand-logo-short,
+  .mobile-open .brand-logo-short,
+  .collapsed .mobile-open .brand-logo-short {
     display: none !important;
   }
-  .mobile-open .brand-logo-full.dark-only {
+
+  .mobile-open .brand-logo-full.dark-only,
+  .collapsed .mobile-open .brand-logo-full.dark-only {
     display: block !important;
+    height: 26px !important;
+    max-width: 145px !important;
   }
-  .mobile-open .brand-logo-full.light-only {
+  .mobile-open .brand-logo-full.light-only,
+  .collapsed .mobile-open .brand-logo-full.light-only {
     display: none !important;
   }
+
   [data-theme="light"] .mobile-open .brand-logo-full.dark-only,
-  .app.light .mobile-open .brand-logo-full.dark-only {
+  .app.light .mobile-open .brand-logo-full.dark-only,
+  [data-theme="light"] .collapsed .mobile-open .brand-logo-full.dark-only,
+  .app.light .collapsed .mobile-open .brand-logo-full.dark-only {
     display: none !important;
   }
   [data-theme="light"] .mobile-open .brand-logo-full.light-only,
-  .app.light .mobile-open .brand-logo-full.light-only {
+  .app.light .mobile-open .brand-logo-full.light-only,
+  [data-theme="light"] .collapsed .mobile-open .brand-logo-full.light-only,
+  .app.light .collapsed .mobile-open .brand-logo-full.light-only {
     display: block !important;
+    height: 26px !important;
+    max-width: 145px !important;
   }
-  .mobile-open .nav-item span,
-  .mobile-open .nav-item em,
-  .mobile-open .sidebar-connection,
-  .mobile-open .collapse-btn {
+
+  /* Close Drawer button at top right of mobile sidebar */
+  .collapse-btn,
+  .collapsed .collapse-btn,
+  .mobile-open .collapse-btn,
+  .collapsed .mobile-open .collapse-btn {
     display: flex !important;
+    position: static !important;
+    transform: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin-left: auto !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--text-2) !important;
+    box-shadow: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
   }
-  .mobile-open .collapse-btn {
-    position: static;
-    transform: none;
-    width: 28px;
-    height: 28px;
-    border-radius: var(--radius-sm);
-    box-shadow: none;
-    margin-left: auto;
-  }
+  .collapse-btn svg,
+  .collapsed .collapse-btn svg,
   .mobile-open .collapse-btn svg {
-    width: 16px;
-    height: 16px;
-    transform: rotate(180deg);
+    width: 15px !important;
+    height: 15px !important;
+    transform: rotate(180deg) !important;
   }
-  .mobile-open .nav-group > label {
+
+  /* Nav items and labels in mobile drawer */
+  .nav-group > label,
+  .collapsed .nav-group > label,
+  .mobile-open .nav-group > label,
+  .collapsed .mobile-open .nav-group > label {
     display: block !important;
+    font-size: 9.5px !important;
+    letter-spacing: 1.1px !important;
+    padding: 10px 12px 4px !important;
+    color: #718298 !important;
+    text-transform: uppercase !important;
+    font-weight: 700 !important;
   }
-  .mobile-open .nav-item {
-    justify-content: flex-start;
-    padding: 0 12px;
+
+  .nav-item,
+  .collapsed .nav-item,
+  .mobile-open .nav-item,
+  .collapsed .mobile-open .nav-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 0 12px !important;
+    width: 100% !important;
+    height: 38px !important;
+    gap: 12px !important;
+  }
+  .nav-item span,
+  .collapsed .nav-item span,
+  .mobile-open .nav-item span,
+  .collapsed .mobile-open .nav-item span {
+    display: inline-block !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: inherit !important;
+    white-space: nowrap !important;
+  }
+  .nav-item em,
+  .collapsed .nav-item em,
+  .mobile-open .nav-item em,
+  .collapsed .mobile-open .nav-item em {
+    display: inline-block !important;
+    margin-left: auto !important;
+  }
+  .sidebar-connection,
+  .collapsed .sidebar-connection,
+  .mobile-open .sidebar-connection,
+  .collapsed .mobile-open .sidebar-connection {
+    display: block !important;
+    margin: 12px 10px !important;
   }
 
   .main-shell, .collapsed .main-shell {
-    margin-left: 0;
-    width: 100%;
+    margin-left: 0 !important;
+    width: 100% !important;
   }
   .topbar {
-    padding: 0 16px;
+    height: 58px;
+    padding: 0 14px;
+    gap: 10px;
   }
-  .mobile-menu-btn {
+  .top-left {
+    min-width: 0;
+    flex: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 0;
-    color: var(--text-2);
-    cursor: pointer;
+    gap: 10px;
+  }
+  .mobile-menu-btn {
+    display: flex !important;
+    width: 34px !important;
+    height: 34px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: var(--radius-sm) !important;
+    color: var(--teal) !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+  }
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+  }
+  .topbar-logo img {
+    height: 24px !important;
+    max-width: 130px !important;
+  }
+  .current-icon,
+  #top-current-title,
+  #top-page-title,
+  .global-search {
+    display: none !important;
+  }
+  .top-actions {
+    gap: 8px;
+    margin-left: auto;
+  }
+  .top-actions .badge {
+    display: none !important;
   }
   .current-icon {
     display: none;

@@ -138,19 +138,50 @@ const hosts = [
   ['224.0.0.251', 'Multicast', 'Clean', '312', '184 KB', '0', '28 sec ago'],
 ]
 
-function LineChart({ entropy = false }: { entropy?: boolean }) {
+const TRAFFIC_PRESETS = {
+  '1H': {
+    yLabels: ['12.0', '8.0', '4.0', '0'],
+    xLabels: ['14:00', '14:15', '14:30', '14:45', '15:00'],
+    area: 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34 V210H0Z',
+    primary: 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34',
+    secondary: 'M0 184 C70 166 110 180 155 152 S250 168 300 130 S390 155 440 122 S540 142 590 104 S690 126 735 91 S780 100 800 78'
+  },
+  '6H': {
+    yLabels: ['16.0', '12.0', '6.0', '0'],
+    xLabels: ['09:00', '10:30', '12:00', '13:30', '15:00'],
+    area: 'M0 175 C60 160 120 130 180 90 S300 110 360 65 S440 30 510 45 S600 80 670 60 S740 40 800 52 V210H0Z',
+    primary: 'M0 175 C60 160 120 130 180 90 S300 110 360 65 S440 30 510 45 S600 80 670 60 S740 40 800 52',
+    secondary: 'M0 190 C70 178 130 150 190 120 S310 135 370 95 S450 60 520 75 S610 105 680 88 S750 68 800 80'
+  },
+  '24H': {
+    yLabels: ['20.0', '14.0', '7.0', '0'],
+    xLabels: ['Yesterday 15:00', '21:00', '03:00', '09:00', 'Today 15:00'],
+    area: 'M0 95 C80 110 140 145 220 170 S340 190 410 185 S500 130 580 80 S670 40 730 30 S770 45 800 38 V210H0Z',
+    primary: 'M0 95 C80 110 140 145 220 170 S340 190 410 185 S500 130 580 80 S670 40 730 30 S770 45 800 38',
+    secondary: 'M0 125 C90 135 150 165 230 185 S350 200 420 196 S510 155 590 110 S680 75 740 60 S780 72 800 65'
+  }
+}
+
+function LineChart({ entropy = false, timeframe = '1H' }: { entropy?: boolean; timeframe?: '1H' | '6H' | '24H' }) {
+  const preset = TRAFFIC_PRESETS[timeframe] || TRAFFIC_PRESETS['1H']
+  const yLabels = entropy ? ['8.0', '6.0', '4.0', '0'] : preset.yLabels
+  const xLabels = entropy ? ['14:00', '14:08', '14:16', '14:24', '14:32'] : preset.xLabels
+  const areaPath = entropy ? 'M0 170 C80 120 100 80 170 105 S250 40 320 72 S420 48 480 66 S580 36 650 55 S730 26 800 38 V210H0Z' : preset.area
+  const primaryPath = entropy ? 'M0 170 C80 120 100 80 170 105 S250 40 320 72 S420 48 480 66 S580 36 650 55 S730 26 800 38' : preset.primary
+  const secondaryPath = preset.secondary
+
   return <div className={`chart-wrap ${entropy ? 'entropy-chart' : ''}`}>
-    <div className="y-axis"><span>{entropy ? '8.0' : '120'}</span><span>{entropy ? '6.0' : '80'}</span><span>{entropy ? '4.0' : '40'}</span><span>0</span></div>
+    <div className="y-axis"><span>{yLabels[0]}</span><span>{yLabels[1]}</span><span>{yLabels[2]}</span><span>{yLabels[3]}</span></div>
     <div className="plot">
       <div className="grid-lines"><i/><i/><i/><i/></div>
       {entropy && <div className="threshold"><span>7.2 threshold</span></div>}
       <svg viewBox="0 0 800 210" preserveAspectRatio="none" aria-label={entropy ? 'Entropy trend' : 'Network traffic trend'}>
         <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#19b89a" stopOpacity=".28"/><stop offset="1" stopColor="#19b89a" stopOpacity="0"/></linearGradient></defs>
-        <path className="area" d={entropy ? 'M0 170 C80 120 100 80 170 105 S250 40 320 72 S420 48 480 66 S580 36 650 55 S730 26 800 38 V210H0Z' : 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34 V210H0Z'} />
-        <path className="line primary" d={entropy ? 'M0 170 C80 120 100 80 170 105 S250 40 320 72 S420 48 480 66 S580 36 650 55 S730 26 800 38' : 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34'} />
-        {!entropy && <path className="line secondary" d="M0 184 C70 166 110 180 155 152 S250 168 300 130 S390 155 440 122 S540 142 590 104 S690 126 735 91 S780 100 800 78" />}
+        <path className="area" d={areaPath} />
+        <path className="line primary" d={primaryPath} />
+        {!entropy && <path className="line secondary" d={secondaryPath} />}
       </svg>
-      <div className="x-axis"><span>14:00</span><span>14:08</span><span>14:16</span><span>14:24</span><span>14:32</span></div>
+      <div className="x-axis">{xLabels.map(l => <span key={l}>{l}</span>)}</div>
     </div>
   </div>
 }
@@ -181,6 +212,10 @@ function PageHeader({ id }: { id: PageId }) {
 }
 
 function Overview() {
+  const [timeframe, setTimeframe] = useState<'1H' | '6H' | '24H'>('1H')
+  const currentRate = timeframe === '1H' ? '6.24' : timeframe === '6H' ? '8.45' : '14.20'
+  const currentVol = timeframe === '1H' ? '2.14 GB' : timeframe === '6H' ? '14.8 GB' : '58.6 GB'
+
   return <>
     <div className="capture-strip"><div><span className="pulse"/><b>Demo capture active</b><span>Simulated traffic · 42 packets/sec</span></div><div><Icon name="clock" size={15}/> Updated just now <Button icon="pause" kind="ghost">Pause view</Button></div></div>
     <div className="metrics six">
@@ -192,7 +227,31 @@ function Overview() {
       <Metric label="Encrypted traffic" value="78.4" unit="%" detail="14,450 packets" />
     </div>
     <div className="dashboard-grid">
-      <Card title="Network traffic overview" className="traffic-card" action={<div className="segmented"><button className="active">1H</button><button>6H</button><button>24H</button></div>}><div className="legend"><span><i className="teal"/>Incoming</span><span><i className="blue"/>Outgoing</span><b>Current 6.24 Mbps</b></div><LineChart /></Card>
+      <Card
+        title="Network traffic overview"
+        className="traffic-card"
+        action={
+          <div className="segmented">
+            {(['1H', '6H', '24H'] as const).map(tf => (
+              <button
+                key={tf}
+                className={timeframe === tf ? 'active' : ''}
+                onClick={() => setTimeframe(tf)}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
+        }
+      >
+        <div className="legend">
+          <span><i className="teal"/>Incoming</span>
+          <span><i className="blue"/>Outgoing</span>
+          <b>Current {currentRate} Mbps</b>
+          <span style={{ fontSize: 10, color: 'var(--muted)', marginLeft: 8 }}>{currentVol} total ({timeframe})</span>
+        </div>
+        <LineChart timeframe={timeframe} />
+      </Card>
       <Card title="Protocol distribution" action={<Button icon="more" kind="ghost"/>}><ProtocolBars /></Card>
       <Card title="Network topology" className="topology-card" action={<Button kind="ghost">Open explorer <Icon name="chevron" size={13}/></Button>}><TopologyGraph /></Card>
       <Card title="Threat posture"><div className="posture"><div className="risk-ring"><b>24</b><span>hosts</span></div><div className="posture-list"><span><i className="clean"/>Clean <b>19</b></span><span><i className="suspicious"/>Suspicious <b>4</b></span><span><i className="malicious"/>Malicious <b>1</b></span></div></div><p className="callout warn"><Icon name="alert" size={16}/><span>10.0.0.42 has exceeded the malicious threshold with a score of 82.</span></p></Card>
@@ -343,13 +402,22 @@ export default function App() {
   const navigate=(id:PageId)=>{setPage(id);setMobileOpen(false);window.scrollTo(0,0)}
   return <div className={`app ${theme} ${collapsed?'collapsed':''}`}>
     <aside className={`sidebar ${mobileOpen?'mobile-open':''}`}>
-      <div className="brand" onClick={() => collapsed && setCollapsed(false)}>
-        {collapsed ? (
-          <img src={theme === 'dark' ? '/NetScope_Short_Icon_Dark_Mode.png' : '/NetScope_Short_Icon_Light_Mode.png'} alt="NetScope" width={32} height={32} style={{ objectFit: 'contain' }} />
+      <div className="brand" onClick={() => {
+        if (!mobileOpen && collapsed) setCollapsed(false);
+      }}>
+        {collapsed && !mobileOpen ? (
+          <img className="brand-logo-short" src={theme === 'dark' ? '/NetScope_Short_Icon_Dark_Mode.png' : '/NetScope_Short_Icon_Light_Mode.png'} alt="NetScope" width={32} height={32} style={{ objectFit: 'contain' }} />
         ) : (
-          <img src={theme === 'dark' ? '/NetScope_Full_Logo_Dark_Mode.png' : '/NetScope_Full_Logo_Light_Mode.png'} alt="NetScope" height={28} style={{ objectFit: 'contain', maxWidth: 150 }} />
+          <img className="brand-logo-full" src={theme === 'dark' ? '/NetScope_Full_Logo_Dark_Mode.png' : '/NetScope_Full_Logo_Light_Mode.png'} alt="NetScope" height={28} style={{ objectFit: 'contain', maxWidth: 150 }} />
         )}
-        <button className="collapse" onClick={(e) => { e.stopPropagation(); setCollapsed(!collapsed); }} aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}>
+        <button className="collapse" onClick={(e) => {
+          e.stopPropagation();
+          if (mobileOpen) {
+            setMobileOpen(false);
+          } else {
+            setCollapsed(!collapsed);
+          }
+        }} aria-label={mobileOpen ? "Close menu" : (collapsed ? "Expand sidebar" : "Collapse sidebar")}>
           <Icon name="chevron" size={16}/>
         </button>
       </div>
@@ -358,7 +426,22 @@ export default function App() {
     </aside>
     {mobileOpen&&<button className="backdrop" onClick={()=>setMobileOpen(false)} aria-label="Close navigation"/>}
     <div className="main-shell">
-      <header className="topbar"><div className="top-left"><button className="mobile-menu" onClick={()=>setMobileOpen(true)}><Icon name="grid"/></button><div className="current-icon"><Icon name={current?.icon||'grid'}/></div><b>{pageMeta[page][0]}</b></div><label className="global-search"><Icon name="search" size={16}/><input placeholder="Search packets, hosts or alerts"/><kbd>⌘ K</kbd></label><div className="top-actions"><Badge tone="good">Connected</Badge><Badge tone="purple">Demo mode</Badge><button aria-label="Notifications" className="icon-btn"><Icon name="bell"/><i/></button><SunMoonThemeToggle theme={theme} onThemeChange={(t)=>setTheme(t)} size={32} sky duration={1200} /><button aria-label="Settings" className="icon-btn" onClick={()=>navigate('settings')}><Icon name="settings"/></button></div></header>
+      <header className="topbar">
+        <div className="top-left">
+          <button className="mobile-menu" onClick={()=>setMobileOpen(true)} aria-label="Open navigation menu"><Icon name="grid"/></button>
+          <a href="#overview" className="topbar-logo" onClick={(e) => { e.preventDefault(); navigate('overview'); }} aria-label="NetScope Overview" title="NetScope Overview" style={{ display: 'flex', alignItems: 'center' }}>
+            <img src={theme === 'dark' ? '/NetScope_Full_Logo_Dark_Mode.png' : '/NetScope_Full_Logo_Light_Mode.png'} alt="NetScope" height={26} style={{ objectFit: 'contain', maxWidth: 145 }} />
+          </a>
+        </div>
+        <label className="global-search"><Icon name="search" size={16}/><input placeholder="Search packets, hosts or alerts"/><kbd>⌘ K</kbd></label>
+        <div className="top-actions">
+          <Badge tone="good">Connected</Badge>
+          <Badge tone="purple">Demo mode</Badge>
+          <button aria-label="Notifications" className="icon-btn" onClick={()=>navigate('alerts')}><Icon name="bell"/><i/></button>
+          <SunMoonThemeToggle theme={theme} onThemeChange={(t)=>setTheme(t)} size={32} sky duration={1200} />
+          <button aria-label="Settings" className="icon-btn" onClick={()=>navigate('settings')}><Icon name="settings"/></button>
+        </div>
+      </header>
       <main><PageHeader id={page}/><GenericPage id={page}/><footer><span>NetScope · Network observability and packet analysis</span><span>Backend connected · v1.0</span></footer></main>
     </div>
   </div>

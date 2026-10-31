@@ -135,8 +135,78 @@ footer{height:65px;display:flex;align-items:center;justify-content:space-between
   .packet-workspace{display:block}.inspector{margin-top:10px}.grid-3{grid-template-columns:1fr 1fr}.grid-3 .card:last-child{grid-column:1/-1}.report-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:768px){
-  .sidebar{width:248px;transform:translateX(-100%)}.sidebar.mobile-open{transform:none}.mobile-open .brand>b,.mobile-open .nav-group>label,.mobile-open .nav-group button span,.mobile-open .nav-group em,.mobile-open .connection,.mobile-open .collapse{display:flex}.mobile-open .nav-group button{justify-content:flex-start;padding:0 10px}
-  .main-shell,.collapsed .main-shell{margin-left:0;width:100%}.topbar{padding:0 14px}.mobile-menu{display:grid}.current-icon{display:none}.global-search{display:none}.top-left{min-width:0;flex:1}.backdrop{position:fixed;inset:0;z-index:45;border:0;background:rgba(4,8,16,.65)}
+  .sidebar, .collapsed .sidebar {
+    width: 280px !important;
+    max-width: 85vw !important;
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    z-index: 100 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 16px 0 40px rgba(0,0,0,0.65) !important;
+    background: var(--surface) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .sidebar.mobile-open, .collapsed .sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+  .brand, .collapsed .brand {
+    padding: 0 16px !important;
+    justify-content: space-between !important;
+    height: 60px !important;
+  }
+  .brand-logo-short, .collapsed .brand-logo-short {
+    display: none !important;
+  }
+  .brand-logo-full, .collapsed .brand-logo-full {
+    display: block !important;
+    height: 28px !important;
+    max-width: 150px !important;
+  }
+  .collapse, .collapsed .collapse {
+    display: flex !important;
+    position: static !important;
+    transform: none !important;
+    width: 32px !important;
+    height: 32px !important;
+    margin-left: auto !important;
+    background: var(--surface-2) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 6px !important;
+    color: var(--teal) !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .collapse svg, .collapsed .collapse svg {
+    transform: rotate(180deg) !important;
+  }
+  .nav-group>label, .collapsed .nav-group>label {
+    display: block !important;
+  }
+  .nav-group button, .collapsed .nav-group button {
+    justify-content: flex-start !important;
+    padding: 0 10px !important;
+  }
+  .nav-group button span, .collapsed .nav-group button span {
+    display: inline-block !important;
+  }
+  .nav-group em, .collapsed .nav-group em {
+    display: inline-block !important;
+  }
+  .connection, .collapsed .connection {
+    display: block !important;
+  }
+
+  .main-shell,.collapsed .main-shell{margin-left:0 !important;width:100% !important;}
+  .topbar{padding:0 14px;height:58px;gap:10px}
+  .mobile-menu{display:grid}
+  .topbar-logo{display:flex;align-items:center}
+  .topbar-logo img{height:24px !important;max-width:130px !important}
+  .current-icon{display:none}
+  .global-search{display:none}
+  .top-left{min-width:0;flex:1;display:flex;align-items:center;gap:10px}
+  .backdrop{position:fixed;inset:0;z-index:90;border:0;background:rgba(4,8,16,.65);cursor:pointer}
   main{padding:18px 14px 0}.page-heading{align-items:flex-start}.page-actions{display:none}.metrics.six,.metrics.four,.metrics.five{grid-template-columns:repeat(2,1fr)}.dashboard-grid{display:block}.dashboard-grid>.card{margin-bottom:10px}.capture-strip>div:last-child>span,.capture-strip .btn{display:none}
   .toolbar{overflow:auto;padding-bottom:3px}.toolbar .search{min-width:260px}.filter-help code,.filter-help>span:nth-child(2){display:none}.topology-workspace,.two-column,.config-layout,.docs-layout{grid-template-columns:1fr}.topology.large{height:450px}.host-panel{display:none}.grid-2{grid-template-columns:1fr}.mode-grid{grid-template-columns:1fr}.settings-layout{grid-template-columns:1fr}.settings-layout>aside{flex-direction:row;overflow:auto}.settings-layout>aside button{white-space:nowrap}.packet-workspace{display:block}.report-hero{align-items:flex-start;gap:12px}.report-grid{grid-template-columns:1fr 1fr}
 }

@@ -79,6 +79,45 @@
   };
 
   // ══════════════════════════════════════════════════════════════════════════
+  //  Traffic Timeframe Datasets (1H, 6H, 24H)
+  // ══════════════════════════════════════════════════════════════════════════
+  const TRAFFIC_TIMEFRAME_DATA = {
+    '1H': {
+      throughput: '6.24',
+      avgThroughput: '5.12',
+      peakThroughput: '7.80',
+      totalVolume: '2.14 GB',
+      xLabels: ['14:00', '14:15', '14:30', '14:45', '15:00'],
+      yLabels: ['12.0', '8.0', '4.0', '0'],
+      pathArea: 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34 V210H0Z',
+      pathPrimary: 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34',
+      pathSecondary: 'M0 184 C70 166 110 180 155 152 S250 168 300 130 S390 155 440 122 S540 142 590 104 S690 126 735 91 S780 100 800 78'
+    },
+    '6H': {
+      throughput: '8.45',
+      avgThroughput: '6.18',
+      peakThroughput: '11.40',
+      totalVolume: '14.8 GB',
+      xLabels: ['09:00', '10:30', '12:00', '13:30', '15:00'],
+      yLabels: ['16.0', '12.0', '6.0', '0'],
+      pathArea: 'M0 175 C60 160 120 130 180 90 S300 110 360 65 S440 30 510 45 S600 80 670 60 S740 40 800 52 V210H0Z',
+      pathPrimary: 'M0 175 C60 160 120 130 180 90 S300 110 360 65 S440 30 510 45 S600 80 670 60 S740 40 800 52',
+      pathSecondary: 'M0 190 C70 178 130 150 190 120 S310 135 370 95 S450 60 520 75 S610 105 680 88 S750 68 800 80'
+    },
+    '24H': {
+      throughput: '14.20',
+      avgThroughput: '4.95',
+      peakThroughput: '15.80',
+      totalVolume: '58.6 GB',
+      xLabels: ['Yesterday 15:00', '21:00', '03:00', '09:00', 'Today 15:00'],
+      yLabels: ['20.0', '14.0', '7.0', '0'],
+      pathArea: 'M0 95 C80 110 140 145 220 170 S340 190 410 185 S500 130 580 80 S670 40 730 30 S770 45 800 38 V210H0Z',
+      pathPrimary: 'M0 95 C80 110 140 145 220 170 S340 190 410 185 S500 130 580 80 S670 40 730 30 S770 45 800 38',
+      pathSecondary: 'M0 125 C90 135 150 165 230 185 S350 200 420 196 S510 155 590 110 S680 75 740 60 S780 72 800 65'
+    }
+  };
+
+  // ══════════════════════════════════════════════════════════════════════════
   //  Application State Store
   // ══════════════════════════════════════════════════════════════════════════
   const state = {
@@ -86,6 +125,7 @@
     sidebarCollapsed: localStorage.getItem(STORAGE_SIDEBAR_KEY) === 'true',
     mobileMenuOpen: false,
     theme: localStorage.getItem(STORAGE_THEME_KEY) || 'dark',
+    trafficTimeframe: '1H', // '1H' | '6H' | '24H'
 
     // Connection
     connState: 'connecting', // 'live' | 'demo' | 'connecting' | 'down'
@@ -1046,18 +1086,21 @@
         <section class="card traffic-card">
           <div class="card-head">
             <div class="card-title">Network traffic overview</div>
-            <div class="segmented">
-              <button class="active" type="button">1H</button>
-              <button type="button">6H</button>
-              <button type="button">24H</button>
+            <div class="segmented" id="traffic-timeframe-controls">
+              <button class="${(state.trafficTimeframe || '1H') === '1H' ? 'active' : ''}" data-timeframe="1H" type="button">1H</button>
+              <button class="${state.trafficTimeframe === '6H' ? 'active' : ''}" data-timeframe="6H" type="button">6H</button>
+              <button class="${state.trafficTimeframe === '24H' ? 'active' : ''}" data-timeframe="24H" type="button">24H</button>
             </div>
           </div>
-          <div class="legend">
+          <div class="legend" id="traffic-legend">
             <span><i class="teal"></i> Incoming</span>
             <span><i class="blue"></i> Outgoing</span>
-            <b>Current ${throughput} Mbps</b>
+            <b id="traffic-legend-rate">Current ${(TRAFFIC_TIMEFRAME_DATA[state.trafficTimeframe || '1H'] || TRAFFIC_TIMEFRAME_DATA['1H']).throughput} Mbps</b>
+            <span class="mono" id="traffic-legend-vol" style="margin-left: 8px; font-size: 10px; color: var(--muted);">${(TRAFFIC_TIMEFRAME_DATA[state.trafficTimeframe || '1H'] || TRAFFIC_TIMEFRAME_DATA['1H']).totalVolume} total (${state.trafficTimeframe || '1H'})</span>
           </div>
-          ${renderThroughputSvgChart()}
+          <div id="traffic-chart-container">
+            ${renderThroughputSvgChart(false, state.trafficTimeframe || '1H')}
+          </div>
         </section>
 
         <section class="card">
@@ -2091,16 +2134,18 @@
     return (arr || [20, 40, 60, 80]).map(v => `<i style="height: ${v}%;"></i>`).join('');
   }
 
-  function renderThroughputSvgChart(entropy = false) {
+  function renderThroughputSvgChart(entropy = false, timeframe = (state.trafficTimeframe || '1H')) {
     const isEntropy = entropy;
-    const yLabels = isEntropy ? ['8.0', '6.0', '4.0', '0'] : ['12.0', '8.0', '4.0', '0'];
+    const tfData = TRAFFIC_TIMEFRAME_DATA[timeframe] || TRAFFIC_TIMEFRAME_DATA['1H'];
+    const yLabels = isEntropy ? ['8.0', '6.0', '4.0', '0'] : tfData.yLabels;
     const pathArea = isEntropy 
       ? 'M0 170 C80 120 100 80 170 105 S250 40 320 72 S420 48 480 66 S580 36 650 55 S730 26 800 38 V210H0Z'
-      : 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34 V210H0Z';
+      : tfData.pathArea;
     const pathLinePrimary = isEntropy
       ? 'M0 170 C80 120 100 80 170 105 S250 40 320 72 S420 48 480 66 S580 36 650 55 S730 26 800 38'
-      : 'M0 158 C50 140 85 160 130 120 S205 130 250 105 S335 48 380 88 S470 120 520 64 S620 74 670 42 S755 68 800 34';
-    const pathLineSecondary = 'M0 184 C70 166 110 180 155 152 S250 168 300 130 S390 155 440 122 S540 142 590 104 S690 126 735 91 S780 100 800 78';
+      : tfData.pathPrimary;
+    const pathLineSecondary = tfData.pathSecondary;
+    const xLabels = isEntropy ? ['14:00', '14:08', '14:16', '14:24', '14:32'] : tfData.xLabels;
 
     return `
       <div class="chart-wrap">
@@ -2119,7 +2164,7 @@
             ${!isEntropy ? `<path class="line secondary" d="${pathLineSecondary}"></path>` : ''}
           </svg>
           <div class="x-axis">
-            <span>14:00</span><span>14:08</span><span>14:16</span><span>14:24</span><span>14:32</span>
+            ${xLabels.map(label => `<span>${label}</span>`).join('')}
           </div>
         </div>
       </div>
@@ -2211,8 +2256,17 @@
   // ══════════════════════════════════════════════════════════════════════════
   function attachGlobalListeners() {
     // Sidebar collapse/expand button & brand click in collapsed state
-    $('#sidebar-collapse-btn')?.addEventListener('click', toggleSidebarCollapse);
+    $('#sidebar-collapse-btn')?.addEventListener('click', () => {
+      if (window.innerWidth <= 768 || state.mobileMenuOpen) {
+        closeMobileMenu();
+      } else {
+        toggleSidebarCollapse();
+      }
+    });
     $('#brand-header')?.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768 || state.mobileMenuOpen) {
+        return;
+      }
       if (state.sidebarCollapsed && !e.target.closest('#sidebar-collapse-btn')) {
         toggleSidebarCollapse();
       }
@@ -2224,6 +2278,34 @@
 
     // Theme toggle button
     $('#btn-theme-toggle')?.addEventListener('click', toggleTheme);
+
+    // Overview Network Traffic timeframe toggle (1H, 6H, 24H)
+    $('#page-content')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('#traffic-timeframe-controls button[data-timeframe]');
+      if (!btn) return;
+      const tf = btn.getAttribute('data-timeframe');
+      if (!tf || tf === state.trafficTimeframe) return;
+      state.trafficTimeframe = tf;
+
+      const controls = $('#traffic-timeframe-controls');
+      if (controls) {
+        controls.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+      }
+
+      const data = TRAFFIC_TIMEFRAME_DATA[tf] || TRAFFIC_TIMEFRAME_DATA['1H'];
+      const chartContainer = $('#traffic-chart-container');
+      if (chartContainer) {
+        chartContainer.innerHTML = renderThroughputSvgChart(false, tf);
+      }
+      const rateEl = $('#traffic-legend-rate');
+      if (rateEl) {
+        rateEl.textContent = `Current ${data.throughput} Mbps`;
+      }
+      const volEl = $('#traffic-legend-vol');
+      if (volEl) {
+        volEl.textContent = `${data.totalVolume} total (${tf})`;
+      }
+    });
 
     // Settings shortcut button
     $('#btn-top-settings')?.addEventListener('click', () => navigateTo('settings'));
