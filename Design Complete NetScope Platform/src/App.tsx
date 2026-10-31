@@ -194,18 +194,118 @@ function ProtocolBars() {
 }
 
 function TopologyGraph({ large = false }: { large?: boolean }) {
-  const nodes = [
-    ['gateway', 48, 48, '192.168.1.1', 'good'],
-    ['host', 24, 26, '192.168.1.24', 'warn'],
-    ['host', 25, 74, '10.0.0.42', 'danger'],
-    ['external', 73, 20, '172.217.14.206', 'good'],
-    ['external', 78, 55, '185.199.108.133', 'warn'],
-    ['host', 70, 82, '192.168.1.31', 'good'],
+  const nodes = large ? [
+    ['gateway', 50, 50, '192.168.1.1 (Gateway)', 'good'],
+    ['host', 22, 26, '192.168.1.24', 'info'],
+    ['host', 22, 74, '10.0.0.42 (Malicious)', 'danger'],
+    ['external', 76, 22, '172.217.14.206', 'good'],
+    ['external', 82, 54, '185.199.108.133', 'warn'],
+    ['host', 72, 82, '192.168.1.31', 'good'],
+  ] : [
+    ['gateway', 50, 50, '192.168.1.1 (Gateway)', 'good'],
+    ['host', 20, 26, '192.168.1.24', 'info'],
+    ['host', 20, 76, '10.0.0.42 (Malicious)', 'danger'],
+    ['external', 80, 26, '172.217.14.206', 'good'],
+    ['host', 80, 76, '192.168.1.105', 'good'],
   ]
+
   return <div className={`topology ${large ? 'large' : ''}`}>
-    <svg viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="48" y1="48" x2="24" y2="26"/><line x1="48" y1="48" x2="25" y2="74" className="risk"/><line x1="48" y1="48" x2="73" y2="20"/><line x1="48" y1="48" x2="78" y2="55"/><line x1="48" y1="48" x2="70" y2="82"/><line x1="25" y1="74" x2="78" y2="55" className="risk"/></svg>
-    {nodes.map(([type, x, y, label, tone]) => <div key={label} className={`node ${type} ${tone}`} style={{ left: `${x}%`, top: `${y}%` }}><span><Icon name={type === 'gateway' ? 'network' : 'server'} size={large ? 20 : 15}/></span><label>{label}</label></div>)}
-    {large && <div className="graph-tools"><Button icon="search" kind="ghost"/><Button icon="sliders" kind="ghost"/><Button kind="ghost">Reset</Button></div>}
+    <div className="topology-status-bar">
+      <span><span className="pulse" /> <b>Live mesh packet transfer</b></span>
+      <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: 'var(--muted)' }}>
+        {large ? '6 links · 54 pkts/s' : '4 links · 42 pkts/s'}
+      </span>
+    </div>
+    <div className="topology-canvas">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <filter id={`glow-t-${large?'lg':'sm'}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <filter id={`glow-b-${large?'lg':'sm'}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <filter id={`glow-d-${large?'lg':'sm'}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+
+        {large ? (
+          <>
+            <line x1="50" y1="50" x2="22" y2="26" className="topo-link active-link" />
+            <line x1="50" y1="50" x2="22" y2="74" className="topo-link risk" />
+            <line x1="50" y1="50" x2="76" y2="22" className="topo-link active-link" />
+            <line x1="50" y1="50" x2="82" y2="54" className="topo-link active-link" />
+            <line x1="50" y1="50" x2="72" y2="82" className="topo-link active-link" />
+            <line x1="22" y1="74" x2="82" y2="54" className="topo-link risk" />
+
+            <circle r="1.8" fill="#5795e8" filter={`url(#glow-b-${large?'lg':'sm'})`}>
+              <animateMotion path="M22,26 L50,50 L76,22" dur="3s" repeatCount="indefinite" />
+            </circle>
+            <circle r="1.8" fill="#19b89a" filter={`url(#glow-t-${large?'lg':'sm'})`}>
+              <animateMotion path="M76,22 L50,50 L22,26" dur="2.6s" begin="0.8s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.2" fill="#e05260" filter={`url(#glow-d-${large?'lg':'sm'})`}>
+              <animateMotion path="M22,74 L50,50" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.0" fill="#e05260" filter={`url(#glow-d-${large?'lg':'sm'})`}>
+              <animateMotion path="M22,74 L82,54" dur="2.0s" begin="0.6s" repeatCount="indefinite" />
+            </circle>
+            <circle r="1.8" fill="#19b89a" filter={`url(#glow-t-${large?'lg':'sm'})`}>
+              <animateMotion path="M50,50 L72,82" dur="3.2s" begin="0.4s" repeatCount="indefinite" />
+            </circle>
+          </>
+        ) : (
+          <>
+            <line x1="50" y1="50" x2="20" y2="26" className="topo-link active-link" />
+            <line x1="50" y1="50" x2="80" y2="26" className="topo-link active-link" />
+            <line x1="50" y1="50" x2="20" y2="76" className="topo-link risk" />
+            <line x1="50" y1="50" x2="80" y2="76" className="topo-link active-link" />
+
+            <circle r="2.2" fill="#5795e8" filter={`url(#glow-b-${large?'lg':'sm'})`}>
+              <animateMotion path="M20,26 L50,50 L80,26" dur="2.8s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.2" fill="#5795e8" filter={`url(#glow-b-${large?'lg':'sm'})`}>
+              <animateMotion path="M20,26 L50,50 L80,26" dur="2.8s" begin="1.4s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.2" fill="#19b89a" filter={`url(#glow-t-${large?'lg':'sm'})`}>
+              <animateMotion path="M80,26 L50,50 L20,26" dur="2.4s" begin="0.7s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.2" fill="#19b89a" filter={`url(#glow-t-${large?'lg':'sm'})`}>
+              <animateMotion path="M80,26 L50,50 L20,26" dur="2.4s" begin="1.9s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.6" fill="#e05260" filter={`url(#glow-d-${large?'lg':'sm'})`}>
+              <animateMotion path="M20,76 L50,50" dur="1.3s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.6" fill="#e05260" filter={`url(#glow-d-${large?'lg':'sm'})`}>
+              <animateMotion path="M20,76 L50,50" dur="1.3s" begin="0.65s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.0" fill="#19b89a" filter={`url(#glow-t-${large?'lg':'sm'})`}>
+              <animateMotion path="M50,50 L80,76" dur="3.2s" begin="0.4s" repeatCount="indefinite" />
+            </circle>
+            <circle r="2.0" fill="#5795e8" filter={`url(#glow-b-${large?'lg':'sm'})`}>
+              <animateMotion path="M80,76 L50,50" dur="3.0s" begin="1.8s" repeatCount="indefinite" />
+            </circle>
+          </>
+        )}
+      </svg>
+      {nodes.map(([type, x, y, label, tone]) => (
+        <div key={label} className={`node ${type} ${tone}`} style={{ left: `${x}%`, top: `${y}%` }}>
+          <span><Icon name={type === 'gateway' ? 'network' : 'server'} size={large ? 20 : 16} /></span>
+          <label>{label}</label>
+        </div>
+      ))}
+      {large && (
+        <div className="graph-tools">
+          <Button icon="search" kind="ghost" />
+          <Button icon="sliders" kind="ghost" />
+          <Button kind="ghost">Reset</Button>
+        </div>
+      )}
+    </div>
   </div>
 }
 

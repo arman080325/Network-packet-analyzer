@@ -1285,36 +1285,68 @@
 
           <div class="topology large">
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-              <line x1="48" y1="48" x2="24" y2="26" stroke-width="1.2" />
-              <line x1="48" y1="48" x2="25" y2="74" class="risk" stroke-width="1.8" />
-              <line x1="48" y1="48" x2="73" y2="20" stroke-width="1.2" />
-              <line x1="48" y1="48" x2="78" y2="55" stroke-width="1" />
-              <line x1="48" y1="48" x2="70" y2="82" stroke-width="1" />
-              <line x1="25" y1="74" x2="78" y2="55" class="risk" stroke-width="2" />
+              <defs>
+                <filter id="lg-glow-teal" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <filter id="lg-glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+                <filter id="lg-glow-danger" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                </filter>
+              </defs>
+
+              <line x1="50" y1="50" x2="22" y2="26" class="topo-link active-link" />
+              <line x1="50" y1="50" x2="22" y2="74" class="topo-link risk" />
+              <line x1="50" y1="50" x2="76" y2="22" class="topo-link active-link" />
+              <line x1="50" y1="50" x2="82" y2="54" class="topo-link active-link" />
+              <line x1="50" y1="50" x2="72" y2="82" class="topo-link active-link" />
+              <line x1="22" y1="74" x2="82" y2="54" class="topo-link risk" />
+
+              <!-- Animated Traveling Packets -->
+              <circle r="1.8" fill="#5795e8" filter="url(#lg-glow-blue)">
+                <animateMotion path="M22,26 L50,50 L76,22" dur="3s" repeatCount="indefinite" />
+              </circle>
+              <circle r="1.8" fill="#19b89a" filter="url(#lg-glow-teal)">
+                <animateMotion path="M76,22 L50,50 L22,26" dur="2.6s" begin="0.8s" repeatCount="indefinite" />
+              </circle>
+              <circle r="2.2" fill="#e05260" filter="url(#lg-glow-danger)">
+                <animateMotion path="M22,74 L50,50" dur="1.5s" repeatCount="indefinite" />
+              </circle>
+              <circle r="2.0" fill="#e05260" filter="url(#lg-glow-danger)">
+                <animateMotion path="M22,74 L82,54" dur="2.0s" begin="0.6s" repeatCount="indefinite" />
+              </circle>
+              <circle r="1.8" fill="#19b89a" filter="url(#lg-glow-teal)">
+                <animateMotion path="M50,50 L72,82" dur="3.2s" begin="0.4s" repeatCount="indefinite" />
+              </circle>
             </svg>
 
             <!-- Nodes -->
-            <div class="node gateway good" style="left: 48%; top: 48%;">
+            <div class="node gateway good" style="left: 50%; top: 50%;">
               <span>${icon('network', 20)}</span>
               <label>192.168.1.1 (Gateway)</label>
             </div>
-            <div class="node host warn" style="left: 24%; top: 26%;">
+            <div class="node host warn" style="left: 22%; top: 26%;">
               <span>${icon('server', 20)}</span>
               <label>192.168.1.24</label>
             </div>
-            <div class="node host danger" style="left: 25%; top: 74%;">
+            <div class="node host danger" style="left: 22%; top: 74%;">
               <span>${icon('server', 20)}</span>
               <label>10.0.0.42</label>
             </div>
-            <div class="node external good" style="left: 73%; top: 20%;">
+            <div class="node external good" style="left: 76%; top: 22%;">
               <span>${icon('server', 20)}</span>
               <label>172.217.14.206</label>
             </div>
-            <div class="node external warn" style="left: 78%; top: 55%;">
+            <div class="node external warn" style="left: 82%; top: 54%;">
               <span>${icon('server', 20)}</span>
               <label>185.199.108.133</label>
             </div>
-            <div class="node host good" style="left: 70%; top: 82%;">
+            <div class="node host good" style="left: 72%; top: 82%;">
               <span>${icon('server', 20)}</span>
               <label>192.168.1.31</label>
             </div>
@@ -2243,29 +2275,95 @@
 
   function renderTopologyMiniGraph() {
     return `
-      <div class="topology">
+      <div class="topology-status-bar">
+        <span><i class="pulse-indicator"></i> <b>Live mesh packet transfer</b></span>
+        <span class="mono" style="font-size: 10px; color: var(--muted);">4 links · <span id="topo-pps-stat">42</span> pkts/s</span>
+      </div>
+      <div class="topology" id="overview-topology-wrap">
         <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-          <line x1="48" y1="48" x2="24" y2="26" />
-          <line x1="48" y1="48" x2="25" y2="74" class="risk" />
-          <line x1="48" y1="48" x2="73" y2="20" />
-          <line x1="48" y1="48" x2="78" y2="55" />
-          <line x1="48" y1="48" x2="70" y2="82" />
+          <defs>
+            <filter id="glow-teal" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="glow-danger" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
+
+          <!-- 4 Active Symmetrical Network Conduit Links Connecting Center to Corners -->
+          <line x1="50" y1="50" x2="20" y2="26" class="topo-link active-link" />
+          <line x1="50" y1="50" x2="80" y2="26" class="topo-link active-link" />
+          <line x1="50" y1="50" x2="20" y2="76" class="topo-link risk" />
+          <line x1="50" y1="50" x2="80" y2="76" class="topo-link active-link" />
+
+          <!-- Live Animated Packet Transfers -->
+          <!-- 1. Outgoing Web Flow: Workstation -> Gateway -> Cloud (Blue) -->
+          <circle r="2.2" fill="#5795e8" filter="url(#glow-blue)">
+            <animateMotion path="M20,26 L50,50 L80,26" dur="2.8s" repeatCount="indefinite" />
+          </circle>
+          <circle r="2.2" fill="#5795e8" filter="url(#glow-blue)">
+            <animateMotion path="M20,26 L50,50 L80,26" dur="2.8s" begin="1.4s" repeatCount="indefinite" />
+          </circle>
+
+          <!-- 2. Incoming Web Response: Cloud -> Gateway -> Workstation (Teal) -->
+          <circle r="2.2" fill="#19b89a" filter="url(#glow-teal)">
+            <animateMotion path="M80,26 L50,50 L20,26" dur="2.4s" begin="0.7s" repeatCount="indefinite" />
+          </circle>
+          <circle r="2.2" fill="#19b89a" filter="url(#glow-teal)">
+            <animateMotion path="M80,26 L50,50 L20,26" dur="2.4s" begin="1.9s" repeatCount="indefinite" />
+          </circle>
+
+          <!-- 3. Threat Scan / Attack Flow: Attacker -> Gateway (Danger Red) -->
+          <circle r="2.6" fill="#e05260" filter="url(#glow-danger)">
+            <animateMotion path="M20,76 L50,50" dur="1.3s" repeatCount="indefinite" />
+          </circle>
+          <circle r="2.6" fill="#e05260" filter="url(#glow-danger)">
+            <animateMotion path="M20,76 L50,50" dur="1.3s" begin="0.65s" repeatCount="indefinite" />
+          </circle>
+
+          <!-- 4. LAN Backup & Database Sync: Gateway <-> Local Host -->
+          <circle r="2.0" fill="#19b89a" filter="url(#glow-teal)">
+            <animateMotion path="M50,50 L80,76" dur="3.2s" begin="0.4s" repeatCount="indefinite" />
+          </circle>
+          <circle r="2.0" fill="#5795e8" filter="url(#glow-blue)">
+            <animateMotion path="M80,76 L50,50" dur="3.0s" begin="1.8s" repeatCount="indefinite" />
+          </circle>
         </svg>
-        <div class="node gateway good" style="left: 48%; top: 48%;">
-          <span>${icon('network', 14)}</span>
-          <label>192.168.1.1</label>
+
+        <!-- Center Gateway Node -->
+        <div class="node gateway good" style="left: 50%; top: 50%;" data-topo-ip="192.168.1.1" data-topo-role="Core Gateway Router" data-topo-status="Clean" data-topo-score="0">
+          <span>${icon('network', 18)}</span>
+          <label>192.168.1.1 (Gateway)</label>
         </div>
-        <div class="node host warn" style="left: 24%; top: 26%;">
-          <span>${icon('server', 14)}</span>
+
+        <!-- Workstation (Top-Left) -->
+        <div class="node host info" style="left: 20%; top: 26%;" data-topo-ip="192.168.1.24" data-topo-role="Internal Workstation" data-topo-status="Clean" data-topo-score="12">
+          <span>${icon('server', 16)}</span>
           <label>192.168.1.24</label>
         </div>
-        <div class="node host danger" style="left: 25%; top: 74%;">
-          <span>${icon('server', 14)}</span>
-          <label>10.0.0.42</label>
+
+        <!-- Threat Host (Bottom-Left) -->
+        <div class="node host danger" style="left: 20%; top: 76%;" data-topo-ip="10.0.0.42" data-topo-role="Suspicious Attacker" data-topo-status="Malicious" data-topo-score="82">
+          <span>${icon('server', 16)}</span>
+          <label>10.0.0.42 (Malicious)</label>
         </div>
-        <div class="node external good" style="left: 73%; top: 20%;">
-          <span>${icon('server', 14)}</span>
+
+        <!-- External Cloud / CDN (Top-Right) -->
+        <div class="node external good" style="left: 80%; top: 26%;" data-topo-ip="172.217.14.206" data-topo-role="Google Cloud / Web (HTTPS)" data-topo-status="Clean" data-topo-score="0">
+          <span>${icon('server', 16)}</span>
           <label>172.217.14.206</label>
+        </div>
+
+        <!-- Local Host / Storage (Bottom-Right) -->
+        <div class="node host good" style="left: 80%; top: 76%;" data-topo-ip="192.168.1.105" data-topo-role="Local File Server" data-topo-status="Clean" data-topo-score="0">
+          <span>${icon('server', 16)}</span>
+          <label>192.168.1.105</label>
         </div>
       </div>
     `;
@@ -2345,6 +2443,39 @@
         e.preventDefault();
         navigateTo(state.previousRoute || 'overview');
       }
+    });
+
+    // Interactive topology node click inspection
+    $('#page-content')?.addEventListener('click', (e) => {
+      const nodeEl = e.target.closest('.node[data-topo-ip]');
+      if (!nodeEl) return;
+      const ip = nodeEl.getAttribute('data-topo-ip');
+      const role = nodeEl.getAttribute('data-topo-role') || 'Observed Host';
+      const status = nodeEl.getAttribute('data-topo-status') || 'Clean';
+      
+      const wrap = nodeEl.closest('.topology');
+      if (!wrap) return;
+
+      let tooltip = wrap.querySelector('#topo-active-tooltip');
+      if (!tooltip) {
+        tooltip = document.createElement('div');
+        tooltip.id = 'topo-active-tooltip';
+        tooltip.className = 'topo-tooltip';
+        wrap.appendChild(tooltip);
+      }
+      
+      const badgeTone = status === 'Malicious' ? 'danger' : status === 'Suspicious' ? 'warn' : 'good';
+      tooltip.innerHTML = `
+        <span><b>${ip}</b> <span class="badge ${badgeTone}" style="margin-left:4px">${status}</span></span>
+        <span style="color:var(--text-2); font-size:9.5px">${role}</span>
+        <button class="btn btn-xs" type="button" style="height:22px; padding:0 8px; font-size:9.5px; margin-left:auto" onclick="window.location.hash='#packets'">Inspect →</button>
+      `;
+      tooltip.style.display = 'flex';
+      
+      clearTimeout(window.__topoTimer);
+      window.__topoTimer = setTimeout(() => {
+        if (tooltip) tooltip.style.display = 'none';
+      }, 5000);
     });
 
     // Connection configuration dialog
