@@ -571,7 +571,7 @@ export default function App() {
       <header className="topbar">
         <div className="top-left">
           <button className="mobile-menu" onClick={()=>setMobileOpen(true)} aria-label="Open navigation menu"><Icon name="grid"/></button>
-          <a href="#overview" className="topbar-logo" onClick={(e) => { e.preventDefault(); navigate('overview'); }} aria-label="NetScope Overview" title="NetScope Overview" style={{ display: 'flex', alignItems: 'center' }}>
+          <a href="#overview" className="topbar-logo" onClick={(e) => { e.preventDefault(); navigate('overview'); }} aria-label="NetScope Overview" title="NetScope Overview">
             <img src={theme === 'dark' ? '/NetScope_Full_Logo_Dark_Mode.png' : '/NetScope_Full_Logo_Light_Mode.png'} alt="NetScope" height={26} style={{ objectFit: 'contain', maxWidth: 145 }} />
           </a>
         </div>
