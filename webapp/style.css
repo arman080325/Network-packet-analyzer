@@ -228,8 +228,15 @@ html, body {
   display: block;
 }
 
-/* By default (expanded sidebar), the short icon mark is strictly hidden */
-.brand-logo-short {
+/* By default (expanded sidebar), the short icon mark is strictly hidden in BOTH themes */
+.brand-logo-short,
+.app:not(.collapsed) .brand-logo-short,
+.sidebar:not(.collapsed) .brand-logo-short,
+[data-theme="light"] .brand-logo-short,
+[data-theme="light"] .app:not(.collapsed) .brand-logo-short,
+.app.light:not(.collapsed) .brand-logo-short,
+.app.light:not(.collapsed) .brand-logo-short.light-only,
+.app.light:not(.collapsed) .brand-logo-short.dark-only {
   display: none !important;
   width: 28px;
   height: 28px;
@@ -248,8 +255,8 @@ html, body {
 .app.light .brand-logo-full.dark-only {
   display: none !important;
 }
-[data-theme="light"] .brand-logo-full.light-only,
-.app.light .brand-logo-full.light-only {
+[data-theme="light"] .app:not(.collapsed) .brand-logo-full.light-only,
+.app.light:not(.collapsed) .brand-logo-full.light-only {
   display: block !important;
 }
 
@@ -434,9 +441,21 @@ html, body {
   height: 100%;
   flex: none;
 }
-.collapsed .sidebar .brand-logo-full {
+/* In collapsed mode, ALL full logos MUST be strictly hidden in both dark and light mode */
+.collapsed .brand-logo-full,
+.collapsed .sidebar .brand-logo-full,
+.collapsed .brand-logo-full.dark-only,
+.collapsed .brand-logo-full.light-only,
+[data-theme="light"] .collapsed .brand-logo-full,
+[data-theme="light"] .collapsed .brand-logo-full.light-only,
+.app.light.collapsed .brand-logo-full,
+.app.light.collapsed .brand-logo-full.light-only,
+.app.light .collapsed .brand-logo-full,
+.app.light .collapsed .brand-logo-full.light-only {
   display: none !important;
 }
+
+/* In collapsed mode, short icon mark is displayed according to theme */
 .collapsed .brand-logo-short.dark-only {
   display: block !important;
 }
@@ -444,11 +463,13 @@ html, body {
   display: none !important;
 }
 [data-theme="light"] .collapsed .brand-logo-short.dark-only,
-.app.light.collapsed .brand-logo-short.dark-only {
+.app.light.collapsed .brand-logo-short.dark-only,
+.app.light .collapsed .brand-logo-short.dark-only {
   display: none !important;
 }
 [data-theme="light"] .collapsed .brand-logo-short.light-only,
-.app.light.collapsed .brand-logo-short.light-only {
+.app.light.collapsed .brand-logo-short.light-only,
+.app.light .collapsed .brand-logo-short.light-only {
   display: block !important;
 }
 .collapsed .brand-logo-short {
@@ -551,16 +572,9 @@ html, body {
   min-width: 190px;
   flex-shrink: 0;
 }
+/* On desktop, topbar logo is strictly hidden because the sidebar already houses the brand */
 .topbar-logo {
-  display: inline-flex !important;
-  align-items: center !important;
-  text-decoration: none;
-  min-width: 0;
-  flex-shrink: 0;
-  transition: opacity 0.15s ease;
-}
-.topbar-logo:hover {
-  opacity: 0.85;
+  display: none !important;
 }
 .topbar-logo-img,
 .topbar-logo img {
