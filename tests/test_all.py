@@ -291,6 +291,57 @@ class TestAnalyzerEnrichment:
         assert a.summary()["retransmissions"] >= 1
 
 
+# ── LiveNetworkEngine tests ───────────────────────────────────────────────
+
+class TestLiveNetworkEngine:
+
+    def test_active_adapter(self):
+        from core.live_engine import LiveNetworkEngine
+        e = LiveNetworkEngine()
+        a = e.active_adapter
+        assert isinstance(a, dict)
+        assert "name" in a and "ip" in a and "gateway" in a and "cidr" in a
+
+    def test_mitre_taxonomy(self):
+        from core.live_engine import MITRE_TACTICS
+        assert len(MITRE_TACTICS) >= 7
+        assert "T1046" in MITRE_TACTICS
+        assert "T1071.001" in MITRE_TACTICS
+        assert "T1041" in MITRE_TACTICS
+
+    def test_vendor_resolution(self):
+        from core.live_engine import resolve_mac_vendor
+        assert "Cisco" in resolve_mac_vendor("C8:4F:86:11:22:33")
+        assert "Apple" in resolve_mac_vendor("F4:34:F0:AA:BB:CC")
+        assert "Samsung" in resolve_mac_vendor("9C:28:F7:00:11:22")
+
+    def test_packet_frame_generation(self):
+        from core.live_engine import LiveNetworkEngine
+        e = LiveNetworkEngine()
+        pkt = e.generate_live_packet_frame()
+        assert "src" in pkt and "dst" in pkt and "protocol" in pkt and "process" in pkt
+
+    def test_pcap_binary(self):
+        from core.live_engine import LiveNetworkEngine
+        e = LiveNetworkEngine()
+        pcap = e.export_libpcap_binary()
+        assert pcap.startswith(b"\xd4\xc3\xb2\xa1")
+        assert len(pcap) > 24
+
+    def test_iocs_feed(self):
+        from core.live_engine import LiveNetworkEngine
+        e = LiveNetworkEngine()
+        iocs = e.export_iocs_json()
+        assert iocs["format"] == "STIX-2.1-like-IOC-Feed"
+        assert "indicators" in iocs
+
+    def test_socket_sampling(self):
+        from core.live_engine import LiveNetworkEngine
+        e = LiveNetworkEngine()
+        socks = e.sample_active_sockets()
+        assert isinstance(socks, list)
+
+
 if __name__ == "__main__":
     try:
         import pytest

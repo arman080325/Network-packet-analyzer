@@ -572,9 +572,20 @@ html, body {
   min-width: 190px;
   flex-shrink: 0;
 }
-/* On desktop, topbar logo is strictly hidden because the sidebar already houses the brand */
+/* On desktop (>768px), topbar logo is strictly hidden because the sidebar houses the brand */
 .topbar-logo {
   display: none !important;
+}
+@media (min-width: 769px) {
+  .topbar-logo,
+  .topbar-logo-img,
+  .topbar-logo img,
+  [data-theme="light"] .topbar-logo,
+  [data-theme="light"] .topbar-logo-img,
+  .app.light .topbar-logo,
+  .app.light .topbar-logo-img {
+    display: none !important;
+  }
 }
 .topbar-logo-img,
 .topbar-logo img {
@@ -584,19 +595,21 @@ html, body {
   object-fit: contain;
   display: block;
 }
-.topbar-logo-img.dark-only {
-  display: block !important;
-}
-.topbar-logo-img.light-only {
-  display: none !important;
-}
-[data-theme="light"] .topbar-logo-img.dark-only,
-.app.light .topbar-logo-img.dark-only {
-  display: none !important;
-}
-[data-theme="light"] .topbar-logo-img.light-only,
-.app.light .topbar-logo-img.light-only {
-  display: block !important;
+@media (max-width: 768px) {
+  .topbar-logo-img.dark-only {
+    display: block !important;
+  }
+  .topbar-logo-img.light-only {
+    display: none !important;
+  }
+  [data-theme="light"] .topbar-logo-img.dark-only,
+  .app.light .topbar-logo-img.dark-only {
+    display: none !important;
+  }
+  [data-theme="light"] .topbar-logo-img.light-only,
+  .app.light .topbar-logo-img.light-only {
+    display: block !important;
+  }
 }
 .top-left > b {
   font-size: 14.5px;
@@ -3634,4 +3647,128 @@ footer.app-footer {
 }
 .new-alert-row {
   animation: row-flash 1.8s ease-out;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Enterprise Cybersecurity & Live Network NDR Production Styles
+   ══════════════════════════════════════════════════════════════════════════ */
+.network-context-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 11.5px;
+  color: var(--text-2);
+  flex-wrap: wrap;
+}
+.network-context-bar .net-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.network-context-bar .net-item b {
+  color: var(--text);
+  font-weight: 600;
+}
+.network-context-bar .net-item code {
+  font-family: var(--font-mono);
+  color: var(--teal);
+  background: rgba(25, 184, 154, 0.08);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* Process Attribution Tag */
+.proc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  color: var(--text);
+  font-weight: 500;
+}
+.proc-tag i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+/* Hardware Vendor Tag */
+.vendor-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--teal);
+  background: rgba(25, 184, 154, 0.1);
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-top: 2px;
+}
+
+/* MITRE ATT&CK Posture Matrix Card */
+.mitre-posture-card {
+  margin-top: 16px;
+}
+.mitre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.mitre-item {
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.mitre-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mitre-item-top code {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--teal);
+  font-size: 11px;
+}
+.mitre-item h4 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+.mitre-item p {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-2);
+  line-height: 1.4;
+}
+
+/* Forensic Download Actions */
+.forensics-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }

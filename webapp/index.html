@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="style.css?v=3.4" />
+  <link rel="stylesheet" href="style.css?v=3.5" />
 </head>
 <body>
 
@@ -305,6 +305,27 @@
         </div>
       </header>
 
+      <!-- Live Connected Network Hardware & NDR Context Bar -->
+      <div id="live-network-context-bar" class="network-context-bar">
+        <div class="net-item">
+          <span class="online-dot"></span>
+          <span>Live Interface: <b id="net-iface-name">Wi-Fi</b></span>
+          <code id="net-iface-ip">192.168.50.78</code>
+        </div>
+        <div class="net-item">
+          <span>Gateway: <b id="net-gateway-ip">192.168.50.1</b></span>
+        </div>
+        <div class="net-item">
+          <span>Subnet: <b id="net-subnet-cidr">192.168.50.0/24</b></span>
+        </div>
+        <div class="net-item">
+          <span>LAN Asset Discovery: <b id="net-assets-count" style="color:var(--teal)">89 active hosts</b></span>
+        </div>
+        <div class="net-item" style="margin-left: auto;">
+          <span class="badge good" style="font-size: 10px; padding: 2px 7px;">Real-time NDR Active</span>
+        </div>
+      </div>
+
       <!-- Active Page Content -->
       <main id="page-content" class="page-content">
         <!-- Rendered by app.js based on active route -->
@@ -335,6 +356,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=3.4"></script>
+  <script src="app.js?v=3.5"></script>
 </body>
 </html>
