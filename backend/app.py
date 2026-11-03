@@ -33,6 +33,7 @@ import struct
 import socket
 import threading
 import mimetypes
+from datetime import datetime
 from collections import deque
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -116,6 +117,82 @@ class Hub:
 
     def heartbeat(self):
         self._broadcast({"type": "heartbeat", "stats": self.stats()})
+
+    def inject_scenario(self, scenario_type: str) -> int:
+        """Inject simulated security event packets into the live analyzer and broadcast."""
+        now_ts = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        injected = 0
+        if scenario_type == "syn_flood":
+            for i in range(20):
+                self.ingest({
+                    "timestamp": now_ts,
+                    "protocol": "TCP",
+                    "src_ip": "10.0.0.42",
+                    "dst_ip": "192.168.1.1",
+                    "src_port": 50000 + i,
+                    "dst_port": 80,
+                    "flags": "SYN",
+                    "info": f"5000{i} → 80 [SYN] Seq=0 (SYN flood probe)",
+                    "payload": b"",
+                    "ttl": 64,
+                    "src_mac": "00:0c:29:42:1a:8b",
+                    "length": 60,
+                })
+                injected += 1
+        elif scenario_type == "port_scan":
+            ports = [21, 22, 23, 25, 80, 110, 139, 143, 443, 445, 993, 1433, 3306, 3389, 5432, 8080, 8443, 8888]
+            for p in ports:
+                self.ingest({
+                    "timestamp": now_ts,
+                    "protocol": "TCP",
+                    "src_ip": "45.33.32.156",
+                    "dst_ip": "192.168.1.24",
+                    "src_port": 41200 + (p % 100),
+                    "dst_port": p,
+                    "flags": "SYN",
+                    "info": f"Port probe {p} [SYN]",
+                    "payload": b"",
+                    "ttl": 48,
+                    "src_mac": "52:54:00:12:34:56",
+                    "length": 60,
+                })
+                injected += 1
+        elif scenario_type == "dns_tunnel":
+            for i in range(5):
+                domain = f"v9x2m4k1p0q7z8w3e5r1t4y2u8i7o5p3_{i}.tunnel.attacker.xyz"
+                self.ingest({
+                    "timestamp": now_ts,
+                    "protocol": "UDP",
+                    "src_ip": "192.168.1.42",
+                    "dst_ip": "8.8.8.8",
+                    "src_port": 53000 + i,
+                    "dst_port": 53,
+                    "flags": "—",
+                    "info": f"Standard query TXT {domain}",
+                    "payload": domain.encode(),
+                    "ttl": 64,
+                    "src_mac": "00:50:56:c0:00:08",
+                    "length": 148,
+                })
+                injected += 1
+        elif scenario_type == "c2_beacon":
+            for i in range(3):
+                self.ingest({
+                    "timestamp": now_ts,
+                    "protocol": "TCP",
+                    "src_ip": "10.0.0.42",
+                    "dst_ip": "185.199.108.133",
+                    "src_port": 49162,
+                    "dst_port": 443,
+                    "flags": "PSH, ACK",
+                    "info": "Periodic C2 Heartbeat beacon",
+                    "payload": b"\x17\x03\x03\x00\x28" + b"beacon" * 4,
+                    "ttl": 58,
+                    "src_mac": "00:0c:29:42:1a:8b",
+                    "length": 92,
+                })
+                injected += 1
+        return injected
 
     def stats(self):
         snap = self.analyzer.live_snapshot()
@@ -387,11 +464,45 @@ def _handle_connection(conn):
             resp = _json_response({"status": "ok", "uptime_s": round(time.time() - hub.started_at, 1)})
         elif path == "/api/status":
             resp = _json_response(hub.stats())
+        elif path == "/api/capture/interfaces":
+            ifaces = ["eth0", "lo", "Wi-Fi", "Ethernet"]
+            try:
+                from scapy.all import get_if_list
+                si = get_if_list()
+                if si:
+                    ifaces = list(si)
+            except Exception:
+                pass
+            resp = _json_response({"interfaces": ifaces, "default": ifaces[0] if ifaces else "eth0"})
+        elif path == "/api/capture/status":
+            snap = hub.analyzer.live_snapshot()
+            resp = _json_response({
+                "mode": "live" if os.environ.get("ALLOW_LIVE_CAPTURE") == "1" else "demo",
+                "interface": os.environ.get("CAPTURE_INTERFACE", "eth0"),
+                "filter": os.environ.get("CAPTURE_FILTER", ""),
+                "pps": snap.get("pps", DEMO_PPS),
+                "running": True,
+                "total_packets": snap.get("total_packets", 0),
+                "uptime_s": round(time.time() - hub.started_at, 1)
+            })
+        elif path.startswith("/api/capture/inject"):
+            attack_type = "syn_flood"
+            try:
+                raw_path = request_line.split(" ")[1]
+                if "?" in raw_path:
+                    qs = raw_path.split("?", 1)[1]
+                    for part in qs.split("&"):
+                        if part.startswith("type="):
+                            attack_type = part.split("=")[1]
+            except Exception:
+                pass
+            count = hub.inject_scenario(attack_type)
+            resp = _json_response({"status": "ok", "scenario": attack_type, "injected_packets": count})
         elif path == "/api":
             resp = _json_response({
                 "name": "NetScope API",
                 "description": "Live network traffic analysis backend",
-                "endpoints": ["/health", "/api/status", "/ws (WebSocket)"],
+                "endpoints": ["/health", "/api/status", "/api/capture/interfaces", "/api/capture/status", "/api/capture/inject", "/ws (WebSocket)"],
             })
         elif path in ("/", "/index.html", "/dashboard.html"):
             resp = _file_response(os.path.join(WEBAPP_DIR, "index.html"))

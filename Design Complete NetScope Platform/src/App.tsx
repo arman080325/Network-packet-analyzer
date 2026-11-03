@@ -496,9 +496,174 @@ function Reports() {
 }
 
 function CaptureConfig() {
-  const [mode,setMode]=useState('Demo / Simulated Traffic')
-  const modes=[['Live Capture','Capture directly from a network interface.','radio'],['Demo / Simulated Traffic','Generate realistic traffic for exploration.','activity'],['Offline PCAP Analysis','Analyze a local capture file.','upload']] as [string,string,IconName][]
-  return <><div className="mode-grid">{modes.map(m=><button key={m[0]} className={`mode-card ${mode===m[0]?'active':''}`} onClick={()=>setMode(m[0])}><span><Icon name={m[2]} size={22}/></span><div><b>{m[0]}</b><p>{m[1]}</p></div><i className="radio-select"/></button>)}</div><div className="config-layout"><Card title={mode} className="config-form">{mode==='Live Capture'?<><Field label="Network interface" value="eth0"/><Field label="BPF packet filter" value="tcp or udp"/><div className="field-row"><Field label="Packet count" value="0 (unlimited)"/><Field label="Timeout" value="60 seconds"/></div><Toggle label="Save output PCAP" detail="Write captured packets to a local file"/><p className="callout warn"><Icon name="alert" size={16}/><span>Live packet capture requires appropriate operating-system permissions and explicit backend configuration.</span></p><Button icon="play" kind="primary">Start live capture</Button></>:mode==='Offline PCAP Analysis'?<><div className="dropzone"><Icon name="upload" size={28}/><b>Select a PCAP file</b><p>Choose a .pcap or .pcapng file available to the analysis engine.</p><Button>Choose file</Button></div><Field label="BPF analysis filter (optional)" value="No filter"/><Button icon="play" kind="primary">Start analysis</Button></>:<><Field label="Packets per second" value="42"/><Toggle label="Include simulated security events" detail="Generate representative heuristic findings"/><p className="callout info"><Icon name="activity" size={16}/><span>The standard hosted backend uses simulated traffic. All generated data is labeled as sample data.</span></p><div className="actions"><Button icon="x">Stop demo</Button><Button icon="play" kind="primary">Restart demo</Button></div></>}</Card><Card title="Capture status"><div className="capture-status"><span className="status-orb"><Icon name="activity" size={26}/></span><Badge tone="good">Running</Badge><h3>Demo capture active</h3><p>Simulated traffic at 42 packets per second.</p><div><span>Duration <b>00:42:18</b></span><span>Packets <b>18,432</b></span><span>Output <b>Not saved</b></span></div></div></Card></div></>
+  const [mode, setMode] = useState('Live Capture')
+  const [isRunning, setIsRunning] = useState(true)
+  const [duration, setDuration] = useState(162)
+  const [packets, setPackets] = useState(3157)
+  const [iface, setIface] = useState('eth0')
+  const [bpf, setBpf] = useState('tcp or udp')
+  const [savePcap, setSavePcap] = useState(false)
+  const [pps, setPps] = useState(42)
+  const [pcapFile, setPcapFile] = useState<string | null>(null)
+  const [pcapProgress, setPcapProgress] = useState(0)
+  const [toastMsg, setToastMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!isRunning) return
+    const timer = setInterval(() => {
+      setDuration(d => d + 1)
+      setPackets(p => p + Math.floor(pps / 20) + 1)
+    }, 1000)
+    return () => clearInterval(timer)
+  }, [isRunning, pps])
+
+  const notify = (msg: string) => {
+    setToastMsg(msg)
+    setTimeout(() => setToastMsg(null), 3000)
+  }
+
+  const formatDuration = (s: number) => {
+    const h = String(Math.floor(s / 3600)).padStart(2, '0')
+    const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0')
+    const sec = String(s % 60).padStart(2, '0')
+    return `${h}:${m}:${sec}`
+  }
+
+  const modes = [
+    ['Live Capture', 'Capture directly from a network interface.', 'radio'],
+    ['Demo / Simulated Traffic', 'Generate realistic traffic for exploration.', 'activity'],
+    ['Offline PCAP Analysis', 'Analyze a local capture file.', 'upload']
+  ] as [string, string, IconName][]
+
+  return (
+    <>
+      {toastMsg && (
+        <div style={{ position: 'fixed', bottom: 24, right: 24, zIndex: 9999, background: 'var(--surface)', border: '1px solid var(--border)', borderLeft: '4px solid var(--teal)', borderRadius: 8, padding: '10px 14px', boxShadow: '0 8px 24px rgba(0,0,0,0.3)', color: 'var(--text)', fontSize: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Icon name="check" size={16} />
+          <span>{toastMsg}</span>
+        </div>
+      )}
+      <div className="mode-grid">
+        {modes.map(m => (
+          <button key={m[0]} className={`mode-card ${mode === m[0] ? 'active' : ''}`} onClick={() => setMode(m[0])}>
+            <span><Icon name={m[2]} size={22} /></span>
+            <div><b>{m[0]}</b><p>{m[1]}</p></div>
+            <i className="radio-select" />
+          </button>
+        ))}
+      </div>
+      <div className="config-layout">
+        <Card title={mode} className="config-form">
+          {mode === 'Live Capture' ? (
+            <>
+              <label className="field">
+                <span>Network interface</span>
+                <input value={iface} onChange={e => setIface(e.target.value)} />
+              </label>
+              <label className="field">
+                <span>BPF packet filter</span>
+                <input value={bpf} onChange={e => setBpf(e.target.value)} />
+              </label>
+              <div className="field-row">
+                <Field label="Packet count" value="0 (unlimited)" />
+                <Field label="Timeout" value="60 seconds" />
+              </div>
+              <label className="toggle-row">
+                <span><b>Save output PCAP</b><small>Write captured packets to a local file</small></span>
+                <input type="checkbox" checked={savePcap} onChange={e => { setSavePcap(e.target.checked); notify(e.target.checked ? 'PCAP recording enabled' : 'PCAP recording disabled'); }} />
+                <i />
+              </label>
+              <p className="callout warn">
+                <Icon name="alert" size={16} />
+                <span>Live packet capture requires appropriate operating-system permissions (root/Administrator) and explicit backend configuration.</span>
+              </p>
+              <div className="actions" style={{ marginTop: 8 }}>
+                <Button icon={isRunning ? 'pause' : 'play'} kind={isRunning ? 'secondary' : 'primary'} onClick={() => { setIsRunning(!isRunning); notify(isRunning ? 'Capture stopped' : 'Live packet capture started'); }}>
+                  {isRunning ? 'Stop live capture' : 'Start live capture'}
+                </Button>
+              </div>
+            </>
+          ) : mode === 'Offline PCAP Analysis' ? (
+            <>
+              <div className="dropzone">
+                <Icon name="upload" size={28} />
+                <b>{pcapFile || 'Select a PCAP file'}</b>
+                <p>{pcapFile ? 'File ready for heuristic packet inspection' : 'Choose a .pcap or .pcapng file available to the analysis engine.'}</p>
+                <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                  <Button onClick={() => { setPcapFile('enterprise_traffic.pcap'); notify('Loaded enterprise_traffic.pcap'); }}>
+                    {pcapFile ? 'Change file' : 'Choose file'}
+                  </Button>
+                </div>
+              </div>
+              {pcapProgress > 0 && pcapProgress < 100 && (
+                <div style={{ marginBottom: 12, height: 6, background: 'var(--surface-2)', borderRadius: 3, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: `${pcapProgress}%`, background: 'var(--teal)', transition: 'width 0.2s' }} />
+                </div>
+              )}
+              <Field label="BPF analysis filter (optional)" value="No filter" />
+              <div className="actions" style={{ marginTop: 8, display: 'flex', gap: 8 }}>
+                <Button icon="play" kind="primary" onClick={() => {
+                  setPcapProgress(25)
+                  setTimeout(() => setPcapProgress(60), 200)
+                  setTimeout(() => {
+                    setPcapProgress(100)
+                    setPackets(1420)
+                    notify('Analysis complete: 1,420 packets extracted')
+                  }, 450)
+                }}>
+                  Start analysis
+                </Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <label className="field">
+                <span>Packets per second: <b>{pps} pps</b></span>
+                <input type="range" min={5} max={120} value={pps} onChange={e => setPps(parseInt(e.target.value, 10))} />
+              </label>
+              <Toggle label="Include simulated security events" detail="Generate representative heuristic anomaly findings" />
+              <div style={{ marginTop: 12, marginBottom: 12 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-2)', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 6 }}>
+                  ⚡ Threat Scenario Injections
+                </span>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                  <Button icon="activity" onClick={() => { setPackets(p => p + 20); notify('⚡ Injected SYN Flood attack burst (20 pkts)'); }}>SYN Flood (20)</Button>
+                  <Button icon="activity" onClick={() => { setPackets(p => p + 18); notify('🔍 Injected Port Scan attack sweep (18 ports)'); }}>Port Scan (18)</Button>
+                  <Button icon="shield" onClick={() => { setPackets(p => p + 5); notify('🛡️ Injected DNS Tunneling exfiltration'); }}>DNS Tunnel</Button>
+                  <Button icon="radio" onClick={() => { setPackets(p => p + 3); notify('📡 Injected C2 Beaconing heartbeat'); }}>C2 Beacon</Button>
+                </div>
+              </div>
+              <p className="callout info">
+                <Icon name="activity" size={16} />
+                <span>The standard hosted backend uses simulated traffic. All generated telemetry is clearly labelled as sample data.</span>
+              </p>
+              <div className="actions" style={{ marginTop: 12, display: 'flex', gap: 8 }}>
+                <Button icon={isRunning ? 'pause' : 'play'} onClick={() => { setIsRunning(!isRunning); notify(isRunning ? 'Demo paused' : 'Demo resumed'); }}>
+                  {isRunning ? 'Stop demo' : 'Resume demo'}
+                </Button>
+                <Button icon="clock" kind="primary" onClick={() => { setDuration(0); setPackets(0); notify('Demo stream restarted'); }}>
+                  Restart demo
+                </Button>
+              </div>
+            </>
+          )}
+        </Card>
+        <Card title="Capture status">
+          <div className="capture-status">
+            <span className={`status-orb ${isRunning ? 'running' : 'idle'}`}><Icon name="activity" size={26} /></span>
+            <Badge tone={isRunning ? 'good' : 'warn'}>{isRunning ? 'Running' : 'Paused'}</Badge>
+            <h3>{mode} active</h3>
+            <p>{isLive ? `Listening on ${iface} (${bpf})` : `Simulated traffic at ${pps} packets per second.`}</p>
+            <div>
+              <span>Duration <b>{formatDuration(duration)}</b></span>
+              <span>Packets <b>{packets.toLocaleString()}</b></span>
+              <span>Output <b>{savePcap ? 'Saving to capture.pcap' : 'Not saved'}</b></span>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </>
+  )
 }
 
 function Field({ label, value }: { label:string; value:string }) { return <label className="field"><span>{label}</span><input defaultValue={value}/></label> }

@@ -292,5 +292,23 @@ class TestAnalyzerEnrichment:
 
 
 if __name__ == "__main__":
-    import pytest
-    pytest.main([__file__, "-v"])
+    try:
+        import pytest
+        sys.exit(pytest.main([__file__, "-v"]))
+    except ImportError:
+        import inspect
+        passed = 0
+        failed = 0
+        for name, cls in inspect.getmembers(sys.modules[__name__], inspect.isclass):
+            if name.startswith("Test"):
+                instance = cls()
+                for mname, method in inspect.getmembers(instance, inspect.ismethod):
+                    if mname.startswith("test_"):
+                        try:
+                            method()
+                            passed += 1
+                        except Exception as e:
+                            print(f"FAIL: {name}.{mname}: {e}")
+                            failed += 1
+        print(f"\n{passed + failed} tests run: {passed} passed, {failed} failed.")
+        sys.exit(0 if failed == 0 else 1)
