@@ -1,274 +1,346 @@
-# 🛡 NetScope — Network Packet Analyzer
+<div align="center">
 
-> Live network traffic capture, analysis & threat detection — with a real-time browser dashboard.
-> Protocol dissection · Anomaly & attack detection · Encrypted-payload analysis · Per-host threat scoring.
+# 🛡️ NetScope
 
-Built with **Python · Scapy · Socket · Cryptography** — the dashboard uses **zero extra dependencies** (pure-stdlib WebSocket + HTTP server).
-Author: **Arman Ahemad Khan** · [github.com/arman080325](https://github.com/arman080325)
+### Network Packet Analyzer & Threat Intelligence Dashboard
+
+**See the traffic. Understand the protocol. Spot suspicious behaviour.**
+
+A Python-powered network analysis platform for live packet capture, protocol inspection, anomaly detection, encrypted-traffic heuristics, and real-time security monitoring — with both a terminal workflow and a browser-based SOC console.
+
+<br/>
+
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Scapy](https://img.shields.io/badge/Packet_Capture-Scapy-2E8B57?style=for-the-badge)](https://scapy.net/)
+[![WebSocket](https://img.shields.io/badge/Streaming-WebSocket-6C63FF?style=for-the-badge)](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+[![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render&logoColor=111)](https://render.com/)
+[![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+
+<br/>
+
+**[Repository](https://github.com/arman080325/Network-packet-analyzer)**
+&nbsp; • &nbsp;
+**[Usage Guide](Usage.md)**
+&nbsp; • &nbsp;
+**[Report an Issue](https://github.com/arman080325/Network-packet-analyzer/issues)**
+
+</div>
 
 ---
 
-## ✦ Features
+## ✨ What is NetScope?
 
-| Module | What it does |
+NetScope turns raw network traffic into information that is easier to inspect and investigate. It captures packets, dissects protocol fields, tracks conversations, highlights unusual activity, and presents the results through a live dashboard or terminal summary.
+
+Use it to explore network behaviour, learn how common protocols work, inspect saved PCAP captures, and experiment with security detection scenarios.
+
+> **Two ways to explore:** run a no-privilege simulated demo to explore the dashboard, or use Scapy with the required permissions to inspect real traffic on a supported machine.
+
+## 🖥️ The dashboard
+
+The browser console brings packet activity and security signals into one workspace.
+
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/d4c7d079-1dd0-44a1-a637-85a9cd3d9af3" alt="NetScope live network security dashboard" width="100%" />
+  <sub>NetScope — live network monitoring and analysis interface</sub>
+</div>
+
+### Dashboard at a glance
+
+| Workspace | What you can inspect |
 |---|---|
-| **Live Web Dashboard** | Real-time SOC-style console in the browser — animated network map, threat board, entropy gauge, throughput & protocol charts, live packet stream with filters |
-| **Packet Sniffer** | Live capture via Scapy on any interface; offline `.pcap` analysis |
-| **Protocol Dissector** | Full dissection of TCP, UDP, ICMP, ARP, DNS, DHCP, HTTP, HTTPS, SSH, FTP |
-| **Anomaly Detector** | SYN flood, port scan, Xmas/Null scan, ARP spoofing, ICMP flood, low-TTL, large packets — **plus DNS tunneling, cleartext credential exposure, C2 beaconing & risky-port contact** |
-| **Threat Scoring Engine** | Per-IP weighted threat score with time-decay; ranks hosts as clean / suspicious / malicious |
-| **IP Intelligence** | Classifies every address (private, public, CGNAT, loopback, multicast, link-local…), resolves service names & flags known backdoor/malware ports |
-| **Crypto Detector** | TLS/SSL signatures, SSH banners, Shannon entropy, Fernet magic bytes, AES-GCM heuristic, Base64 detection + live encrypted-traffic % |
-| **Session Analyzer** | Protocol breakdown, top talkers, **conversation flows**, **retransmission detection**, per-second throughput history, connection tracking |
-| **Reporter** | Self-contained HTML report + JSON export (now includes the threat board) |
-| **Demo Mode** | Fully simulated traffic with realistic attack bursts — **no root, no live interface, no scapy needed** |
+| **Network map** | Hosts, traffic relationships, and threat-level visualisation |
+| **Live packet stream** | Incoming packets with searchable filters and packet inspection |
+| **Threat board** | Hosts ranked by weighted, time-decaying risk scores |
+| **Anomaly feed** | Detection events and suspicious network patterns |
+| **Traffic analytics** | Throughput, protocol distribution, and session statistics |
+| **Crypto analysis** | Payload entropy and encryption-related signatures |
+| **Host intelligence** | Address classification, services, and risky-port indicators |
 
----
+## 🚀 Capabilities
 
-## 📁 Project Structure
+### Packet capture & protocol analysis
 
-```
-Network-packet-analyzer/
-│
-├── main.py                    ← Entry point, CLI argument parser
-├── dashboard.html             ← Original single-file local dashboard (unchanged, still works)
-│
-├── core/
-│   ├── sniffer.py             ← Scapy-based live capture & pcap reader
-│   ├── analyzer.py            ← Stateful stats, flows, throughput, retransmissions
-│   ├── anomaly.py             ← Real-time anomaly & attack detection engine
-│   ├── crypto_detector.py     ← Encrypted-payload detection (entropy + signatures)
-│   ├── threat.py              ← Per-host weighted threat-scoring engine
-│   └── netinfo.py             ← IP classification, service & risky-port lookup
-│
-├── frontend/
-│   └── server.py              ← Pure-stdlib HTTP + WebSocket server (local/offline use)
-│
-├── backend/                   ★ production backend, deploy this to Render
-│   ├── app.py                 ← Single-port HTTP + WebSocket server (pure stdlib, serves webapp/ directly)
-│   └── requirements.txt
-│
-├── webapp/                    ★ production web console & Live Traffic workspace
-│   ├── index.html             ← Modern Figma-designed SOC console & live packet inspector
-│   ├── style.css              ← Enterprise design system with dark/light themes, responsive drawer, animations
-│   ├── app.js                 ← Live packet inspector, dynamic WS protocol, animated topology mesh
-│   └── vercel.json
-│
-├── Design Complete NetScope Platform/  ★ React + Vite + Tailwind CSS + shadcn implementation
-│   ├── src/App.tsx            ← Interactive React platform with telemetry & widgets
-│   └── src/components/ui/     ← shadcn components including celestial SunMoonThemeToggle
-│
-├── render.yaml                ★ one-click Render blueprint for backend/ (HTTP + WS on single $PORT)
-│
-├── utils/
-│   ├── display.py             ← ANSI-coloured terminal output
-│   ├── logger.py              ← CSV packet log + alert log writer
-│   └── demo.py                ← Simulated traffic + attack scenarios
-│
-├── reports/
-│   └── reporter.py            ← HTML + JSON report generator
-│
-├── tests/
-│   └── test_all.py            ← Unit tests (pytest) — 32 tests
-│
-├── requirements.txt            ← CLI/local deps
-└── README.md
-```
+- Live packet capture through **Scapy** on supported network interfaces.
+- Offline analysis of existing `.pcap` captures.
+- BPF capture filters, packet-count limits, timeouts, and optional PCAP output.
+- Dissection and analysis across TCP, UDP, ICMP, ARP, DNS, DHCP, HTTP, HTTPS, SSH, and FTP traffic.
+- Session statistics, top talkers, conversation flows, retransmission detection, and throughput history.
 
----
+### Threat and anomaly detection
 
-## 🚀 Getting Started
+| Detection | Signal |
+|---|---|
+| SYN flood | High-rate SYN activity from a source |
+| Port scan | A source probing many destination ports |
+| Xmas / Null scan | Unusual TCP flag combinations |
+| ARP spoofing | Conflicting MAC announcements for an IP |
+| ICMP flood | Excessive ICMP echo activity |
+| DNS tunnelling | Unusually long or high-entropy DNS labels |
+| Cleartext credentials | Recognisable credentials in supported plaintext protocols |
+| C2 beaconing | Repeated, regular outbound contact patterns |
+| Risky-port contact | Traffic involving configured suspicious ports |
+| Low TTL / large packet | Heuristic indicators worth investigating |
 
-### 1. Install dependencies
+### Per-host threat scoring
+
+Alerts contribute weighted points to a host's risk score. Scores decay over time so older activity gradually loses influence.
+
+| Classification | Score | Interpretation |
+|---|---:|---|
+| 🟢 Clean | Below 25 | No elevated score |
+| 🟡 Suspicious | 25–69 | Activity deserves review |
+| 🔴 Malicious | 70 or higher | High-risk activity detected |
+
+These are project heuristics, not a replacement for a dedicated IDS, endpoint protection, or analyst verification.
+
+### Encrypted-traffic heuristics
+
+NetScope looks for signals that may indicate encrypted or encoded payloads:
+
+- Shannon entropy analysis.
+- TLS/SSL record signatures.
+- SSH banner recognition.
+- Fernet marker recognition.
+- AES-GCM pattern heuristic.
+- Base64-like payload detection.
+- Common encrypted-service port inference.
+
+**Important:** payload entropy and signatures are indicators, not proof that a payload is encrypted. NetScope does not decrypt TLS traffic.
+
+## ⚡ Quick start
+
+### 1. Clone the repository
+
 ```bash
-pip install -r requirements.txt
-```
-> The dashboard itself needs **nothing beyond the standard library**. `scapy` is only required for *live* capture; demo mode and the dashboard run on a stock Python 3.8+.
-
-### 2. ⭐ Launch the Live Dashboard (recommended — no root needed)
-```bash
-python3 main.py --dashboard --demo
-```
-This starts the server **and opens your browser** to the live console. Or run the server directly:
-```bash
-python3 frontend/server.py --demo            # then open the URL it prints
-# → http://localhost:8080/dashboard.html
-```
-You'll see a force-directed **network map** (hosts coloured by threat level), a **threat leaderboard**, a live **entropy gauge**, **throughput** & **protocol** charts, and a filterable **packet stream** — all updating in real time as simulated normal traffic, port scans, SYN floods, ARP spoofing, DNS tunneling, C2 beacons and cleartext-credential leaks stream through.
-
-**Live capture on the dashboard** (requires root):
-```bash
-sudo python3 main.py --dashboard -i eth0
-sudo python3 frontend/server.py -i eth0 -f "tcp or udp"
+git clone https://github.com/arman080325/Network-packet-analyzer.git
+cd Network-packet-analyzer
 ```
 
-Dashboard ports are configurable:
+### 2. Install dependencies
+
 ```bash
-python3 main.py --dashboard --demo --http-port 8080 --ws-port 8765 --demo-pps 25
+python -m pip install -r requirements.txt
 ```
 
-### 3. Terminal Demo Mode (no root needed)
+Use `python3` instead of `python` on systems where that is the configured Python command.
+
+### 3. Launch the dashboard demo
+
 ```bash
-python3 main.py --demo
+python main.py --dashboard --demo
 ```
 
-### 4. Live Capture in the terminal (requires root)
+Open **http://localhost:8080/dashboard.html** if your browser does not open automatically.
+
+The demo generates simulated packets and attack scenarios. It does **not** capture traffic from your network and does not require administrator/root privileges.
+
+### 4. Try the terminal demo
+
 ```bash
-sudo python3 main.py                          # auto-detect interface
-sudo python3 main.py -i eth0                   # specific interface
-sudo python3 main.py -i eth0 -c 100            # capture 100 packets then stop
-sudo python3 main.py -i eth0 -f "tcp port 443" # BPF filter: HTTPS only
-sudo python3 main.py -i wlan0 -t 30 --report   # 30s capture + HTML report
+python main.py --demo
 ```
 
-### 5. Analyze an existing pcap
-```bash
-python3 main.py --offline capture.pcap --report
-```
+### 5. Run the test suite
 
-### 6. Run the tests
 ```bash
-pip install pytest
 python -m pytest tests/ -v
 ```
 
----
+For Windows-specific commands, Npcap setup, and troubleshooting, see the **[complete Usage Guide](Usage.md)**.
 
-## ☁️ Live Deployment (Vercel + Render)
+## 🎯 Working with real traffic
 
-The project ships in two independently-deployable pieces that talk to each other over WebSocket:
+Live capture requires Scapy, a supported packet-capture driver, and sufficient operating-system permissions.
 
-| Piece | Folder | Deploy to | What it is |
+**Linux / macOS**
+```bash
+sudo python3 main.py -i eth0
+sudo python3 main.py -i eth0 -f "tcp port 443"
+sudo python3 main.py -i eth0 -t 30 --report
+```
+
+**Windows**
+
+1. Install [Npcap](https://npcap.com/).
+2. Open PowerShell or Terminal as Administrator.
+3. Check available interfaces:
+   ```powershell
+   python -c "from scapy.all import get_if_list; print(get_if_list())"
+   ```
+4. Start capture using the interface name shown:
+   ```powershell
+   python main.py -i "Wi-Fi"
+   ```
+
+### Analyze an existing capture
+
+```bash
+python main.py --offline capture.pcap --report
+```
+
+### Useful CLI options
+
+| Option | Description |
+|---|---|
+| `-i, --interface` | Network interface to capture from |
+| `-c, --count` | Stop after a packet count (`0` means unlimited) |
+| `-f, --filter` | BPF capture filter, e.g. `"tcp port 443"` |
+| `-t, --timeout` | Stop capture after a number of seconds |
+| `-o, --output` | Save captured packets to a PCAP file |
+| `--offline FILE` | Analyze an existing PCAP file |
+| `--demo` | Generate simulated traffic |
+| `--dashboard` | Launch the local browser dashboard |
+| `--report` | Generate HTML and JSON reports |
+| `--http-port N` | Set the dashboard HTTP port (default: `8080`) |
+| `--ws-port N` | Set the dashboard WebSocket port (default: `8765`) |
+| `--threshold-syn N` | Configure the SYN-flood threshold |
+| `--threshold-port N` | Configure the port-scan threshold |
+
+## ☁️ Deployment architecture
+
+NetScope can be explored locally or deployed as a split frontend/backend application.
+
+<div align="center">
+
+```text
+                 ┌──────────────────────────────┐
+                 │       Browser / User         │
+                 └──────────────┬───────────────┘
+                                │
+                                ▼
+                 ┌──────────────────────────────┐
+                 │       Vercel · webapp/      │
+                 │    Static dashboard UI      │
+                 └──────────────┬───────────────┘
+                                │ WebSocket
+                                ▼
+                 ┌──────────────────────────────┐
+                 │      Render · backend/     │
+                 │   HTTP + WebSocket service  │
+                 └──────────────┬───────────────┘
+                                │
+                                ▼
+                 ┌──────────────────────────────┐
+                 │       Core analysis         │
+                 │  Packets · Threats · Stats  │
+                 └──────────────────────────────┘
+```
+
+</div>
+
+| Component | Location | Hosting | Responsibility |
 |---|---|---|---|
-| **Backend / API** | `backend/` | **Render** | Single-port stdlib HTTP + WebSocket server (no Flask/gunicorn — same hand-rolled approach as `frontend/server.py`, just merged onto one port). Reuses `core/` untouched. Runs realistic simulated traffic (demo mode) since Render containers can't do raw-socket live capture — the same reason any hosted demo of a packet sniffer runs simulated traffic. |
-| **Frontend console** | `webapp/` | **Vercel** | Static SOC-style dashboard (no build step). Connects to the backend over WebSocket and renders the live feed. |
+| Web console | `webapp/` | Vercel | Static dashboard interface |
+| Backend service | `backend/` | Render | HTTP endpoints and WebSocket stream |
+| Analysis engine | `core/` | Used by backend/local app | Packet analysis, anomaly detection, crypto heuristics, threat scoring |
+| Local dashboard server | `frontend/` | Local machine | Local HTTP/WebSocket dashboard and capture workflow |
 
-### 1. Deploy the backend to Render
-1. Push this repo to GitHub.
-2. In Render: **New → Blueprint**, point it at the repo — `render.yaml` at the root configures everything automatically (root dir `backend/`, build + start commands, health check).
-   - Or manually: **New → Web Service**, root directory `backend`, build command `pip install -r requirements.txt`, start command `python app.py`, health check path `/health`.
-3. Once deployed, note the URL, e.g. `https://netscope-backend.onrender.com`.
-4. Your WebSocket endpoint is `wss://netscope-backend.onrender.com/ws`.
+### Deploy the backend to Render
 
-### 2. Deploy the frontend to Vercel
-1. In Vercel: **New Project**, import the repo, set **Root Directory** to `webapp`.
-2. Framework preset: **Other** (static site) — no build command needed.
-3. Deploy. You'll get a URL like `https://netscope.vercel.app`.
-4. Open it, click the connection pill (top right), paste your Render WebSocket URL (`wss://netscope-backend.onrender.com/ws`) and hit **Connect**. It's saved in the browser for next time.
+1. Import this repository into Render.
+2. Create a **Blueprint** deployment using the root `render.yaml`.
+3. Render uses `backend/` as the service root and `/health` as its health-check endpoint.
+4. After deployment, copy the service URL. The WebSocket endpoint is:
+   ```text
+   wss://YOUR-RENDER-SERVICE.onrender.com/ws
+   ```
 
-### Notes on Render's free tier
-Free-tier Render services spin down after inactivity — the first WebSocket connection after idle can take ~30–50s to wake up (the console will show "Connecting…" and auto-retry). Upgrade to a paid instance for an always-on demo.
+### Deploy the frontend to Vercel
 
-### Environment variables (backend)
-| Var | Default | Purpose |
-|---|---|---|
-| `PORT` | (set by Render) | HTTP/WS port |
-| `DEMO_PPS` | `18` | Simulated packets/sec |
-| `SYN_THRESHOLD` | `100` | SYN-flood alert threshold |
-| `PORT_SCAN_THRESHOLD` | `20` | Port-scan alert threshold |
-| `ALLOW_LIVE_CAPTURE` | unset | Set to `1` to attempt real Scapy capture instead of demo (only works on hosts with raw-socket access, not Render) |
+1. Import the same repository into Vercel.
+2. Set the project **Root Directory** to `webapp`.
+3. Use the **Other** framework preset; the static console does not need a build step.
+4. Deploy, open the site, and configure its connection settings with the Render WebSocket URL.
 
----
+**Hosted demo note:** standard Render hosting does not provide the raw-socket access needed for ordinary live interface sniffing. The hosted service is designed around simulated/demo traffic; use the local capture workflow on a machine with the required permissions for real network capture.
 
-## 🖥 Dashboard Panels
+## 🗂️ Project structure
 
-<img width="1918" height="997" alt="image" src="https://github.com/user-attachments/assets/d4c7d079-1dd0-44a1-a637-85a9cd3d9af3" />
-
-
-| Panel | Shows |
-|---|---|
-| **Live Network Map** | Force-directed graph of hosts & flows; nodes coloured by threat level (green/amber/red) and address class (local cyan / external orange); animated packet pulses; malicious hosts glow |
-| **Payload Entropy** | Live Shannon-entropy gauge with the 7.2 bits/byte "likely encrypted" threshold marked |
-| **Threat Posture** | Count of hosts tracked & how many are flagged, split clean / suspicious / malicious |
-| **Throughput** | Bytes/sec over time | 
-| **Protocol Mix** | TCP / UDP / ICMP / ARP distribution |
-| **Sidebar** | Protocol counts, address-type breakdown, top services |
-| **Packet Stream** | Live table — filter with `ip:`, `proto:`, `port:`, `enc:true`; click a row to inspect |
-| **Threats / Alerts / Crypto / Detail / Stats** | Tabbed right panel: ranked threat board, anomaly feed, encrypted-payload feed, packet detail, and full session stats incl. top conversations |
-
----
-
-## 🔍 Detection Capabilities
-
-### Anomaly & Attack Detection
-| Attack | Detection Method |
-|---|---|
-| SYN Flood | ≥N SYN packets/sec from a single IP |
-| Port Scan | Single IP probing ≥N unique destination ports |
-| Xmas Scan | TCP FIN+PSH+URG flag combination |
-| Null Scan | TCP packet with zero flags |
-| ARP Spoofing | Same IP announced from multiple MAC addresses |
-| ICMP Flood | ≥50 ICMP echo requests/sec from a single source |
-| **DNS Tunneling** ★ | Abnormally long / high-entropy DNS query labels |
-| **Credential Exposure** ★ | Cleartext HTTP Basic auth, FTP USER/PASS, or form passwords |
-| **C2 Beaconing** ★ | Regular-interval, low-jitter internal→external contact |
-| **Suspicious Port** ★ | Contact to known backdoor/malware ports (4444, 6667, 31337, …) |
-| Low TTL | TTL ≤ 5 (traceroute / routing-loop indicator) |
-| Large Packet | Non-TCP packets > 8 KB (possible amplification) |
-
-### Per-Host Threat Scoring ★
-Each alert contributes a weighted score to its source host. Scores **decay over time** (90 s half-life) so stale activity fades, and hosts are banded:
-
-| Band | Score | Meaning |
-|---|---|---|
-| 🟢 Clean | < 25 | Normal |
-| 🟡 Suspicious | 25 – 70 | Worth watching |
-| 🔴 Malicious | ≥ 70 | Active threat |
-
-### Encryption Detection
-| Method | Signal |
-|---|---|
-| Shannon Entropy | > 7.2 bits/byte → likely encrypted or compressed |
-| TLS/SSL Signature | Record-layer magic bytes `\x16\x03` / `\x17\x03` |
-| SSH Banner | `SSH-2.0-…` banner in payload |
-| Fernet Magic | `\x80` version byte (Python `cryptography` lib) |
-| AES-GCM Heuristic | Low-entropy nonce prefix + high-entropy ciphertext |
-| Base64 Heuristic | ≥92% valid base64 chars + length divisible by 4 |
-| Port Inference | 443, 22, 993, 995, 465, 8443, … |
-
----
-
-## 🛠 CLI Reference
-
-```
-usage: main.py [-h] [-i INTERFACE] [-c COUNT] [-f FILTER] [-t TIMEOUT]
-               [-o OUTPUT] [--report] [--offline PCAP] [--demo]
-               [--dashboard] [--http-port N] [--ws-port N] [--demo-pps N]
-               [--threshold-syn N] [--threshold-port N]
-
-Options:
-  -i, --interface     Network interface (default: auto-detect)
-  -c, --count         Packet count limit (0 = unlimited)
-  -f, --filter        BPF filter string (e.g. "tcp port 80")
-  -t, --timeout       Stop after N seconds
-  -o, --output        Save packets to a .pcap file
-  --report            Generate HTML + JSON report after the session
-  --offline FILE      Analyze a .pcap file (no root needed)
-  --demo              Simulated traffic demo (no root needed)
-  --dashboard         Launch the live web dashboard (opens browser)
-  --http-port N       Dashboard HTTP port (default: 8080)
-  --ws-port N         Dashboard WebSocket port (default: 8765)
-  --demo-pps N        Demo packets-per-second (default: 18)
-  --threshold-syn N   SYN-flood alert threshold (default: 100/sec)
-  --threshold-port N  Port-scan alert threshold (default: 20 ports)
+```text
+Network-packet-analyzer/
+├── backend/
+│   ├── app.py                  # Hosted HTTP + WebSocket service
+│   └── requirements.txt
+├── core/
+│   ├── sniffer.py              # Scapy capture and PCAP reader
+│   ├── analyzer.py             # Packet/session statistics and flows
+│   ├── anomaly.py              # Anomaly and attack heuristics
+│   ├── crypto_detector.py      # Encrypted-payload heuristics
+│   ├── threat.py               # Per-host threat scoring
+│   ├── netinfo.py              # IP and service intelligence
+│   └── live_engine.py          # Live host/network intelligence
+├── frontend/
+│   └── server.py               # Local HTTP + WebSocket server
+├── webapp/
+│   ├── index.html               # Browser dashboard
+│   ├── style.css                # Dashboard design system
+│   ├── app.js                   # Dashboard behaviour and streaming
+│   └── vercel.json
+├── reports/
+│   └── reporter.py              # HTML and JSON report generation
+├── utils/
+│   ├── demo.py                  # Simulated traffic scenarios
+│   ├── display.py               # Terminal presentation
+│   └── logger.py                # Packet and alert logging
+├── tests/
+│   └── test_all.py              # Automated tests
+├── main.py                      # CLI entry point
+├── requirements.txt
+├── render.yaml                  # Render Blueprint
+├── Usage.md                     # Cross-platform usage guide
+└── README.md
 ```
 
+## 🧰 Built with
+
+| Technology | Role |
+|---|---|
+| **Python** | Core application and analysis engine |
+| **Scapy** | Live packet capture and PCAP parsing |
+| **Sockets / WebSocket** | Local and hosted real-time communication |
+| **HTML, CSS, JavaScript** | Browser dashboard |
+| **Cryptography** | Optional cryptographic payload heuristics |
+| **Render** | Hosted backend |
+| **Vercel** | Static frontend hosting |
+| **Pytest** | Automated tests |
+
+## 🔐 Responsible use
+
+NetScope is intended for learning, defensive analysis, and authorized network troubleshooting.
+
+- Capture traffic only on networks and devices you own or are explicitly authorized to monitor.
+- Packet captures may contain sensitive information. Store and share them carefully.
+- Detection rules are heuristic and can produce false positives or miss threats.
+- Do not treat a dashboard alert as proof of compromise without further investigation.
+
+## 🛣️ Further improvements
+
+Ideas for future development include expanded protocol coverage, configurable detection rules, richer PCAP investigation workflows, and additional test scenarios.
+
+## 👨‍💻 Author
+
+<div align="center">
+
+**Arman Ahemad Khan**
+
+Computer Science & Engineering · Network Security · Software Development
+
+[![GitHub](https://img.shields.io/badge/GitHub-arman080325-181717?style=for-the-badge&logo=github)](https://github.com/arman080325)
+
+</div>
+
+## 📄 License
+
+This project is distributed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ---
 
-## 📄 Resume framing
+<div align="center">
 
-Suggested bullet points:
+**NetScope — Turn network packets into actionable visibility.**
 
-- Built **NetScope**, a full-stack network security console (Python/Flask backend on Render, static JS frontend on Vercel) performing real-time protocol dissection, anomaly detection (SYN floods, port scans, ARP spoofing, DNS tunneling, C2 beaconing) and per-host threat scoring over a WebSocket stream.
-- Designed a from-scratch anomaly-detection and threat-scoring engine with time-decayed risk bands (clean / suspicious / malicious) and encrypted-traffic classification via Shannon entropy + protocol-signature heuristics.
-- Deployed a decoupled architecture (Render API + Vercel static console) with health checks, CORS configuration, and environment-based configuration for a always-reachable public demo.
+<sub>Built with curiosity and care by Arman Ahemad Khan.</sub>
 
----
-
-## 📝 License
-
-MIT License — free to use, fork, and learn from.
-
----
-
-*Made with care by Arman Ahemad Khan — armankhan082020@gmail.com*
+</div>
