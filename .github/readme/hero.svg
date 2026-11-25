@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-label="NetScope — network packet analyzer and threat intelligence console">
+  <title>NetScope — Network Packet Analyzer &amp; Threat Intelligence Console</title>
+  <style>.blink{animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#111C30" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glowG"><stop offset="0" stop-color="#31F2A0" stop-opacity=".28"/><stop offset="1" stop-color="#31F2A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowA"><stop offset="0" stop-color="#8C6BFF" stop-opacity=".22"/><stop offset="1" stop-color="#8C6BFF" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".42" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".5" stop-color="#E9FFF5" stop-opacity=".85"/><stop offset=".58" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0" dur="6s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="wordBase" x1="0" x2="1"><stop offset="0" stop-color="#31F2A0"/><stop offset="1" stop-color="#8C6BFF"/></linearGradient>
+    <linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="#EAF1FB" stop-opacity="0"/><stop offset="1" stop-color="#EAF1FB" stop-opacity=".6"/></linearGradient>
+    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#31F2A0" stop-opacity="0"/><stop offset="1" stop-color="#31F2A0" stop-opacity=".45"/>
+    </linearGradient>
+    <linearGradient id="wire" x1="0" x2="1"><stop offset="0" stop-color="#1B2944" stop-opacity="0"/><stop offset=".5" stop-color="#2A3D63"/><stop offset="1" stop-color="#1B2944" stop-opacity="0"/></linearGradient>
+    <clipPath id="card"><rect width="1280" height="440" rx="22"/></clipPath>
+    <clipPath id="radar"><circle cx="1075" cy="196" r="138"/></clipPath>
+    
+    <clipPath id="tp0"><rect x="296" y="274" height="26" width="0">
+      <animate attributeName="width" dur="18.0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0.0000;0.0047;0.0066;0.0085;0.0104;0.0123;0.0142;0.0161;0.0180;0.0199;0.0218;0.0237;0.0256;0.0275;0.0294;0.0313;0.0332;0.0351;0.0370;0.0389;0.0408;0.0427;0.0447;0.0466;0.0485;0.0504;0.0523;0.0542;0.0561;0.0580;0.0599;0.0618;0.0637;0.0656;0.0675;0.0694;0.0713;0.0732;0.0751;0.0770;0.0789;0.0808;0.0827;0.0846;0.0865;0.0884;0.0903;0.0922;0.0941;0.0960;0.0979;0.0998;0.1017;0.1037;0.1056;0.2500" values="0;10.2;20.4;30.6;40.8;51.0;61.2;71.4;81.6;91.8;102.0;112.2;122.4;132.6;142.8;153.0;163.2;173.4;183.6;193.8;204.0;214.2;224.4;234.6;244.8;255.0;265.2;275.4;285.6;295.8;306.0;316.2;326.4;336.6;346.8;357.0;367.2;377.4;387.6;397.8;408.0;418.2;428.4;438.6;448.8;459.0;469.2;479.4;489.6;499.8;510.0;520.2;530.4;540.6;550.8;0"/>
+    </rect></clipPath>
+    <clipPath id="tp1"><rect x="296" y="274" height="26" width="0">
+      <animate attributeName="width" dur="18.0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0.0000;0.2549;0.2571;0.2592;0.2613;0.2635;0.2656;0.2678;0.2699;0.2720;0.2742;0.2763;0.2785;0.2806;0.2828;0.2849;0.2870;0.2892;0.2913;0.2935;0.2956;0.2977;0.2999;0.3020;0.3042;0.3063;0.3084;0.3106;0.3127;0.3149;0.3170;0.3192;0.3213;0.3234;0.3256;0.3277;0.3299;0.3320;0.3341;0.3363;0.3384;0.3406;0.3427;0.3448;0.3470;0.3491;0.3513;0.3534;0.3556;0.5000" values="0;10.2;20.4;30.6;40.8;51.0;61.2;71.4;81.6;91.8;102.0;112.2;122.4;132.6;142.8;153.0;163.2;173.4;183.6;193.8;204.0;214.2;224.4;234.6;244.8;255.0;265.2;275.4;285.6;295.8;306.0;316.2;326.4;336.6;346.8;357.0;367.2;377.4;387.6;397.8;408.0;418.2;428.4;438.6;448.8;459.0;469.2;479.4;489.6;0"/>
+    </rect></clipPath>
+    <clipPath id="tp2"><rect x="296" y="274" height="26" width="0">
+      <animate attributeName="width" dur="18.0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0.0000;0.5050;0.5072;0.5095;0.5117;0.5139;0.5162;0.5184;0.5207;0.5229;0.5251;0.5274;0.5296;0.5318;0.5341;0.5363;0.5385;0.5408;0.5430;0.5452;0.5475;0.5497;0.5519;0.5542;0.5564;0.5586;0.5609;0.5631;0.5653;0.5676;0.5698;0.5720;0.5743;0.5765;0.5787;0.5810;0.5832;0.5854;0.5877;0.5899;0.5921;0.5944;0.5966;0.5989;0.6011;0.6033;0.6056;0.7500" values="0;10.2;20.4;30.6;40.8;51.0;61.2;71.4;81.6;91.8;102.0;112.2;122.4;132.6;142.8;153.0;163.2;173.4;183.6;193.8;204.0;214.2;224.4;234.6;244.8;255.0;265.2;275.4;285.6;295.8;306.0;316.2;326.4;336.6;346.8;357.0;367.2;377.4;387.6;397.8;408.0;418.2;428.4;438.6;448.8;459.0;469.2;0"/>
+    </rect></clipPath>
+    <clipPath id="tp3"><rect x="296" y="274" height="26" width="0">
+      <animate attributeName="width" dur="18.0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0.0000;0.7549;0.7570;0.7591;0.7612;0.7633;0.7654;0.7675;0.7696;0.7717;0.7738;0.7759;0.7779;0.7800;0.7821;0.7842;0.7863;0.7884;0.7905;0.7926;0.7947;0.7968;0.7989;0.8010;0.8031;0.8052;0.8073;0.8094;0.8115;0.8136;0.8157;0.8178;0.8199;0.8220;0.8241;0.8262;0.8283;0.8304;0.8325;0.8346;0.8367;0.8388;0.8409;0.8430;0.8451;0.8472;0.8493;0.8514;0.8535;0.8556" values="0;10.2;20.4;30.6;40.8;51.0;61.2;71.4;81.6;91.8;102.0;112.2;122.4;132.6;142.8;153.0;163.2;173.4;183.6;193.8;204.0;214.2;224.4;234.6;244.8;255.0;265.2;275.4;285.6;295.8;306.0;316.2;326.4;336.6;346.8;357.0;367.2;377.4;387.6;397.8;408.0;418.2;428.4;438.6;448.8;459.0;469.2;479.4;489.6;499.8"/>
+    </rect></clipPath>
+  </defs>
+  <g clip-path="url(#card)">
+    <rect width="1280" height="440" fill="#060911"/>
+    <rect width="1280" height="440" fill="url(#grid)" opacity=".9"/>
+    <circle cx="1075" cy="196" r="320" fill="url(#glowA)"/>
+    <rect y="-40" width="1280" height="40" fill="#31F2A0" opacity=".035">
+      <animate attributeName="y" values="-40;440" dur="7s" repeatCount="indefinite"/>
+    </rect>
+
+    <!-- top bar -->
+    <text x="36" y="38" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="500" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="158.4" lengthAdjust="spacingAndGlyphs" >netscope://soc-console</text>
+    <circle cx="1042" cy="34" r="5" fill="#FF3E6C"><animate attributeName="opacity" values="1;.2;1" dur="1.2s" repeatCount="indefinite"/></circle>
+    <text x="1054" y="38" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="189.0" lengthAdjust="spacingAndGlyphs" >LIVE · 18 pkt/s · ws://8765</text>
+
+    
+  <g>
+    <circle cx="150" cy="196" r="105.4" fill="url(#glowG)"/>
+    <circle cx="150" cy="196" r="73.2" fill="none" stroke="#31F2A0" stroke-opacity=".35"
+      stroke-width="1.5" stroke-dasharray="3 9">
+      <animateTransform attributeName="transform" type="rotate" from="0 150 196" to="360 150 196" dur="18s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="150" cy="196" r="86.0" fill="none" stroke="#8C6BFF" stroke-opacity=".25"
+      stroke-width="1" stroke-dasharray="40 14 4 14">
+      <animateTransform attributeName="transform" type="rotate" from="360 150 196" to="0 150 196" dur="26s" repeatCount="indefinite"/>
+    </circle>
+    <polygon points="150.00,140.54 198.03,168.27 198.03,223.73 150.00,251.46 101.97,223.73 101.97,168.27" fill="#060911" stroke="#31F2A0" stroke-width="7.1"
+      stroke-linejoin="round" filter="url(#glow)"/>
+    <polygon points="150.00,171.22 171.46,183.61 171.46,208.39 150.00,220.78 128.54,208.39 128.54,183.61" fill="#31F2A0">
+      <animate attributeName="opacity" values="1;.55;1" dur="2.4s" repeatCount="indefinite"/>
+    </polygon>
+    <circle cx="198.03" cy="168.27" r="8.3" fill="#8C6BFF" filter="url(#glow)">
+      <animate attributeName="r" values="8.3;11.2;8.3" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="198.03" cy="168.27" r="8.3" fill="none" stroke="#8C6BFF" stroke-width="2">
+      <animate attributeName="r" values="8.3;28.3" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".9;0" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+    <!-- wordmark -->
+    <text x="292" y="186" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="82" font-weight="800" fill="url(#wordBase)" text-anchor="start" xml:space="preserve" textLength="528.0" lengthAdjust="spacingAndGlyphs" letter-spacing="4">NETSCOPE</text>
+    <text x="292" y="186" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="82" font-weight="800" fill="url(#word)" text-anchor="start" xml:space="preserve" textLength="528.0" lengthAdjust="spacingAndGlyphs" letter-spacing="4">NETSCOPE</text>
+    <text x="296" y="228" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="14.5" font-weight="600" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="537.6" lengthAdjust="spacingAndGlyphs" >NETWORK PACKET ANALYZER  //  THREAT INTELLIGENCE CONSOLE</text>
+
+    <!-- typing console -->
+    <text x="274" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" font-weight="800" fill="#31F2A0" text-anchor="start" xml:space="preserve" >$</text>
+    <g clip-path="url(#tp0)"><text x="296" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" font-weight="500" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="550.8" lengthAdjust="spacingAndGlyphs" >capture ▸ live packets &amp; .pcap · TCP · UDP · DNS · TLS</text></g><g clip-path="url(#tp1)"><text x="296" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" font-weight="500" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="489.6" lengthAdjust="spacingAndGlyphs" >detect  ▸ SYN floods · port scans · ARP spoofing</text></g><g clip-path="url(#tp2)"><text x="296" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" font-weight="500" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="469.2" lengthAdjust="spacingAndGlyphs" >score   ▸ per-host threat risk with time decay</text></g><g clip-path="url(#tp3)"><text x="296" y="292" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="17" font-weight="500" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="499.8" lengthAdjust="spacingAndGlyphs" >map     ▸ every alert to a MITRE ATT&amp;CK technique</text></g>
+    <rect class="blink" x="296" y="276" width="9" height="20" fill="#31F2A0">
+      <animate attributeName="x" dur="18.0s" repeatCount="indefinite" calcMode="discrete" keyTimes="0.0000;0.0001;0.0047;0.0066;0.0085;0.0104;0.0123;0.0142;0.0161;0.0180;0.0199;0.0218;0.0237;0.0256;0.0275;0.0294;0.0313;0.0332;0.0351;0.0370;0.0389;0.0408;0.0427;0.0447;0.0466;0.0485;0.0504;0.0523;0.0542;0.0561;0.0580;0.0599;0.0618;0.0637;0.0656;0.0675;0.0694;0.0713;0.0732;0.0751;0.0770;0.0789;0.0808;0.0827;0.0846;0.0865;0.0884;0.0903;0.0922;0.0941;0.0960;0.0979;0.0998;0.1017;0.1037;0.1056;0.2501;0.2549;0.2571;0.2592;0.2613;0.2635;0.2656;0.2678;0.2699;0.2720;0.2742;0.2763;0.2785;0.2806;0.2828;0.2849;0.2870;0.2892;0.2913;0.2935;0.2956;0.2977;0.2999;0.3020;0.3042;0.3063;0.3084;0.3106;0.3127;0.3149;0.3170;0.3192;0.3213;0.3234;0.3256;0.3277;0.3299;0.3320;0.3341;0.3363;0.3384;0.3406;0.3427;0.3448;0.3470;0.3491;0.3513;0.3534;0.3556;0.5001;0.5050;0.5072;0.5095;0.5117;0.5139;0.5162;0.5184;0.5207;0.5229;0.5251;0.5274;0.5296;0.5318;0.5341;0.5363;0.5385;0.5408;0.5430;0.5452;0.5475;0.5497;0.5519;0.5542;0.5564;0.5586;0.5609;0.5631;0.5653;0.5676;0.5698;0.5720;0.5743;0.5765;0.5787;0.5810;0.5832;0.5854;0.5877;0.5899;0.5921;0.5944;0.5966;0.5989;0.6011;0.6033;0.6056;0.7501;0.7549;0.7570;0.7591;0.7612;0.7633;0.7654;0.7675;0.7696;0.7717;0.7738;0.7759;0.7779;0.7800;0.7821;0.7842;0.7863;0.7884;0.7905;0.7926;0.7947;0.7968;0.7989;0.8010;0.8031;0.8052;0.8073;0.8094;0.8115;0.8136;0.8157;0.8178;0.8199;0.8220;0.8241;0.8262;0.8283;0.8304;0.8325;0.8346;0.8367;0.8388;0.8409;0.8430;0.8451;0.8472;0.8493;0.8514;0.8535;0.8556" values="296;298.0;308.2;318.4;328.6;338.8;349.0;359.2;369.4;379.6;389.8;400.0;410.2;420.4;430.6;440.8;451.0;461.2;471.4;481.6;491.8;502.0;512.2;522.4;532.6;542.8;553.0;563.2;573.4;583.6;593.8;604.0;614.2;624.4;634.6;644.8;655.0;665.2;675.4;685.6;695.8;706.0;716.2;726.4;736.6;746.8;757.0;767.2;777.4;787.6;797.8;808.0;818.2;828.4;838.6;848.8;298.0;308.2;318.4;328.6;338.8;349.0;359.2;369.4;379.6;389.8;400.0;410.2;420.4;430.6;440.8;451.0;461.2;471.4;481.6;491.8;502.0;512.2;522.4;532.6;542.8;553.0;563.2;573.4;583.6;593.8;604.0;614.2;624.4;634.6;644.8;655.0;665.2;675.4;685.6;695.8;706.0;716.2;726.4;736.6;746.8;757.0;767.2;777.4;787.6;298.0;308.2;318.4;328.6;338.8;349.0;359.2;369.4;379.6;389.8;400.0;410.2;420.4;430.6;440.8;451.0;461.2;471.4;481.6;491.8;502.0;512.2;522.4;532.6;542.8;553.0;563.2;573.4;583.6;593.8;604.0;614.2;624.4;634.6;644.8;655.0;665.2;675.4;685.6;695.8;706.0;716.2;726.4;736.6;746.8;757.0;767.2;298.0;308.2;318.4;328.6;338.8;349.0;359.2;369.4;379.6;389.8;400.0;410.2;420.4;430.6;440.8;451.0;461.2;471.4;481.6;491.8;502.0;512.2;522.4;532.6;542.8;553.0;563.2;573.4;583.6;593.8;604.0;614.2;624.4;634.6;644.8;655.0;665.2;675.4;685.6;695.8;706.0;716.2;726.4;736.6;746.8;757.0;767.2;777.4;787.6;797.8"/>
+    </rect>
+
+    
+    <g>
+      <rect x="296" y="320" width="128" height="28" rx="14" fill="#31F2A0" fill-opacity=".08" stroke="#31F2A0" stroke-opacity=".55"/>
+      <circle cx="310" cy="334" r="3.5" fill="#31F2A0"><animate attributeName="opacity" values="1;.25;1" dur="1.8s" repeatCount="indefinite"/></circle>
+      <text x="320" y="338.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="700" fill="#31F2A0" text-anchor="start" xml:space="preserve" textLength="91.2" lengthAdjust="spacingAndGlyphs" >LIVE CAPTURE</text>
+    </g>
+    <g>
+      <rect x="436.4" y="320" width="145" height="28" rx="14" fill="#8C6BFF" fill-opacity=".08" stroke="#8C6BFF" stroke-opacity=".55"/>
+      <circle cx="450.4" cy="334" r="3.5" fill="#8C6BFF"><animate attributeName="opacity" values="1;.25;1" dur="1.8s" repeatCount="indefinite"/></circle>
+      <text x="460.4" y="338.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="700" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="106.4" lengthAdjust="spacingAndGlyphs" >PCAP FORENSICS</text>
+    </g>
+    <g>
+      <rect x="593.1999999999999" y="320" width="128" height="28" rx="14" fill="#FF3E6C" fill-opacity=".08" stroke="#FF3E6C" stroke-opacity=".55"/>
+      <circle cx="607.1999999999999" cy="334" r="3.5" fill="#FF3E6C"><animate attributeName="opacity" values="1;.25;1" dur="1.8s" repeatCount="indefinite"/></circle>
+      <text x="617.1999999999999" y="338.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="700" fill="#FF3E6C" text-anchor="start" xml:space="preserve" textLength="91.2" lengthAdjust="spacingAndGlyphs" >MITRE ATT&amp;CK</text>
+    </g>
+    <g>
+      <rect x="733.5999999999999" y="320" width="161" height="28" rx="14" fill="#FFB13C" fill-opacity=".08" stroke="#FFB13C" stroke-opacity=".55"/>
+      <circle cx="747.5999999999999" cy="334" r="3.5" fill="#FFB13C"><animate attributeName="opacity" values="1;.25;1" dur="1.8s" repeatCount="indefinite"/></circle>
+      <text x="757.5999999999999" y="338.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="700" fill="#FFB13C" text-anchor="start" xml:space="preserve" textLength="121.6" lengthAdjust="spacingAndGlyphs" >WEBSOCKET STREAM</text>
+    </g>
+
+    <!-- radar -->
+    <g>
+      <circle cx="1075" cy="196" r="138" fill="#0A1120" fill-opacity=".85" stroke="#1E3A4F" stroke-width="1.5"/>
+      <circle cx="1075" cy="196" r="91" fill="none" stroke="#173246"/>
+      <circle cx="1075" cy="196" r="46" fill="none" stroke="#173246"/>
+      <path d="M937 196H1213M1075 58V334" stroke="#173246"/>
+      <g clip-path="url(#radar)">
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0 1075 196" to="360 1075 196" dur="4s" repeatCount="indefinite"/>
+          <path d="M1075 196 L1213 196 A138 138 0 0 0 1144.0 76.5 Z" fill="url(#sweep)" opacity=".75"/>
+          <line x1="1075" y1="196" x2="1213" y2="196" stroke="#31F2A0" stroke-width="2" filter="url(#glow)"/>
+        </g>
+      </g>
+      <circle cx="1075" cy="196" r="4" fill="#31F2A0"/>
+      
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.55;1" dur="4s" begin="0.6s" repeatCount="indefinite"/>
+      <circle cx="1137" cy="126" r="4" fill="#31F2A0" filter="url(#glow)"/>
+      <circle cx="1137" cy="126" r="4" fill="none" stroke="#31F2A0" stroke-width="1.5">
+        <animate attributeName="r" values="4;16" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="1146" y="119" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#31F2A0" text-anchor="start" xml:space="preserve" >10.0.0.12</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.55;1" dur="4s" begin="1.6s" repeatCount="indefinite"/>
+      <circle cx="987" cy="166" r="4" fill="#FFB13C" filter="url(#glow)"/>
+      <circle cx="987" cy="166" r="4" fill="none" stroke="#FFB13C" stroke-width="1.5">
+        <animate attributeName="r" values="4;16" dur="1.4s" begin="1.6s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="1.4s" begin="1.6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="996" y="159" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#FFB13C" text-anchor="start" xml:space="preserve" >198.51.100.7 · 47</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.55;1" dur="4s" begin="2.5s" repeatCount="indefinite"/>
+      <circle cx="1115" cy="288" r="4" fill="#FF3E6C" filter="url(#glow)"/>
+      <circle cx="1115" cy="288" r="4" fill="none" stroke="#FF3E6C" stroke-width="1.5">
+        <animate attributeName="r" values="4;16" dur="1.4s" begin="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="1.4s" begin="2.5s" repeatCount="indefinite"/>
+      </circle>
+      <text x="1124" y="281" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#FF3E6C" text-anchor="start" xml:space="preserve" >203.0.113.45 · 82</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.55;1" dur="4s" begin="3.3s" repeatCount="indefinite"/>
+      <circle cx="1035" cy="256" r="4" fill="#31F2A0" filter="url(#glow)"/>
+      <circle cx="1035" cy="256" r="4" fill="none" stroke="#31F2A0" stroke-width="1.5">
+        <animate attributeName="r" values="4;16" dur="1.4s" begin="3.3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="1.4s" begin="3.3s" repeatCount="indefinite"/>
+      </circle>
+      <text x="1044" y="249" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#31F2A0" text-anchor="start" xml:space="preserve" >10.0.0.1 gw</text>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.55;1" dur="4s" begin="1.1s" repeatCount="indefinite"/>
+      <circle cx="1179" cy="214" r="4" fill="#8C6BFF" filter="url(#glow)"/>
+      <circle cx="1179" cy="214" r="4" fill="none" stroke="#8C6BFF" stroke-width="1.5">
+        <animate attributeName="r" values="4;16" dur="1.4s" begin="1.1s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0" dur="1.4s" begin="1.1s" repeatCount="indefinite"/>
+      </circle>
+      <text x="1188" y="207" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#8C6BFF" text-anchor="start" xml:space="preserve" >TLS 1.3</text>
+    </g>
+      <text x="1075" y="360" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="600" fill="#5B6884" text-anchor="middle" xml:space="preserve" textLength="184.6" lengthAdjust="spacingAndGlyphs" >HOST DISCOVERY · ARP / OUI</text>
+    </g>
+
+    <!-- packet wire -->
+    <rect x="0" y="397" width="1280" height="2" fill="url(#wire)"/>
+    
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-0.0s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="40" height="20" rx="10" fill="#31F2A0" fill-opacity=".14" stroke="#31F2A0" stroke-opacity=".8"/>
+      <text x="19.75" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#31F2A0" text-anchor="middle" xml:space="preserve" >TCP</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-1.75s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="40" height="20" rx="10" fill="#FFB13C" fill-opacity=".14" stroke="#FFB13C" stroke-opacity=".8"/>
+      <text x="19.75" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#FFB13C" text-anchor="middle" xml:space="preserve" >DNS</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-3.5s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="40" height="20" rx="10" fill="#8C6BFF" fill-opacity=".14" stroke="#8C6BFF" stroke-opacity=".8"/>
+      <text x="19.75" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#8C6BFF" text-anchor="middle" xml:space="preserve" >TLS</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-5.25s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="40" height="20" rx="10" fill="#4FD1FF" fill-opacity=".14" stroke="#4FD1FF" stroke-opacity=".8"/>
+      <text x="19.75" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#4FD1FF" text-anchor="middle" xml:space="preserve" >UDP</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-7.0s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="48" height="20" rx="10" fill="#FF3E6C" fill-opacity=".14" stroke="#FF3E6C" stroke-opacity=".8"/>
+      <text x="24.0" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#FF3E6C" text-anchor="middle" xml:space="preserve" >SYN!</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-8.75s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="40" height="20" rx="10" fill="#8493B2" fill-opacity=".14" stroke="#8493B2" stroke-opacity=".8"/>
+      <text x="19.75" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#8493B2" text-anchor="middle" xml:space="preserve" >ARP</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-10.5s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="48" height="20" rx="10" fill="#EAF1FB" fill-opacity=".14" stroke="#EAF1FB" stroke-opacity=".8"/>
+      <text x="24.0" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#EAF1FB" text-anchor="middle" xml:space="preserve" >ICMP</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="-90 0" to="1320 0" dur="14s" begin="-12.25s" repeatCount="indefinite"/>
+      <rect x="0" y="388" width="48" height="20" rx="10" fill="#FFB13C" fill-opacity=".14" stroke="#FFB13C" stroke-opacity=".8"/>
+      <text x="24.0" y="402.5" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11" font-weight="700" fill="#FFB13C" text-anchor="middle" xml:space="preserve" >HTTP</text>
+      <rect x="-60" y="397" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+    </g>
+  </g>
+  <rect x=".75" y=".75" width="1278.5" height="438.5" rx="21.5" fill="none" stroke="#1C2A45" stroke-width="1.5"/>
+</svg>

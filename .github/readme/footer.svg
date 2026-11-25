@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="150" viewBox="0 0 1200 150" role="img" aria-label="End of capture">
+  <title>NetScope — end of capture</title>
+  <style>.blink{animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#111C30" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glowG"><stop offset="0" stop-color="#31F2A0" stop-opacity=".28"/><stop offset="1" stop-color="#31F2A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowA"><stop offset="0" stop-color="#8C6BFF" stop-opacity=".22"/><stop offset="1" stop-color="#8C6BFF" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060911" stop-opacity="0"/><stop offset="1" stop-color="#060911"/></linearGradient>
+    <clipPath id="card"><rect width="1200" height="150" rx="18"/></clipPath>
+  </defs>
+  <g clip-path="url(#card)">
+    <rect width="1200" height="150" fill="#060911"/>
+    <rect width="1200" height="150" fill="url(#grid)" opacity=".8"/>
+    
+  <g>
+    <circle cx="92" cy="75" r="49.1" fill="url(#glowG)"/>
+    <circle cx="92" cy="75" r="34.1" fill="none" stroke="#31F2A0" stroke-opacity=".35"
+      stroke-width="1.5" stroke-dasharray="3 9">
+      <animateTransform attributeName="transform" type="rotate" from="0 92 75" to="360 92 75" dur="18s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="92" cy="75" r="40.1" fill="none" stroke="#8C6BFF" stroke-opacity=".25"
+      stroke-width="1" stroke-dasharray="40 14 4 14">
+      <animateTransform attributeName="transform" type="rotate" from="360 92 75" to="0 92 75" dur="26s" repeatCount="indefinite"/>
+    </circle>
+    <polygon points="92.00,49.15 114.39,62.08 114.39,87.92 92.00,100.85 69.61,87.92 69.61,62.07" fill="#060911" stroke="#31F2A0" stroke-width="3.3"
+      stroke-linejoin="round" filter="url(#glow)"/>
+    <polygon points="92.00,63.45 102.00,69.22 102.00,80.78 92.00,86.55 82.00,80.78 82.00,69.22" fill="#31F2A0">
+      <animate attributeName="opacity" values="1;.55;1" dur="2.4s" repeatCount="indefinite"/>
+    </polygon>
+    <circle cx="114.39" cy="62.08" r="3.9" fill="#8C6BFF" filter="url(#glow)">
+      <animate attributeName="r" values="3.9;5.2;3.9" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="114.39" cy="62.08" r="3.9" fill="none" stroke="#8C6BFF" stroke-width="2">
+      <animate attributeName="r" values="3.9;13.2" dur="1.6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".9;0" dur="1.6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+    <text x="160" y="66" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="26" font-weight="800" fill="#31F2A0" text-anchor="start" xml:space="preserve" textLength="51.0" lengthAdjust="spacingAndGlyphs" >EOF</text>
+    <text x="222" y="66" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="441.0" lengthAdjust="spacingAndGlyphs" >capture closed · 0 packets dropped · stay curious</text>
+    <text x="160" y="96" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="13" font-weight="600" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="221.2" lengthAdjust="spacingAndGlyphs" >$ netscope --watch --forever</text>
+    <rect class="blink" x="387.2" y="84" width="8" height="15" fill="#31F2A0"/>
+    <clipPath id="wave"><rect x="680" y="0" width="480" height="150"/></clipPath>
+    <g clip-path="url(#wave)">
+      <g>
+        <animateTransform attributeName="transform" type="translate" values="0 0;-336 0" dur="9s" repeatCount="indefinite"/>
+        <rect x="680" y="67" width="10" height="16" rx="3" fill="#31F2A0" opacity=".55"/><rect x="704" y="57" width="10" height="36" rx="3" fill="#31F2A0" opacity=".55"/><rect x="728" y="63" width="10" height="24" rx="3" fill="#8C6BFF" opacity=".55"/><rect x="752" y="49" width="10" height="52" rx="3" fill="#31F2A0" opacity=".55"/><rect x="776" y="65" width="10" height="20" rx="3" fill="#FFB13C" opacity=".55"/><rect x="800" y="53" width="10" height="44" rx="3" fill="#31F2A0" opacity=".55"/><rect x="824" y="69" width="10" height="12" rx="3" fill="#31F2A0" opacity=".55"/><rect x="848" y="45" width="10" height="60" rx="3" fill="#FF3E6C" opacity=".55"/><rect x="872" y="61" width="10" height="28" rx="3" fill="#31F2A0" opacity=".55"/><rect x="896" y="55" width="10" height="40" rx="3" fill="#8C6BFF" opacity=".55"/><rect x="920" y="66" width="10" height="18" rx="3" fill="#31F2A0" opacity=".55"/><rect x="944" y="51" width="10" height="48" rx="3" fill="#31F2A0" opacity=".55"/><rect x="968" y="63" width="10" height="24" rx="3" fill="#FFB13C" opacity=".55"/><rect x="992" y="59" width="10" height="32" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1016" y="67" width="10" height="16" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1040" y="57" width="10" height="36" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1064" y="63" width="10" height="24" rx="3" fill="#8C6BFF" opacity=".55"/><rect x="1088" y="49" width="10" height="52" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1112" y="65" width="10" height="20" rx="3" fill="#FFB13C" opacity=".55"/><rect x="1136" y="53" width="10" height="44" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1160" y="69" width="10" height="12" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1184" y="45" width="10" height="60" rx="3" fill="#FF3E6C" opacity=".55"/><rect x="1208" y="61" width="10" height="28" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1232" y="55" width="10" height="40" rx="3" fill="#8C6BFF" opacity=".55"/><rect x="1256" y="66" width="10" height="18" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1280" y="51" width="10" height="48" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1304" y="63" width="10" height="24" rx="3" fill="#FFB13C" opacity=".55"/><rect x="1328" y="59" width="10" height="32" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1352" y="67" width="10" height="16" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1376" y="57" width="10" height="36" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1400" y="63" width="10" height="24" rx="3" fill="#8C6BFF" opacity=".55"/><rect x="1424" y="49" width="10" height="52" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1448" y="65" width="10" height="20" rx="3" fill="#FFB13C" opacity=".55"/><rect x="1472" y="53" width="10" height="44" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1496" y="69" width="10" height="12" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1520" y="45" width="10" height="60" rx="3" fill="#FF3E6C" opacity=".55"/><rect x="1544" y="61" width="10" height="28" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1568" y="55" width="10" height="40" rx="3" fill="#8C6BFF" opacity=".55"/><rect x="1592" y="66" width="10" height="18" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1616" y="51" width="10" height="48" rx="3" fill="#31F2A0" opacity=".55"/><rect x="1640" y="63" width="10" height="24" rx="3" fill="#FFB13C" opacity=".55"/><rect x="1664" y="59" width="10" height="32" rx="3" fill="#31F2A0" opacity=".55"/>
+      </g>
+      <rect x="680" width="60" height="150" fill="url(#fadeL)"/>
+      <rect x="1100" width="60" height="150" fill="url(#fadeR)"/>
+    </g>
+  </g>
+  <defs><linearGradient id="fadeL" x1="0" x2="1"><stop offset="0" stop-color="#060911"/><stop offset="1" stop-color="#060911" stop-opacity="0"/></linearGradient>
+  <linearGradient id="fadeR" x1="0" x2="1"><stop offset="0" stop-color="#060911" stop-opacity="0"/><stop offset="1" stop-color="#060911"/></linearGradient></defs>
+  <rect x=".75" y=".75" width="1198.5" height="148.5" rx="17.5" fill="none" stroke="#1C2A45" stroke-width="1.5"/>
+</svg>

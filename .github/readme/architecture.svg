@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="540" viewBox="0 0 1200 540" role="img" aria-label="NetScope architecture: hosted and local modes feeding the core analysis engine">
+  <title>NetScope architecture</title>
+  <style>@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#111C30" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glowG"><stop offset="0" stop-color="#31F2A0" stop-opacity=".28"/><stop offset="1" stop-color="#31F2A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowA"><stop offset="0" stop-color="#8C6BFF" stop-opacity=".22"/><stop offset="1" stop-color="#8C6BFF" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter><clipPath id="card"><rect width="1200" height="540" rx="20"/></clipPath></defs>
+  <g clip-path="url(#card)">
+    <rect width="1200" height="540" fill="#060911"/>
+    <rect width="1200" height="540" fill="url(#grid)"/>
+    <text x="40" y="36" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="800" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="112.0" lengthAdjust="spacingAndGlyphs" >// SIGNAL PATH</text>
+    <text x="40" y="64" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="800" fill="#31F2A0" text-anchor="start" xml:space="preserve" textLength="88.0" lengthAdjust="spacingAndGlyphs" >HOSTED MODE</text><text x="140" y="64" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="500" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="262.7" lengthAdjust="spacingAndGlyphs" >· Vercel + Render · simulated traffic</text><text x="40" y="332" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="80.0" lengthAdjust="spacingAndGlyphs" >LOCAL MODE</text><text x="132" y="332" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="500" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="284.0" lengthAdjust="spacingAndGlyphs" >· your machine · real interfaces &amp; .pcap</text>
+    <g>
+      <rect x="40" y="92" width="190" height="92" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="40" y="92" width="190" height="3" rx="1.5" fill="#4FD1FF"/>
+      <text x="56" y="124" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="60.2" lengthAdjust="spacingAndGlyphs" >Browser</text>
+      <text x="56" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="134.0" lengthAdjust="spacingAndGlyphs" >analyst · any device</text>
+      <rect x="56" y="156" width="49" height="18" rx="9" fill="#4FD1FF" fill-opacity=".12"/>
+      <text x="64" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#4FD1FF" text-anchor="start" xml:space="preserve" textLength="33.0" lengthAdjust="spacingAndGlyphs" >HTTPS</text>
+    </g>
+    <g>
+      <rect x="318" y="92" width="190" height="92" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="318" y="92" width="190" height="3" rx="1.5" fill="#EAF1FB"/>
+      <text x="334" y="124" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="60.2" lengthAdjust="spacingAndGlyphs" >webapp/</text>
+      <text x="334" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="120.6" lengthAdjust="spacingAndGlyphs" >static SOC console</text>
+      <rect x="334" y="156" width="56" height="18" rx="9" fill="#EAF1FB" fill-opacity=".12"/>
+      <text x="342" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="39.6" lengthAdjust="spacingAndGlyphs" >VERCEL</text>
+    </g>
+    <g>
+      <rect x="596" y="92" width="190" height="92" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="596" y="92" width="190" height="3" rx="1.5" fill="#31F2A0"/>
+      <text x="612" y="124" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="120.4" lengthAdjust="spacingAndGlyphs" >backend/app.py</text>
+      <text x="612" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="140.7" lengthAdjust="spacingAndGlyphs" >HTTP API · /ws stream</text>
+      <rect x="612" y="156" width="56" height="18" rx="9" fill="#31F2A0" fill-opacity=".12"/>
+      <text x="620" y="169" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#31F2A0" text-anchor="start" xml:space="preserve" textLength="39.6" lengthAdjust="spacingAndGlyphs" >RENDER</text>
+    </g>
+    <g>
+      <rect x="40" y="360" width="190" height="92" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="40" y="360" width="190" height="3" rx="1.5" fill="#FFB13C"/>
+      <text x="56" y="392" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="94.6" lengthAdjust="spacingAndGlyphs" >NIC · .pcap</text>
+      <text x="56" y="414" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="154.1" lengthAdjust="spacingAndGlyphs" >eth0 · Wi-Fi · captures</text>
+      <rect x="56" y="424" width="49" height="18" rx="9" fill="#FFB13C" fill-opacity=".12"/>
+      <text x="64" y="437" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#FFB13C" text-anchor="start" xml:space="preserve" textLength="33.0" lengthAdjust="spacingAndGlyphs" >SCAPY</text>
+    </g>
+    <g>
+      <rect x="318" y="360" width="190" height="92" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="318" y="360" width="190" height="3" rx="1.5" fill="#8C6BFF"/>
+      <text x="334" y="392" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="60.2" lengthAdjust="spacingAndGlyphs" >main.py</text>
+      <text x="334" y="414" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="154.1" lengthAdjust="spacingAndGlyphs" >CLI · filters · reports</text>
+      <rect x="334" y="424" width="56" height="18" rx="9" fill="#8C6BFF" fill-opacity=".12"/>
+      <text x="342" y="437" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="39.6" lengthAdjust="spacingAndGlyphs" >PYTHON</text>
+    </g>
+    <g>
+      <rect x="596" y="360" width="190" height="92" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="596" y="360" width="190" height="3" rx="1.5" fill="#8C6BFF"/>
+      <text x="612" y="392" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="154.8" lengthAdjust="spacingAndGlyphs" >frontend/server.py</text>
+      <text x="612" y="414" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="140.7" lengthAdjust="spacingAndGlyphs" >:8080 HTTP · :8765 WS</text>
+      <rect x="612" y="424" width="75" height="18" rx="9" fill="#8C6BFF" fill-opacity=".12"/>
+      <text x="620" y="437" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="59.4" lengthAdjust="spacingAndGlyphs" >LOCALHOST</text>
+    </g>
+    <path id="p230138.0318138.0" d="M230 138.0H318" stroke="#4FD1FF" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 6" fill="none">
+      <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <text x="274.0" y="128.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#4FD1FF" text-anchor="middle" xml:space="preserve" textLength="44.8" lengthAdjust="spacingAndGlyphs" >load UI</text>
+    <circle r="4" fill="#4FD1FF" filter="url(#glow)"><animateMotion dur="2.2s" begin="0.00s" repeatCount="indefinite"><mpath href="#p230138.0318138.0"/></animateMotion></circle>
+    <circle r="4" fill="#4FD1FF" filter="url(#glow)"><animateMotion dur="2.2s" begin="0.73s" repeatCount="indefinite"><mpath href="#p230138.0318138.0"/></animateMotion></circle>
+    <circle r="4" fill="#4FD1FF" filter="url(#glow)"><animateMotion dur="2.2s" begin="1.47s" repeatCount="indefinite"><mpath href="#p230138.0318138.0"/></animateMotion></circle>
+    <path id="p508138.0596138.0" d="M508 138.0H596" stroke="#31F2A0" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 6" fill="none">
+      <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <text x="552.0" y="128.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#31F2A0" text-anchor="middle" xml:space="preserve" textLength="64.0" lengthAdjust="spacingAndGlyphs" >WSS frames</text>
+    <circle r="4" fill="#31F2A0" filter="url(#glow)"><animateMotion dur="1.8s" begin="0.00s" repeatCount="indefinite"><mpath href="#p508138.0596138.0"/></animateMotion></circle>
+    <circle r="4" fill="#31F2A0" filter="url(#glow)"><animateMotion dur="1.8s" begin="0.60s" repeatCount="indefinite"><mpath href="#p508138.0596138.0"/></animateMotion></circle>
+    <circle r="4" fill="#31F2A0" filter="url(#glow)"><animateMotion dur="1.8s" begin="1.20s" repeatCount="indefinite"><mpath href="#p508138.0596138.0"/></animateMotion></circle>
+    <circle r="3" fill="#EAF1FB" opacity=".8"><animateMotion dur="2.3s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#p508138.0596138.0"/></animateMotion></circle>
+    <path id="p786138.0884138.0" d="M786 138.0H884" stroke="#31F2A0" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 6" fill="none">
+      <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <text x="835.0" y="128.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#31F2A0" text-anchor="middle" xml:space="preserve" textLength="44.8" lengthAdjust="spacingAndGlyphs" >analyse</text>
+    <circle r="4" fill="#31F2A0" filter="url(#glow)"><animateMotion dur="2.0s" begin="0.40s" repeatCount="indefinite"><mpath href="#p786138.0884138.0"/></animateMotion></circle>
+    <circle r="4" fill="#31F2A0" filter="url(#glow)"><animateMotion dur="2.0s" begin="1.07s" repeatCount="indefinite"><mpath href="#p786138.0884138.0"/></animateMotion></circle>
+    <circle r="4" fill="#31F2A0" filter="url(#glow)"><animateMotion dur="2.0s" begin="1.73s" repeatCount="indefinite"><mpath href="#p786138.0884138.0"/></animateMotion></circle>
+    <path id="p230406.0318406.0" d="M230 406.0H318" stroke="#FFB13C" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 6" fill="none">
+      <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <text x="274.0" y="396.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#FFB13C" text-anchor="middle" xml:space="preserve" textLength="70.4" lengthAdjust="spacingAndGlyphs" >raw packets</text>
+    <circle r="4" fill="#FFB13C" filter="url(#glow)"><animateMotion dur="1.6s" begin="0.00s" repeatCount="indefinite"><mpath href="#p230406.0318406.0"/></animateMotion></circle>
+    <circle r="4" fill="#FFB13C" filter="url(#glow)"><animateMotion dur="1.6s" begin="0.53s" repeatCount="indefinite"><mpath href="#p230406.0318406.0"/></animateMotion></circle>
+    <circle r="4" fill="#FFB13C" filter="url(#glow)"><animateMotion dur="1.6s" begin="1.07s" repeatCount="indefinite"><mpath href="#p230406.0318406.0"/></animateMotion></circle>
+    <path id="p508406.0596406.0" d="M508 406.0H596" stroke="#8C6BFF" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 6" fill="none">
+      <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <text x="552.0" y="396.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#8C6BFF" text-anchor="middle" xml:space="preserve" textLength="70.4" lengthAdjust="spacingAndGlyphs" >--dashboard</text>
+    <circle r="4" fill="#8C6BFF" filter="url(#glow)"><animateMotion dur="2.0s" begin="0.00s" repeatCount="indefinite"><mpath href="#p508406.0596406.0"/></animateMotion></circle>
+    <circle r="4" fill="#8C6BFF" filter="url(#glow)"><animateMotion dur="2.0s" begin="0.67s" repeatCount="indefinite"><mpath href="#p508406.0596406.0"/></animateMotion></circle>
+    <circle r="4" fill="#8C6BFF" filter="url(#glow)"><animateMotion dur="2.0s" begin="1.33s" repeatCount="indefinite"><mpath href="#p508406.0596406.0"/></animateMotion></circle>
+    <path id="p786406.0884406.0" d="M786 406.0H884" stroke="#8C6BFF" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 6" fill="none">
+      <animate attributeName="stroke-dashoffset" from="24" to="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <text x="835.0" y="396.0" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="700" fill="#8C6BFF" text-anchor="middle" xml:space="preserve" textLength="44.8" lengthAdjust="spacingAndGlyphs" >analyse</text>
+    <circle r="4" fill="#8C6BFF" filter="url(#glow)"><animateMotion dur="2.0s" begin="0.30s" repeatCount="indefinite"><mpath href="#p786406.0884406.0"/></animateMotion></circle>
+    <circle r="4" fill="#8C6BFF" filter="url(#glow)"><animateMotion dur="2.0s" begin="0.97s" repeatCount="indefinite"><mpath href="#p786406.0884406.0"/></animateMotion></circle>
+    <circle r="4" fill="#8C6BFF" filter="url(#glow)"><animateMotion dur="2.0s" begin="1.63s" repeatCount="indefinite"><mpath href="#p786406.0884406.0"/></animateMotion></circle>
+    <rect x="40" y="222" width="746" height="52" rx="10" fill="#060911" stroke="#1B2944"/>
+    <text x="56" y="243" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="800" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="133.0" lengthAdjust="spacingAndGlyphs" >REAL-TIME EVENT BUS</text>
+    <clipPath id="tick"><rect x="52" y="246" width="722" height="24"/></clipPath>
+    <g clip-path="url(#tick)">
+      <g><animateTransform attributeName="transform" type="translate" from="0 0" to="-458.8 0" dur="9s" repeatCount="indefinite"/>
+        <text x="56" y="263" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="1835.2" lengthAdjust="spacingAndGlyphs" >packet ▸ alert ▸ stats ▸ threat ▸ host ▸ flow ▸ mitre ▸ ioc ▸ packet ▸ alert ▸ stats ▸ threat ▸ host ▸ flow ▸ mitre ▸ ioc ▸ packet ▸ alert ▸ stats ▸ threat ▸ host ▸ flow ▸ mitre ▸ ioc ▸ packet ▸ alert ▸ stats ▸ threat ▸ host ▸ flow ▸ mitre ▸ ioc ▸ </text>
+      </g>
+    </g>
+    <rect x="884" y="70" width="280" height="404" rx="16" fill="#0F1726" stroke="#31F2A0" stroke-opacity=".45" stroke-width="1.5"/>
+    <rect x="884" y="70" width="280" height="404" rx="16" fill="none" stroke="#31F2A0" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="stroke-opacity" values=".05;.5;.05" dur="3s" repeatCount="indefinite"/></rect>
+    <text x="906" y="106" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="20" font-weight="800" fill="#31F2A0" text-anchor="start" xml:space="preserve" textLength="60.0" lengthAdjust="spacingAndGlyphs" >core/</text>
+    <text x="976" y="106" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="600" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="108.0" lengthAdjust="spacingAndGlyphs" >analysis engine</text>
+    <g>
+      <rect x="900" y="132" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="132" width="248" height="38" rx="8" fill="#FFB13C" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="0.0s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="151" r="4.5" fill="#FFB13C"><animate attributeName="opacity" values="1;.3;1" dur="1.40s" repeatCount="indefinite"/></circle>
+      <text x="932" y="149" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="75.0" lengthAdjust="spacingAndGlyphs" >sniffer.py</text>
+      <text x="932" y="163" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="128.1" lengthAdjust="spacingAndGlyphs" >capture · pcap reader</text>
+    </g>
+    <g>
+      <rect x="900" y="179" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="179" width="248" height="38" rx="8" fill="#4FD1FF" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="0.8s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="198" r="4.5" fill="#4FD1FF"><animate attributeName="opacity" values="1;.3;1" dur="1.53s" repeatCount="indefinite"/></circle>
+      <text x="932" y="196" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="82.5" lengthAdjust="spacingAndGlyphs" >analyzer.py</text>
+      <text x="932" y="210" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="158.6" lengthAdjust="spacingAndGlyphs" >sessions · flows · talkers</text>
+    </g>
+    <g>
+      <rect x="900" y="226" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="226" width="248" height="38" rx="8" fill="#FF3E6C" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="1.6s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="245" r="4.5" fill="#FF3E6C"><animate attributeName="opacity" values="1;.3;1" dur="1.66s" repeatCount="indefinite"/></circle>
+      <text x="932" y="243" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="75.0" lengthAdjust="spacingAndGlyphs" >anomaly.py</text>
+      <text x="932" y="257" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="152.5" lengthAdjust="spacingAndGlyphs" >floods · scans · spoofing</text>
+    </g>
+    <g>
+      <rect x="900" y="273" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="273" width="248" height="38" rx="8" fill="#8C6BFF" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="2.4s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="292" r="4.5" fill="#8C6BFF"><animate attributeName="opacity" values="1;.3;1" dur="1.79s" repeatCount="indefinite"/></circle>
+      <text x="932" y="290" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="135.0" lengthAdjust="spacingAndGlyphs" >crypto_detector.py</text>
+      <text x="932" y="304" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="115.9" lengthAdjust="spacingAndGlyphs" >entropy · TLS · SSH</text>
+    </g>
+    <g>
+      <rect x="900" y="320" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="320" width="248" height="38" rx="8" fill="#FF3E6C" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="3.2s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="339" r="4.5" fill="#FF3E6C"><animate attributeName="opacity" values="1;.3;1" dur="1.92s" repeatCount="indefinite"/></circle>
+      <text x="932" y="337" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="67.5" lengthAdjust="spacingAndGlyphs" >threat.py</text>
+      <text x="932" y="351" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="122.0" lengthAdjust="spacingAndGlyphs" >decaying host scores</text>
+    </g>
+    <g>
+      <rect x="900" y="367" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="367" width="248" height="38" rx="8" fill="#8493B2" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="4.0s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="386" r="4.5" fill="#8493B2"><animate attributeName="opacity" values="1;.3;1" dur="2.05s" repeatCount="indefinite"/></circle>
+      <text x="932" y="384" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="75.0" lengthAdjust="spacingAndGlyphs" >netinfo.py</text>
+      <text x="932" y="398" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="115.9" lengthAdjust="spacingAndGlyphs" >IP class · services</text>
+    </g>
+    <g>
+      <rect x="900" y="414" width="248" height="38" rx="8" fill="#0A1120" stroke="#1B2944"/>
+      <rect x="900" y="414" width="248" height="38" rx="8" fill="#31F2A0" opacity="0">
+        <animate attributeName="opacity" values="0;.16;0;0" keyTimes="0;.06;.16;1" dur="5.6s" begin="4.8s" repeatCount="indefinite"/></rect>
+      <circle cx="918" cy="433" r="4.5" fill="#31F2A0"><animate attributeName="opacity" values="1;.3;1" dur="2.18s" repeatCount="indefinite"/></circle>
+      <text x="932" y="431" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="700" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="105.0" lengthAdjust="spacingAndGlyphs" >live_engine.py</text>
+      <text x="932" y="445" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="146.4" lengthAdjust="spacingAndGlyphs" >NDR · MITRE · IOC export</text>
+    </g>
+    <text x="600.0" y="518" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="500" fill="#5B6884" text-anchor="middle" xml:space="preserve" textLength="772.2" lengthAdjust="spacingAndGlyphs" >same core/ engine powers both modes — the hosted backend streams simulated traffic, local mode sniffs real interfaces</text>
+  </g>
+  <rect x=".75" y=".75" width="1198.5" height="538.5" rx="19.5" fill="none" stroke="#1C2A45" stroke-width="1.5"/>
+</svg>

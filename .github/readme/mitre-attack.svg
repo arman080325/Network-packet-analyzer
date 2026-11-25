@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-label="MITRE ATT&amp;CK techniques mapped by NetScope">
+  <title>MITRE ATT&amp;CK techniques mapped by NetScope</title>
+  <style>@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#111C30" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="glowG"><stop offset="0" stop-color="#31F2A0" stop-opacity=".28"/><stop offset="1" stop-color="#31F2A0" stop-opacity="0"/></radialGradient>
+    <radialGradient id="glowA"><stop offset="0" stop-color="#8C6BFF" stop-opacity=".22"/><stop offset="1" stop-color="#8C6BFF" stop-opacity="0"/></radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter><clipPath id="card"><rect width="1200" height="300" rx="18"/></clipPath></defs>
+  <g clip-path="url(#card)">
+    <rect width="1200" height="300" fill="#060911"/>
+    <rect width="1200" height="300" fill="url(#grid)" opacity=".7"/>
+    <text x="40" y="46" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="15" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="114.0" lengthAdjust="spacingAndGlyphs" >MITRE ATT&amp;CK</text>
+    <text x="170" y="46" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" textLength="434.0" lengthAdjust="spacingAndGlyphs" >every alert is tagged with a technique ID, tactic and severity</text>
+    <text x="1160" y="46" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="11.5" font-weight="700" fill="#31F2A0" text-anchor="end" xml:space="preserve" textLength="163.2" lengthAdjust="spacingAndGlyphs" >7 techniques · 5 tactics</text>
+    
+    <g>
+      <rect x="40" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="40" y="78" width="152" height="178" rx="12" fill="#FFB13C" fill-opacity=".07" stroke="#FFB13C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="0.00s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="54" y="94" width="68" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="61" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="54.0" lengthAdjust="spacingAndGlyphs" >DISCOVERY</text>
+      <text x="54" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="65.0" lengthAdjust="spacingAndGlyphs" >T1046</text>
+      <text x="54" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >Network Service</text>
+      <text x="54" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >Discovery</text>
+      <circle cx="60" cy="232" r="4" fill="#FFB13C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="0.00s" repeatCount="indefinite"/>
+        <text x="70" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FFB13C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="0.00s" repeatCount="indefinite"/>
+        <text x="70" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <g>
+      <rect x="204" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="204" y="78" width="152" height="178" rx="12" fill="#FFB13C" fill-opacity=".07" stroke="#FFB13C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="1.20s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="218" y="94" width="116" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="225" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="102.0" lengthAdjust="spacingAndGlyphs" >COMMAND &amp; CONTROL</text>
+      <text x="218" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="100.8" lengthAdjust="spacingAndGlyphs" >T1071.001</text>
+      <text x="218" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >Web Protocols</text>
+      <text x="218" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >(cleartext)</text>
+      <circle cx="224" cy="232" r="4" fill="#FFB13C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="1.20s" repeatCount="indefinite"/>
+        <text x="234" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FFB13C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="1.20s" repeatCount="indefinite"/>
+        <text x="234" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <g>
+      <rect x="368" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="368" y="78" width="152" height="178" rx="12" fill="#FF3E6C" fill-opacity=".07" stroke="#FF3E6C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="2.40s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="382" y="94" width="116" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="389" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="102.0" lengthAdjust="spacingAndGlyphs" >COMMAND &amp; CONTROL</text>
+      <text x="382" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="100.8" lengthAdjust="spacingAndGlyphs" >T1071.004</text>
+      <text x="382" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >DNS Tunneling</text>
+      <text x="382" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >high entropy</text>
+      <circle cx="388" cy="232" r="4" fill="#FF3E6C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="2.40s" repeatCount="indefinite"/>
+        <text x="398" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FF3E6C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="2.40s" repeatCount="indefinite"/>
+        <text x="398" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <g>
+      <rect x="532" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="532" y="78" width="152" height="178" rx="12" fill="#FFB13C" fill-opacity=".07" stroke="#FFB13C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="3.60s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="546" y="94" width="116" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="553" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="102.0" lengthAdjust="spacingAndGlyphs" >COMMAND &amp; CONTROL</text>
+      <text x="546" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="65.0" lengthAdjust="spacingAndGlyphs" >T1571</text>
+      <text x="546" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >Non-Standard</text>
+      <text x="546" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >Port</text>
+      <circle cx="552" cy="232" r="4" fill="#FFB13C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="3.60s" repeatCount="indefinite"/>
+        <text x="562" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FFB13C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="3.60s" repeatCount="indefinite"/>
+        <text x="562" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <g>
+      <rect x="696" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="696" y="78" width="152" height="178" rx="12" fill="#FF3E6C" fill-opacity=".07" stroke="#FF3E6C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="4.80s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="710" y="94" width="86" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="717" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="72.0" lengthAdjust="spacingAndGlyphs" >EXFILTRATION</text>
+      <text x="710" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="65.0" lengthAdjust="spacingAndGlyphs" >T1041</text>
+      <text x="710" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >Exfiltration</text>
+      <text x="710" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >over C2</text>
+      <circle cx="716" cy="232" r="4" fill="#FF3E6C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="4.80s" repeatCount="indefinite"/>
+        <text x="726" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FF3E6C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="4.80s" repeatCount="indefinite"/>
+        <text x="726" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <g>
+      <rect x="860" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="860" y="78" width="152" height="178" rx="12" fill="#FF3E6C" fill-opacity=".07" stroke="#FF3E6C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="6.00s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="874" y="94" width="68" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="881" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="54.0" lengthAdjust="spacingAndGlyphs" >EXECUTION</text>
+      <text x="874" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="65.0" lengthAdjust="spacingAndGlyphs" >T1059</text>
+      <text x="874" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >Command &amp;</text>
+      <text x="874" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >Scripting</text>
+      <circle cx="880" cy="232" r="4" fill="#FF3E6C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="6.00s" repeatCount="indefinite"/>
+        <text x="890" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FF3E6C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="6.00s" repeatCount="indefinite"/>
+        <text x="890" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <g>
+      <rect x="1024" y="78" width="152" height="178" rx="12" fill="#0F1726" stroke="#1B2944" stroke-width="1.5"/>
+      <rect x="1024" y="78" width="152" height="178" rx="12" fill="#FF3E6C" fill-opacity=".07" stroke="#FF3E6C" stroke-width="2" opacity="0">
+        <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.01;.12;.14;1" dur="8.4s" begin="7.20s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="1038" y="94" width="116" height="18" rx="9" fill="#8C6BFF" fill-opacity=".14"/>
+      <text x="1045" y="107" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="9.5" font-weight="800" fill="#8C6BFF" text-anchor="start" xml:space="preserve" textLength="102.0" lengthAdjust="spacingAndGlyphs" >CREDENTIAL ACCESS</text>
+      <text x="1038" y="148" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="19" font-weight="800" fill="#EAF1FB" text-anchor="start" xml:space="preserve" textLength="100.8" lengthAdjust="spacingAndGlyphs" >T1557.002</text>
+      <text x="1038" y="176" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="600" fill="#EAF1FB" text-anchor="start" xml:space="preserve" >ARP Spoofing</text>
+      <text x="1038" y="194" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="12.5" font-weight="500" fill="#8493B2" text-anchor="start" xml:space="preserve" >/ Poisoning</text>
+      <circle cx="1044" cy="232" r="4" fill="#FF3E6C"/>
+      <g opacity="0">
+        <animate attributeName="opacity" values="0;1;0" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="7.20s" repeatCount="indefinite"/>
+        <text x="1054" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="800" fill="#FF3E6C" text-anchor="start" xml:space="preserve" textLength="52.8" lengthAdjust="spacingAndGlyphs" >DETECTED</text>
+      </g>
+      <g opacity="1">
+        <animate attributeName="opacity" values="1;0;1" keyTimes="0;.005;.14" calcMode="discrete" dur="8.4s" begin="7.20s" repeatCount="indefinite"/>
+        <text x="1054" y="236" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" font-size="10" font-weight="700" fill="#5B6884" text-anchor="start" xml:space="preserve" textLength="66.0" lengthAdjust="spacingAndGlyphs" >MONITORING</text>
+      </g>
+    </g>
+    <rect x="40" y="270" width="1136" height="3" rx="1.5" fill="#0F1726"/>
+    <rect x="40" y="270" width="152" height="3" rx="1.5" fill="#31F2A0" filter="url(#glow)">
+      <animate attributeName="x" values="40;204;368;532;696;860;1024;40" dur="8.4s" calcMode="discrete" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  <rect x=".75" y=".75" width="1198.5" height="298.5" rx="17.5" fill="none" stroke="#1C2A45" stroke-width="1.5"/>
+</svg>

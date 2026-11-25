@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="28" viewBox="0 0 1200 28" role="presentation" aria-hidden="true">
+  <style>@media (prefers-reduced-motion: reduce){*{animation:none!important}}</style>
+  <defs>
+    <linearGradient id="ln" x1="0" x2="1"><stop offset="0" stop-color="#31F2A0" stop-opacity="0"/><stop offset=".5" stop-color="#31F2A0" stop-opacity=".55"/><stop offset="1" stop-color="#8C6BFF" stop-opacity="0"/></linearGradient>
+    <radialGradient id="pk"><stop offset="0" stop-color="#31F2A0"/><stop offset="1" stop-color="#31F2A0" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect y="13" width="1200" height="2" fill="url(#ln)"/>
+  <polygon points="300.00,9.00 304.33,11.50 304.33,16.50 300.00,19.00 295.67,16.50 295.67,11.50" fill="#060911" stroke="#31F2A0" stroke-opacity=".6" stroke-width="1.5"/><polygon points="600.00,9.00 604.33,11.50 604.33,16.50 600.00,19.00 595.67,16.50 595.67,11.50" fill="#060911" stroke="#31F2A0" stroke-opacity=".6" stroke-width="1.5"/><polygon points="900.00,9.00 904.33,11.50 904.33,16.50 900.00,19.00 895.67,16.50 895.67,11.50" fill="#060911" stroke="#31F2A0" stroke-opacity=".6" stroke-width="1.5"/>
+  <g><animateTransform attributeName="transform" type="translate" from="-40 0" to="1240 0" dur="5s" repeatCount="indefinite"/>
+    <ellipse cx="0" cy="14" rx="34" ry="6" fill="url(#pk)"/><circle cx="0" cy="14" r="3" fill="#EAF1FB"/></g>
+  <g><animateTransform attributeName="transform" type="translate" from="1240 0" to="-40 0" dur="7s" repeatCount="indefinite"/>
+    <circle cx="0" cy="14" r="2.5" fill="#8C6BFF"/></g>
+</svg>
