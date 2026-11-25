@@ -90,159 +90,407 @@ def discrete_typing(n, cw, start, end_type, hide, period):
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# 1 · HERO
+# 1 · HERO — "scope lock": a 12-second story told on a live sensor mesh
+#     monitor → anomaly → port scan → target lock → contained → reset
 # ════════════════════════════════════════════════════════════════════════════
+def vis(a, b, period, fade=0.12, peak=1, discrete=False):
+    """Opacity animation: visible between a and b seconds of a looping period."""
+    a, b = max(a, 0.001), min(b, period - 0.001)
+    if discrete:
+        return (f'<animate attributeName="opacity" dur="{period}s" repeatCount="indefinite" calcMode="discrete" '
+                f'values="0;{peak};0" keyTimes="0;{a / period:.4f};{b / period:.4f}"/>')
+    f = min(fade, (b - a) / 3)
+    kts = [0, a, a + f, b - f, b, period]
+    return (f'<animate attributeName="opacity" dur="{period}s" repeatCount="indefinite" '
+            f'values="0;0;{peak};{peak};0;0" keyTimes="{";".join(f"{k / period:.4f}" for k in kts)}"/>')
+
+
+def windows_anim(attr, windows, period, on, off):
+    """Discrete attribute flips: `on` inside each (a, b) window, `off` elsewhere."""
+    kt, vals = [0.0], [off]
+    for a, b in windows:
+        kt += [a, b]
+        vals += [on, off]
+    return (f'<animate attributeName="{attr}" dur="{period}s" repeatCount="indefinite" calcMode="discrete" '
+            f'keyTimes="{";".join(f"{k / period:.4f}" for k in kt)}" values="{";".join(map(str, vals))}"/>')
+
+
 def hero():
-    W, H = 1280, 440
-    cx, cy, rr = 1075, 196, 138
+    import math
+    W, H = 1280, 560
+    P = 12.0                      # story period
+    CYAN = "#4FD1FF"
+
+    # ── left column: wordmark, typing console, packet anatomy ───────────────
+    glitch_w = [(2.90, 2.98), (3.04, 3.16), (7.40, 7.47), (7.52, 7.60), (10.9, 11.0)]
+    GP = 12.0
+    wx, wy = 62, 214
+    word = lambda fill, extra="": t(wx, wy, "NETSCOPE", 106, fill, 800, 74, extra=f'letter-spacing="2" {extra}')
+    wordmark = f'''
+    {word("url(#wordBase)")}
+    {word("url(#shine)")}
+    <g opacity="0" style="mix-blend-mode:screen">{windows_anim("opacity", glitch_w, GP, 1, 0)}
+      <g transform="translate(-6 0)">{word(CYAN, 'opacity=".85"')}</g>
+      <g transform="translate(6 0)">{word(DANGER, 'opacity=".85"')}</g>
+    </g>
+    <g opacity="0">{windows_anim("opacity", glitch_w, GP, 1, 0)}
+      <g clip-path="url(#slice1)"><g transform="translate(22 0)">{word(TEXT)}</g></g>
+      <g clip-path="url(#slice2)"><g transform="translate(-16 0)">{word(SIGNAL)}</g></g>
+      <rect x="{wx - 10}" y="{wy - 44}" width="640" height="3" fill="{CYAN}" opacity=".7"/>
+    </g>'''
+
     phrases = [
-        "capture ▸ live packets & .pcap · TCP · UDP · DNS · TLS",
+        "capture ▸ live NIC & .pcap · TCP · UDP · DNS · TLS",
         "detect  ▸ SYN floods · port scans · ARP spoofing",
         "score   ▸ per-host threat risk with time decay",
         "map     ▸ every alert to a MITRE ATT&CK technique",
     ]
-    cw, fs, tx, ty = 10.2, 17, 296, 292
+    cw, fs, tx, ty = 10.0, 17, 86, 312
     period, slot = 18.0, 4.5
-    typing = []
+    typing_defs, typing_text = "", ""
     for i, p in enumerate(phrases):
         s0 = i * slot
         kts, vals = discrete_typing(len(p), cw, s0 + 0.05, s0 + 1.9, s0 + slot, period)
-        typing.append(f'''
+        typing_defs += f'''
     <clipPath id="tp{i}"><rect x="{tx}" y="{ty - 18}" height="26" width="0">
       <animate attributeName="width" dur="{period}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{kts}" values="{vals}"/>
-    </rect></clipPath>''')
-    typing_text = "".join(
-        f'<g clip-path="url(#tp{i})">{t(tx, ty, p, fs, TEXT, 500, cw)}</g>' for i, p in enumerate(phrases))
-    # cursor x follows typing
+    </rect></clipPath>'''
+        typing_text += f'<g clip-path="url(#tp{i})">{t(tx, ty, p, fs, TEXT, 500, cw)}</g>'
     ckt, cvals = [0.0], [tx]
     for i, p in enumerate(phrases):
-        s0 = i * slot
-        n = len(p)
-        for k in range(0, n + 1):
-            ckt.append(s0 + 0.05 + (1.85) * k / n if k else s0 + 0.001)
+        s0, n = i * slot, len(p)
+        for k in range(n + 1):
+            ckt.append(s0 + 0.05 + 1.85 * k / n if k else s0 + 0.001)
             cvals.append(round(tx + k * cw + 2, 1))
-    ckts = ";".join(f"{x / period:.4f}" for x in ckt)
-    cvs = ";".join(str(v) for v in cvals)
+    cursor = (f'<rect class="blink" x="{tx}" y="{ty - 16}" width="9" height="20" fill="{SIGNAL}">'
+              f'<animate attributeName="x" dur="{period}s" repeatCount="indefinite" calcMode="discrete" '
+              f'keyTimes="{";".join(f"{x / period:.4f}" for x in ckt)}" values="{";".join(map(str, cvals))}"/></rect>')
 
-    blips = [  # angle-ish position, color, label, delay
-        (cx + 62, cy - 70, SIGNAL, "10.0.0.12", 0.6),
-        (cx - 88, cy - 30, WARN, "198.51.100.7 · 47", 1.6),
-        (cx + 40, cy + 92, DANGER, "203.0.113.45 · 82", 2.5),
-        (cx - 40, cy + 60, SIGNAL, "10.0.0.1 gw", 3.3),
-        (cx + 104, cy + 18, ACCENT, "TLS 1.3", 1.1),
-    ]
-    blip_svg = ""
-    for bx, by, col, lab, d in blips:
-        blip_svg += f'''
-    <g opacity="0">
-      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.55;1" dur="4s" begin="{d}s" repeatCount="indefinite"/>
-      <circle cx="{bx}" cy="{by}" r="4" fill="{col}" filter="url(#glow)"/>
-      <circle cx="{bx}" cy="{by}" r="4" fill="none" stroke="{col}" stroke-width="1.5">
-        <animate attributeName="r" values="4;16" dur="1.4s" begin="{d}s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="1;0" dur="1.4s" begin="{d}s" repeatCount="indefinite"/>
-      </circle>
-      {t(bx + 9, by - 7, lab, 11, col, 600)}
+    # IPv4 header of the scanning packet: 203.0.113.45 → 10.0.0.12, TTL 64, TCP
+    raw = "45 00 00 3C 1C 46 40 00 40 06 B1 E6 CB 00 71 2D 0A 00 00 0C".split()
+    fields = [(0, 1, "VERSION · IHL", "IPv4 · 20-byte header", SIGNAL),
+              (1, 1, "DSCP · ECN", "0x00 · best effort", MUTED),
+              (2, 2, "TOTAL LENGTH", "0x003C → 60 bytes", CYAN),
+              (4, 2, "IDENTIFICATION", "0x1C46", MUTED),
+              (6, 2, "FLAGS · OFFSET", "DF · don't fragment", WARN),
+              (8, 1, "TIME TO LIVE", "0x40 → 64 hops", SIGNAL),
+              (9, 1, "PROTOCOL", "0x06 → TCP", ACCENT),
+              (10, 2, "HEADER CHECKSUM", "0xB1E6 · verified", MUTED),
+              (12, 4, "SOURCE", "203.0.113.45 · external", DANGER),
+              (16, 4, "DESTINATION", "10.0.0.12 · web-01", SIGNAL)]
+    bx, by, bw, bstep = 64, 386, 25, 27
+    AP = len(fields) * 0.9
+    anat = f'''
+    {t(bx, by - 16, "▸ DISSECTING FRAME #4471", 12, SIGNAL, 800, 7.6)}
+    {t(bx + 190, by - 16, "IPv4 header · 20 bytes · offset 0x0E", 12, DIM, 600, 7.0)}'''
+    for i, b in enumerate(raw):
+        anat += f'''
+    <rect x="{bx + i * bstep}" y="{by}" width="{bw}" height="30" rx="4" fill="{SURF}" stroke="{LINE}"/>
+    {t(bx + i * bstep + bw / 2, by + 20, b, 12.5, TEXT, 700, anchor="middle")}'''
+    for s, n, _, _, col in fields:
+        anat += f'<rect x="{bx + s * bstep + 1}" y="{by + 34}" width="{n * bstep - 3}" height="3" rx="1.5" fill="{col}" opacity=".8"/>'
+    hx = ";".join(str(bx + f[0] * bstep - 3) for f in fields)
+    hw = ";".join(str(f[1] * bstep + 4) for f in fields)
+    hc = ";".join(f[4] for f in fields)
+    hk = ";".join(f"{i / len(fields):.4f}" for i in range(len(fields)))
+    anat += f'''
+    <rect x="{bx - 3}" y="{by - 4}" width="{bstep + 4}" height="38" rx="6" fill="{SIGNAL}" fill-opacity=".1" stroke="{SIGNAL}" stroke-width="2" filter="url(#glow)">
+      <animate attributeName="x" dur="{AP}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{hk}" values="{hx}"/>
+      <animate attributeName="width" dur="{AP}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{hk}" values="{hw}"/>
+      <animate attributeName="stroke" dur="{AP}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{hk}" values="{hc}"/>
+      <animate attributeName="fill" dur="{AP}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{hk}" values="{hc}"/>
+    </rect>
+    <rect x="{bx}" y="{by + 48}" width="{len(raw) * bstep - 2}" height="44" rx="8" fill="{SURF2}" stroke="{LINE}"/>
+    <path d="M{bx + 14} {by + 62}l6 8-6 8" fill="none" stroke="{SIGNAL}" stroke-width="2">
+      <animate attributeName="stroke" dur="{AP}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{hk}" values="{hc}"/></path>'''
+    for i, (s, n, lab, val, col) in enumerate(fields):
+        anat += f'''
+    <g opacity="0">{vis(i * 0.9, (i + 1) * 0.9, AP, discrete=True)}
+      {t(bx + 34, by + 67, lab, 10.5, DIM, 800, 6.8)}
+      {t(bx + 34, by + 84, val, 14, col, 700, 8.4)}
+      {t(bx + len(raw) * bstep - 16, by + 76, f"bytes {s:02d}–{s + n - 1:02d}", 11, MUTED, 600, 6.8, anchor="end")}
     </g>'''
 
-    plist = [("TCP", SIGNAL), ("DNS", WARN), ("TLS", ACCENT), ("UDP", "#4FD1FF"),
-             ("SYN!", DANGER), ("ARP", MUTED), ("ICMP", TEXT), ("HTTP", WARN)]
-    packets = [(lab, col, 14, i * 14 / len(plist)) for i, (lab, col) in enumerate(plist)]
-    pk_svg = ""
-    for lab, col, dur, beg in packets:
-        w = 14 + len(lab) * 8.5
-        pk_svg += f'''
+    # ── right column: sensor mesh + attack story ────────────────────────────
+    SX, SY = 958, 312
+    nodes = {"dns": ("dns-01", "10.0.0.53", 1004, 132), "web": ("web-01", "10.0.0.12", 772, 176),
+             "db": ("db-01", "10.0.0.31", 752, 430), "gw": ("gw", "10.0.0.1", 944, 466),
+             "ws": ("ws-07", "10.0.0.23", 1156, 446)}
+    XX, XY = 1190, 172
+    mesh = ""
+    peers = [("dns", "web"), ("web", "db"), ("db", "gw"), ("gw", "ws")]
+    for a, b in peers:
+        _, _, x1, y1 = nodes[a]
+        _, _, x2, y2 = nodes[b]
+        mesh += f'<path d="M{x1} {y1}L{x2} {y2}" stroke="{LINE}" stroke-width="1.5"/>'
+    for k, (_, _, x, y) in nodes.items():
+        pid = f"sp_{k}"
+        mesh += f'''
+    <path id="{pid}" d="M{SX} {SY}L{x} {y}" stroke="{SIGNAL}" stroke-opacity=".22" stroke-width="1.5" stroke-dasharray="4 6">
+      <animate attributeName="stroke-dashoffset" from="20" to="0" dur="1.2s" repeatCount="indefinite"/></path>'''
+        d = 1.6 + (x % 7) * 0.15
+        mesh += f'''
+    <circle r="3" fill="{SIGNAL}"><animateMotion dur="{d:.2f}s" repeatCount="indefinite" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#{pid}"/></animateMotion></circle>
+    <circle r="2.5" fill="{TEXT}" opacity=".7"><animateMotion dur="{d * 1.4:.2f}s" begin="-{d / 2:.2f}s" repeatCount="indefinite"><mpath href="#{pid}"/></animateMotion></circle>'''
+
+    sonar = "".join(f'''
+    <circle cx="{SX}" cy="{SY}" r="40" fill="none" stroke="{SIGNAL}" stroke-width="1.5">
+      <animate attributeName="r" values="40;300" dur="4s" begin="{b}s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".5;0" dur="4s" begin="{b}s" repeatCount="indefinite"/>
+    </circle>''' for b in (0, 2))
+
+    hits = {"dns": 3.9, "web": 4.3, "db": 4.7, "gw": 5.1, "ws": 5.5}
+    node_svg, scan_svg = "", ""
+    for k, (name, ip, x, y) in nodes.items():
+        h = hits[k]
+        node_svg += f'''
     <g>
-      <animateTransform attributeName="transform" type="translate" from="-90 0" to="{W + 40} 0" dur="{dur}s" begin="-{beg}s" repeatCount="indefinite"/>
-      <rect x="0" y="{H - 52}" width="{w:.0f}" height="20" rx="10" fill="{col}" fill-opacity=".14" stroke="{col}" stroke-opacity=".8"/>
-      {t(w / 2, H - 37.5, lab, 11, col, 700, anchor="middle")}
-      <rect x="{-60}" y="{H - 43}" width="56" height="2" fill="url(#trail)" opacity=".7"/>
+      <polygon points="{hexpts(x, y, 13)}" fill="{VOID}" stroke="{SIGNAL}" stroke-width="2"/>
+      <polygon points="{hexpts(x, y, 5)}" fill="{SIGNAL}"/>
+      <g opacity="0">{vis(h, h + 1.1, P)}
+        <polygon points="{hexpts(x, y, 13)}" fill="{WARN}" fill-opacity=".25" stroke="{WARN}" stroke-width="2.5" filter="url(#glow)"/>
+        <circle cx="{x}" cy="{y}" r="13" fill="none" stroke="{WARN}" stroke-width="1.5">
+          <animate attributeName="r" values="13;13;36;36" dur="{P}s" keyTimes="0;{h / P:.4f};{(h + 1.1) / P:.4f};1" repeatCount="indefinite"/>
+        </circle>
+        {t(x, y - 22, "PROBED", 9.5, WARN, 800, 6.4, anchor="middle")}
+      </g>
+      {t(x, y + 30, name, 11, TEXT, 700, 6.8, anchor="middle")}
+      {t(x, y + 44, ip, 10, MUTED, 500, 6.1, anchor="middle")}
     </g>'''
+        for j in range(3):
+            a = h - 0.55 + j * 0.07
+            scan_svg += f'''
+    <circle r="{3 - j * 0.6:.1f}" fill="{DANGER}" filter="url(#glow)" opacity="0">{vis(a, a + 0.55, P, fade=0.04)}
+      <animateMotion dur="{P}s" repeatCount="indefinite" path="M{XX} {XY}L{x} {y}" keyPoints="0;0;1;1" keyTimes="0;{a / P:.4f};{(a + 0.55) / P:.4f};1" calcMode="linear"/>
+    </circle>'''
+        scan_svg += f'''
+    <path d="M{XX} {XY}L{x} {y}" stroke="{DANGER}" stroke-width="1.5" stroke-dasharray="2 5" opacity="0">{vis(h - 0.5, 9.2, P, peak=.55)}</path>'''
 
-    chips = [("LIVE CAPTURE", SIGNAL), ("PCAP FORENSICS", ACCENT), ("MITRE ATT&CK", DANGER),
-             ("WEBSOCKET STREAM", WARN)]
-    chip_svg, cxp = "", 296
-    for lab, col in chips:
-        w = 30 + len(lab) * 8.2
-        chip_svg += f'''
+    # attacker, reticle, containment, threat card
+    L = 6 * 30   # hex ring perimeter (r=30)
+    br = "".join(f'<path d="M{dx * 26} {dy * 14}V{dy * 26}H{dx * 14}" fill="none" stroke="{DANGER}" stroke-width="3" stroke-linecap="round"/>'
+                 for dx in (-1, 1) for dy in (-1, 1))
+    attacker = f'''
     <g>
-      <rect x="{cxp}" y="320" width="{w:.0f}" height="28" rx="14" fill="{col}" fill-opacity=".08" stroke="{col}" stroke-opacity=".55"/>
-      <circle cx="{cxp + 14}" cy="334" r="3.5" fill="{col}"><animate attributeName="opacity" values="1;.25;1" dur="1.8s" repeatCount="indefinite"/></circle>
-      {t(cxp + 24, 338.5, lab, 11.5, col, 700, 7.6)}
+      <polygon points="{hexpts(XX, XY, 13)}" fill="{VOID}" stroke="{DIM}" stroke-width="2" stroke-dasharray="3 3"/>
+      {t(XX, XY + 5, "?", 13, DIM, 800, anchor="middle")}
+      <g opacity="0">{vis(3.3, 11.4, P)}
+        <polygon points="{hexpts(XX, XY, 13)}" fill="{DANGER}" stroke="{DANGER}" stroke-width="2" filter="url(#glow)">
+          <animate attributeName="fill-opacity" values="1;.35;1" dur=".5s" repeatCount="indefinite"/></polygon>
+      </g>
+      <g opacity="0">{vis(3.3, 11.4, P)}{t(XX, XY - 44, "203.0.113.45", 10.5, DANGER, 700, 6.6, anchor="middle")}</g>
+      <g opacity="0">{vis(5.6, 8.8, P)}
+        <g transform="translate({XX} {XY})">
+          <g>
+            <animateTransform attributeName="transform" type="scale" dur="{P}s" repeatCount="indefinite" values="2.6;2.6;1;1;1.12;1" keyTimes="0;{5.6 / P:.4f};{6.2 / P:.4f};{7.0 / P:.4f};{7.2 / P:.4f};1"/>
+            <g><animateTransform attributeName="transform" type="rotate" dur="{P}s" repeatCount="indefinite" values="90;90;0;0" keyTimes="0;{5.6 / P:.4f};{6.2 / P:.4f};1"/>
+              {br}
+              <path d="M-36 0h8M28 0h8M0 -36v8M0 28v8" stroke="{DANGER}" stroke-width="2"/>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g opacity="0">{vis(8.6, 11.4, P)}
+        <polygon points="{hexpts(XX, XY, 30)}" fill="{ACCENT}" fill-opacity=".1" stroke="{ACCENT}" stroke-width="3" stroke-dasharray="{L}" stroke-dashoffset="{L}" filter="url(#glow)">
+          <animate attributeName="stroke-dashoffset" dur="{P}s" repeatCount="indefinite" values="{L};{L};0;0" keyTimes="0;{8.6 / P:.4f};{9.4 / P:.4f};1"/>
+        </polygon>
+        {t(XX, XY + 50, "QUARANTINED", 9.5, ACCENT, 800, 6.6, anchor="middle")}
+      </g>
     </g>'''
-        cxp += w + 12
 
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="NetScope — network packet analyzer and threat intelligence console">
+    cx0, cy0, cwid, chei = 1034, 240, 214, 142
+    scores = [(6.4, "18", WARN), (6.8, "41", WARN), (7.2, "63", WARN), (7.6, "82", DANGER)]
+    score_svg = ""
+    for i, (a, v, col) in enumerate(scores):
+        b = scores[i + 1][0] if i + 1 < len(scores) else 11.4
+        score_svg += f'<g opacity="0">{vis(a, b, P, discrete=True)}{t(cx0 + 16, cy0 + 124, v, 26, col, 800, 16)}</g>'
+    card = f'''
+    <g opacity="0">{vis(6.2, 11.4, P)}
+      <rect x="{cx0}" y="{cy0}" width="{cwid}" height="{chei}" rx="10" fill="{SURF2}" fill-opacity=".96" stroke="{DANGER}" stroke-opacity=".7" stroke-width="1.5"/>
+      <rect x="{cx0}" y="{cy0}" width="{cwid}" height="24" rx="10" fill="{DANGER}" fill-opacity=".16"/>
+      <circle cx="{cx0 + 14}" cy="{cy0 + 12}" r="4" fill="{DANGER}"><animate attributeName="opacity" values="1;.2;1" dur=".6s" repeatCount="indefinite"/></circle>
+      {t(cx0 + 24, cy0 + 16.5, "TARGET LOCKED", 11, DANGER, 800, 7.6)}
+      {t(cx0 + cwid - 12, cy0 + 16.5, "#A-0217", 10, MUTED, 600, 6.2, anchor="end")}
+      {t(cx0 + 16, cy0 + 46, "203.0.113.45", 15, TEXT, 800, 9)}
+      {t(cx0 + 16, cy0 + 64, "PORT_SCAN · 5 hosts · 312 ports", 10.5, MUTED, 600, 6.2)}
+      <rect x="{cx0 + 16}" y="{cy0 + 73}" width="148" height="18" rx="9" fill="{ACCENT}" fill-opacity=".16"/>
+      {t(cx0 + 24, cy0 + 86, "T1046 · DISCOVERY", 10, ACCENT, 800, 7.6)}
+      {t(cx0 + 16, cy0 + 104, "THREAT SCORE", 9.5, DIM, 800, 6.4)}
+      {score_svg}
+      <rect x="{cx0 + 62}" y="{cy0 + 112}" width="136" height="8" rx="4" fill="{SURF}"/>
+      <rect x="{cx0 + 62}" y="{cy0 + 112}" width="0" height="8" rx="4" fill="url(#scoreBar)">
+        <animate attributeName="width" dur="{P}s" repeatCount="indefinite" values="0;0;{136 * .82:.1f};{136 * .82:.1f};0" keyTimes="0;{6.3 / P:.4f};{7.6 / P:.4f};{11.3 / P:.4f};1"/></rect>
+      <g opacity="0">{vis(7.6, 11.4, P, discrete=True)}{t(cx0 + 198, cy0 + 106, "MALICIOUS", 9.5, DANGER, 800, 6.4, anchor="end")}</g>
+    </g>'''
+
+    phases = [(0.0, 3.3, "●", "MONITORING", "5 hosts · 0 alerts · sonar sweep", SIGNAL),
+              (3.3, 5.6, "▲", "ANOMALY", "unknown host probing the subnet", WARN),
+              (5.6, 8.6, "◎", "LOCKED", "port scan → T1046 · scoring host", DANGER),
+              (8.6, 12.0, "■", "CONTAINED", "host quarantined · IOC exported", ACCENT)]
+    status = ""
+    for a, b, ic, lab, txt, col in phases:
+        status += f'''
+    <g opacity="0">{vis(a, b, P, discrete=True)}
+      {t(708, 92, ic, 13, col, 800)}
+      {t(728, 92, lab, 12.5, col, 800, 8)}
+      {t(728 + len(lab) * 8 + 14, 92, txt, 12, MUTED, 600, 7.0)}
+    </g>'''
+    # timeline scrubber for the story
+    status += f'''
+    <rect x="708" y="104" width="500" height="2" rx="1" fill="{LINE}"/>
+    {"".join(f'<rect x="{708 + a / P * 500:.1f}" y="104" width="{(b - a) / P * 500 - 3:.1f}" height="2" rx="1" fill="{col}" opacity=".45"/>' for a, b, _, _, _, col in phases)}
+    <circle cy="105" r="4" fill="{TEXT}" filter="url(#glow)"><animate attributeName="cx" values="708;1208" dur="{P}s" repeatCount="indefinite"/></circle>'''
+
+    # hex-dump ticker
+    dump = ("0000  45 00 00 3c 1c 46 40 00 40 06 b1 e6 cb 00 71 2d  E..<.F@.@.....q-     "
+            "0010  0a 00 00 0c d4 31 00 16 5e 2b 7a 10 00 00 00 00  .....1..^+z.....     "
+            "0020  a0 02 fa f0 3c 1e 00 00 02 04 05 b4 04 02 08 0a  ....<...........     ")
+    dcw = 7.0
+    ticker = f'''
+    <g clip-path="url(#tickclip)" opacity=".55">
+      <g><animateTransform attributeName="transform" type="translate" from="0 0" to="-{len(dump) * dcw:.1f} 0" dur="40s" repeatCount="indefinite"/>
+        {t(40, H - 22, dump * 2, 11.5, DIM, 600, dcw)}
+      </g>
+    </g>'''
+
+    corners = "".join(
+        f'<path d="M{x} {y + 22 * sy}V{y}H{x + 22 * sx}" fill="none" stroke="{SIGNAL}" stroke-width="2" stroke-opacity=".7"/>'
+        for x, y, sx, sy in [(18, 18, 1, 1), (W - 18, 18, -1, 1), (18, H - 18, 1, -1), (W - 18, H - 18, -1, -1)])
+
+    hexs = "".join(f'<polygon points="{hexpts(px, py, 18)}" fill="none" stroke="#14233A" stroke-width="1"/>'
+                   for px, py in [(0, 0), (31.18, 0), (15.59, 27), (0, 54), (31.18, 54)])
+
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="NetScope — a sensor mesh detects a port scan, locks on to the attacker and contains it">
   <title>NetScope — Network Packet Analyzer &amp; Threat Intelligence Console</title>
   <style>.blink{{animation:b 1s steps(1) infinite}}@keyframes b{{50%{{opacity:0}}}}{REDUCED}</style>
   <defs>{common_defs()}
-    <linearGradient id="word" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".42" stop-color="#FFFFFF" stop-opacity="0"/><stop offset=".5" stop-color="#E9FFF5" stop-opacity=".85"/><stop offset=".58" stop-color="#FFFFFF" stop-opacity="0"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
-      <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1 0" dur="6s" repeatCount="indefinite"/>
+    <pattern id="hexmesh" width="31.18" height="54" patternUnits="userSpaceOnUse">{hexs}</pattern>
+    <pattern id="scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="1" fill="#FFFFFF" opacity=".025"/></pattern>
+    <radialGradient id="meshFade" gradientUnits="userSpaceOnUse" cx="{SX}" cy="{SY}" r="560">
+      <stop offset="0" stop-color="#fff" stop-opacity="1"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <mask id="meshMask"><rect width="{W}" height="{H}" fill="url(#meshFade)"/></mask>
+    <radialGradient id="vignette" cx=".5" cy=".5" r=".75"><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".65"/></radialGradient>
+    <linearGradient id="wordBase" x1="0" x2="1"><stop offset="0" stop-color="{SIGNAL}"/><stop offset=".6" stop-color="#7FE8D8"/><stop offset="1" stop-color="{ACCENT}"/></linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".44" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#F2FFF9" stop-opacity=".9"/><stop offset=".56" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-1 0;1.2 0" dur="5s" repeatCount="indefinite"/>
     </linearGradient>
-    <linearGradient id="wordBase" x1="0" x2="1"><stop offset="0" stop-color="{SIGNAL}"/><stop offset="1" stop-color="{ACCENT}"/></linearGradient>
-    <linearGradient id="trail" x1="0" x2="1"><stop offset="0" stop-color="{TEXT}" stop-opacity="0"/><stop offset="1" stop-color="{TEXT}" stop-opacity=".6"/></linearGradient>
-    <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="{SIGNAL}" stop-opacity="0"/><stop offset="1" stop-color="{SIGNAL}" stop-opacity=".45"/>
-    </linearGradient>
-    <linearGradient id="wire" x1="0" x2="1"><stop offset="0" stop-color="{LINE}" stop-opacity="0"/><stop offset=".5" stop-color="#2A3D63"/><stop offset="1" stop-color="{LINE}" stop-opacity="0"/></linearGradient>
-    <clipPath id="card"><rect width="{W}" height="{H}" rx="22"/></clipPath>
-    <clipPath id="radar"><circle cx="{cx}" cy="{cy}" r="{rr}"/></clipPath>
-    {"".join(typing)}
+    <linearGradient id="scoreBar" x1="0" x2="1"><stop offset="0" stop-color="{WARN}"/><stop offset="1" stop-color="{DANGER}"/></linearGradient>
+    <clipPath id="slice1"><rect x="0" y="{wy - 62}" width="{W}" height="16"/></clipPath>
+    <clipPath id="slice2"><rect x="0" y="{wy - 26}" width="{W}" height="9"/></clipPath>
+    <clipPath id="right"><rect x="676" y="112" width="{W - 694}" height="{H - 160}"/></clipPath>
+    <clipPath id="tickclip"><rect x="40" y="{H - 40}" width="{W - 80}" height="26"/></clipPath>
+    <clipPath id="card"><rect width="{W}" height="{H}" rx="24"/></clipPath>
+    {typing_defs}
   </defs>
   <g clip-path="url(#card)">
     <rect width="{W}" height="{H}" fill="{VOID}"/>
-    <rect width="{W}" height="{H}" fill="url(#grid)" opacity=".9"/>
-    <circle cx="{cx}" cy="{cy}" r="320" fill="url(#glowA)"/>
-    <rect y="-40" width="{W}" height="40" fill="{SIGNAL}" opacity=".035">
-      <animate attributeName="y" values="-40;{H}" dur="7s" repeatCount="indefinite"/>
-    </rect>
+    <rect width="{W}" height="{H}" fill="url(#hexmesh)" mask="url(#meshMask)"/>
+    <circle cx="220" cy="230" r="320" fill="url(#glowG)" opacity=".7"/>
+    <circle cx="{SX}" cy="{SY}" r="360" fill="url(#glowA)"/>
 
-    <!-- top bar -->
-    {t(36, 38, "netscope://soc-console", 12, DIM, 500, 7.2)}
-    <circle cx="{W - 238}" cy="34" r="5" fill="{DANGER}"><animate attributeName="opacity" values="1;.2;1" dur="1.2s" repeatCount="indefinite"/></circle>
-    {t(W - 226, 38, "LIVE · 18 pkt/s · ws://8765", 12, MUTED, 600, 7.0)}
+    <!-- HUD -->
+    {corners}
+    {t(44, 50, "◢ NETSCOPE", 12, SIGNAL, 800, 7.6)}{t(130, 50, "// SOC-CONSOLE · SENSOR-01 · PASSIVE NDR", 12, DIM, 600, 7.2)}
+    <circle cx="{W - 236}" cy="46" r="5" fill="{DANGER}"><animate attributeName="opacity" values="1;.15;1" dur="1.2s" repeatCount="indefinite"/></circle>
+    {t(W - 224, 50, "REC", 12, DANGER, 800, 7.6)}{t(W - 190, 50, "18 pkt/s · ws:8765", 12, MUTED, 600, 7.6)}
+    <rect x="40" y="66" width="{W - 80}" height="1" fill="{LINE}"/>
+    <rect x="40" y="{H - 48}" width="{W - 80}" height="1" fill="{LINE}"/>
 
-    {logo(150, 196, 1.18)}
-
-    <!-- wordmark -->
-    {t(292, 186, "NETSCOPE", 82, "url(#wordBase)", 800, 66, extra='letter-spacing="4"')}
-    {t(292, 186, "NETSCOPE", 82, "url(#word)", 800, 66, extra='letter-spacing="4"')}
-    {t(296, 228, "NETWORK PACKET ANALYZER  //  THREAT INTELLIGENCE CONSOLE", 14.5, MUTED, 600, 9.6)}
-
-    <!-- typing console -->
-    {t(tx - 22, ty, "$", fs, SIGNAL, 800)}
+    <!-- left -->
+    {t(64, 128, "[ PACKET ANALYZER ]", 12, ACCENT, 800, 8.4)}{t(236, 128, "+ THREAT INTELLIGENCE", 12, MUTED, 700, 8.4)}
+    {wordmark}
+    {t(66, 252, "see the traffic · understand the protocol · catch the anomaly", 14, MUTED, 600, 8.35)}
+    {t(64, ty, "$", fs, SIGNAL, 800)}
     {typing_text}
-    <rect class="blink" x="{tx}" y="{ty - 16}" width="9" height="20" fill="{SIGNAL}">
-      <animate attributeName="x" dur="{period}s" repeatCount="indefinite" calcMode="discrete" keyTimes="{ckts}" values="{cvs}"/>
-    </rect>
+    {cursor}
+    {anat}
 
-    {chip_svg}
-
-    <!-- radar -->
-    <g>
-      <circle cx="{cx}" cy="{cy}" r="{rr}" fill="{SURF2}" fill-opacity=".85" stroke="#1E3A4F" stroke-width="1.5"/>
-      <circle cx="{cx}" cy="{cy}" r="{rr * .66:.0f}" fill="none" stroke="#173246"/>
-      <circle cx="{cx}" cy="{cy}" r="{rr * .33:.0f}" fill="none" stroke="#173246"/>
-      <path d="M{cx - rr} {cy}H{cx + rr}M{cx} {cy - rr}V{cy + rr}" stroke="#173246"/>
-      <g clip-path="url(#radar)">
-        <g>
-          <animateTransform attributeName="transform" type="rotate" from="0 {cx} {cy}" to="360 {cx} {cy}" dur="4s" repeatCount="indefinite"/>
-          <path d="M{cx} {cy} L{cx + rr} {cy} A{rr} {rr} 0 0 0 {cx + rr * 0.5:.1f} {cy - rr * 0.866:.1f} Z" fill="url(#sweep)" opacity=".75"/>
-          <line x1="{cx}" y1="{cy}" x2="{cx + rr}" y2="{cy}" stroke="{SIGNAL}" stroke-width="2" filter="url(#glow)"/>
-        </g>
-      </g>
-      <circle cx="{cx}" cy="{cy}" r="4" fill="{SIGNAL}"/>
-      {blip_svg}
-      {t(cx, cy + rr + 26, "HOST DISCOVERY · ARP / OUI", 11, DIM, 600, 7.1, anchor="middle")}
+    <!-- right -->
+    <rect x="676" y="78" width="1" height="{H - 140}" fill="{LINE}"/>
+    {status}
+    <g clip-path="url(#right)">
+      {sonar}
+      {mesh}
+      {scan_svg}
     </g>
+    {logo(SX, SY, .62)}
+    {node_svg}
+    {attacker}
+    {card}
 
-    <!-- packet wire -->
-    <rect x="0" y="{H - 43}" width="{W}" height="2" fill="url(#wire)"/>
-    {pk_svg}
+    {ticker}
+    <rect width="{W}" height="{H}" fill="url(#scan)"/>
+    <rect width="{W}" height="{H}" fill="url(#vignette)"/>
+    <rect y="-60" width="{W}" height="60" fill="{SIGNAL}" opacity=".03"><animate attributeName="y" values="-60;{H}" dur="6s" repeatCount="indefinite"/></rect>
   </g>
-  <rect x=".75" y=".75" width="{W - 1.5}" height="{H - 1.5}" rx="21.5" fill="none" stroke="#1C2A45" stroke-width="1.5"/>
+  <rect x=".75" y=".75" width="{W - 1.5}" height="{H - 1.5}" rx="23.5" fill="none" stroke="#1C2A45" stroke-width="1.5"/>
 </svg>'''
-    return svg
+
+
+# ════════════════════════════════════════════════════════════════════════════
+# 1b · TELEMETRY RACK — replaces generic shield badges
+# ════════════════════════════════════════════════════════════════════════════
+def rack():
+    W, H = 1280, 150
+    mods = [("RUNTIME", "PYTHON 3.8+", "stdlib-only demo & dashboard", SIGNAL, "cursor"),
+            ("CAPTURE", "SCAPY · BPF", "live interfaces + .pcap replay", "#4FD1FF", "scope"),
+            ("INTEL", "ATT&CK × 7", "techniques · 5 tactics mapped", DANGER, "cells"),
+            ("STREAM", "WEBSOCKET", "init → packet → heartbeat", ACCENT, "flow"),
+            ("QA", "PYTEST × 46", "analyzer → live NDR engine", WARN, "bars")]
+    mw, gap, x0, y0, mh = 236, 12, 26, 18, 114
+    s = ""
+    for i, (lab, val, sub, col, viz) in enumerate(mods):
+        x = x0 + i * (mw + gap)
+        screws = "".join(f'<circle cx="{x + sx}" cy="{y0 + sy}" r="2.2" fill="{LINE}"/>' for sx in (8, mw - 8) for sy in (8, mh - 8))
+        s += f'''
+    <g>
+      <rect x="{x}" y="{y0}" width="{mw}" height="{mh}" rx="12" fill="{SURF}" stroke="{LINE}" stroke-width="1.5"/>
+      <rect x="{x + 14}" y="{y0}" width="{mw - 28}" height="2" fill="{col}" opacity=".9"/>
+      {screws}
+      <circle cx="{x + 22}" cy="{y0 + 26}" r="4" fill="{col}" filter="url(#glow)"><animate attributeName="opacity" values="1;.3;1" dur="{1.1 + i * .23:.2f}s" repeatCount="indefinite"/></circle>
+      {t(x + 34, y0 + 30, lab, 11, col, 800, 7.6)}
+      {t(x + mw - 18, y0 + 30, f"0{i + 1}", 11, DIM, 800, 7.6, anchor="end")}
+      {t(x + 20, y0 + 64, val, 19, TEXT, 800, 11.2)}
+      {t(x + 20, y0 + 84, sub, 10.5, MUTED, 500, 6.1)}'''
+        vy = y0 + 96
+        if viz == "cursor":
+            s += f'''{t(x + 20, vy + 10, ">>> import netscope", 10.5, DIM, 600, 6.4)}
+      <rect class="blink" x="{x + 20 + 22 * 6.4 + 3:.1f}" y="{vy + 1}" width="6" height="11" fill="{col}"/>'''
+        elif viz == "scope":
+            pts = " ".join(f"{k * 4},{6 * math_sin(k):.1f}" for k in range(0, 100))
+            s += f'''
+      <clipPath id="sc{i}"><rect x="{x + 20}" y="{vy - 4}" width="{mw - 40}" height="16"/></clipPath>
+      <g clip-path="url(#sc{i})"><g transform="translate({x + 20} {vy + 5})">
+        <polyline points="{pts}" fill="none" stroke="{col}" stroke-width="1.6" filter="url(#glow)">
+          <animateTransform attributeName="transform" type="translate" from="0 0" to="-{4 * 20:.0f} 0" dur="1.4s" repeatCount="indefinite"/></polyline></g></g>'''
+        elif viz == "cells":
+            for k in range(7):
+                s += f'''
+      <rect x="{x + 20 + k * 28}" y="{vy}" width="24" height="10" rx="2" fill="{col}" opacity=".18">
+        <animate attributeName="opacity" values=".18;.95;.18;.18" keyTimes="0;.06;.2;1" dur="3.5s" begin="{k * .5:.1f}s" repeatCount="indefinite"/></rect>'''
+        elif viz == "flow":
+            s += f'<rect x="{x + 20}" y="{vy + 4}" width="{mw - 40}" height="2" rx="1" fill="{LINE}"/>'
+            for k in range(4):
+                s += f'''
+      <rect y="{vy + 1}" width="14" height="8" rx="4" fill="{col}" opacity=".85"><animate attributeName="x" values="{x + 20};{x + mw - 34}" dur="2.4s" begin="-{k * .6:.1f}s" repeatCount="indefinite"/></rect>'''
+        elif viz == "bars":
+            for k in range(10):
+                s += f'''
+      <rect x="{x + 20 + k * 19.6:.1f}" y="{vy}" width="16" height="10" rx="2" fill="{col}" opacity=".15">
+        <animate attributeName="opacity" values=".15;.15;.9;.9;.15" keyTimes="0;{k * .07:.2f};{k * .07 + .02:.2f};.92;1" dur="4s" repeatCount="indefinite"/></rect>'''
+        s += "\n    </g>"
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Spec rack: Python 3.8+, Scapy, MITRE ATT&amp;CK, WebSocket, pytest">
+  <title>NetScope spec rack</title>
+  <style>.blink{{animation:b 1s steps(1) infinite}}@keyframes b{{50%{{opacity:0}}}}{REDUCED}</style>
+  <defs>{common_defs()}</defs>
+  {s}
+</svg>'''
+
+
+def math_sin(k):
+    import math
+    return math.sin(k * math.pi / 10) * (0.6 + 0.4 * math.sin(k * math.pi / 50 * 5))
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -612,7 +860,7 @@ def footer():
 </svg>'''
 
 
-for name, fn in [("hero", hero), ("terminal", terminal), ("architecture", architecture),
+for name, fn in [("hero", hero), ("rack", rack), ("terminal", terminal), ("architecture", architecture),
                  ("threat-board", threat_board), ("mitre-attack", mitre), ("divider", divider),
                  ("footer", footer)]:
     with open(os.path.join(OUT, f"{name}.svg"), "w") as f:

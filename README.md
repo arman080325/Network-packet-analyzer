@@ -4,32 +4,25 @@
   <img src=".github/readme/hero.svg" alt="NetScope — Network Packet Analyzer & Threat Intelligence Console" width="100%"/>
 </a>
 
-<br/>
-
-<a href="https://www.python.org/"><img src="https://img.shields.io/badge/python-3.8%2B-31F2A0?style=for-the-badge&logo=python&logoColor=31F2A0&labelColor=0F1726" alt="Python 3.8+"/></a>
-<a href="https://scapy.net/"><img src="https://img.shields.io/badge/capture-scapy-31F2A0?style=for-the-badge&logo=wireshark&logoColor=31F2A0&labelColor=0F1726" alt="Scapy"/></a>
-<a href="https://attack.mitre.org/"><img src="https://img.shields.io/badge/mitre-att%26ck-FF3E6C?style=for-the-badge&labelColor=0F1726" alt="MITRE ATT&CK"/></a>
-<a href="#-06--signal-path"><img src="https://img.shields.io/badge/stream-websocket-8C6BFF?style=for-the-badge&logo=socketdotio&logoColor=8C6BFF&labelColor=0F1726" alt="WebSocket"/></a>
-<a href="#-08--quality-gates"><img src="https://img.shields.io/badge/tests-pytest-FFB13C?style=for-the-badge&logo=pytest&logoColor=FFB13C&labelColor=0F1726" alt="Pytest"/></a>
-
-<a href="https://github.com/arman080325/Network-packet-analyzer/stargazers"><img src="https://img.shields.io/github/stars/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=31F2A0&label=%E2%98%85%20stars" alt="Stars"/></a>
-<a href="https://github.com/arman080325/Network-packet-analyzer/commits"><img src="https://img.shields.io/github/last-commit/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=8C6BFF&label=last%20signal" alt="Last commit"/></a>
-<img src="https://img.shields.io/github/repo-size/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=FFB13C&label=payload" alt="Repo size"/>
-<a href="https://github.com/arman080325/Network-packet-analyzer/issues"><img src="https://img.shields.io/github/issues/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=FF3E6C&label=open%20alerts" alt="Issues"/></a>
-
-<br/><br/>
+<a href="#-09--built-with">
+  <img src=".github/readme/rack.svg" alt="Spec rack — Python 3.8+ · Scapy · MITRE ATT&CK × 7 · WebSocket · pytest × 46" width="100%"/>
+</a>
 
 <samp>
 
-**[`⟐ quick start`](#-01--boot-sequence)** &nbsp;·&nbsp;
-**[`⟐ console`](#-02--the-console)** &nbsp;·&nbsp;
-**[`⟐ detections`](#-03--detection-engine)** &nbsp;·&nbsp;
-**[`⟐ att&ck`](#-04--mitre-attck-mapping)** &nbsp;·&nbsp;
-**[`⟐ architecture`](#-06--signal-path)** &nbsp;·&nbsp;
-**[`⟐ api`](#-07--api-surface)** &nbsp;·&nbsp;
-**[`⟐ usage guide`](Usage.md)**
+**`~/netscope ❯`** &nbsp;
+[`./boot`](#-01--boot-sequence) &nbsp;
+[`./console`](#-02--the-console) &nbsp;
+[`./detect`](#-03--detection-engine) &nbsp;
+[`./att&ck`](#-04--mitre-attck-mapping) &nbsp;
+[`./ndr`](#-05--live-ndr-engine) &nbsp;
+[`./signal-path`](#-06--signal-path) &nbsp;
+[`./api`](#-07--api-surface) &nbsp;
+[`man netscope`](Usage.md)
 
 </samp>
+
+<sub><samp>▲ above: a 12-second loop — the sensor sweeps the mesh, an unknown host port-scans five assets, NetScope dissects the frame, locks on, scores it 82 and quarantines it.</samp></sub>
 
 </div>
 
@@ -472,6 +465,10 @@ Network-packet-analyzer/
 <br/><sub>Computer Science & Engineering · Network Security · Software Development</sub>
 
 <a href="https://github.com/arman080325"><img src="https://img.shields.io/badge/github-arman080325-31F2A0?style=for-the-badge&logo=github&logoColor=31F2A0&labelColor=0F1726" alt="GitHub @arman080325"/></a>
+
+<a href="https://github.com/arman080325/Network-packet-analyzer/stargazers"><img src="https://img.shields.io/github/stars/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=31F2A0&label=%E2%98%85%20stars" alt="Stars"/></a>
+<a href="https://github.com/arman080325/Network-packet-analyzer/commits"><img src="https://img.shields.io/github/last-commit/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=8C6BFF&label=last%20signal" alt="Last commit"/></a>
+<a href="https://github.com/arman080325/Network-packet-analyzer/issues"><img src="https://img.shields.io/github/issues/arman080325/Network-packet-analyzer?style=flat-square&labelColor=060911&color=FF3E6C&label=open%20alerts" alt="Issues"/></a>
 
 <sub>Released under the MIT License.</sub>
 
